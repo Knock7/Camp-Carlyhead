@@ -1,0 +1,269 @@
+
+* {
+   box-sizing:border-box;
+}
+container {
+	width:100%;
+	height: 100%;
+}
+header {
+	padding:.2em;
+	color: white;
+	background-color: black;
+	clear: both;
+	text-align: center;
+	width:100%;
+	min-width:1000px;
+	float:center;
+}
+footer {
+	position:absolute;
+	bottom:0;
+	padding:.2em;
+	color: white;
+	background-color: black;
+	clear: both;
+	text-align: center;
+	width:100%;
+	min-width:1000px;
+	float:center;
+}
+.hide {
+	visibility: hidden;
+}
+.show {
+	visibility: visible;
+}
+.none {
+	display:none;
+}
+.butt {
+	width:500px;
+	color:black;
+	border:3px solid grey;
+	padding:10px;
+	background-color:white;
+	visibility:block;
+}
+.butt:hover {
+	color:white;
+	background-color:grey;
+	cursor:pointer;
+}
+resources {
+	float:left;
+	width: 20%;
+	margin: 0;
+	padding:1em;
+	text-align: left;
+	height:800px;
+	border-right:3px solid black;
+	border-left:3px solid black;
+}
+buttons {
+	display:inline-block;
+	height:100%;
+	width:80%;
+	margin:auto;
+	float:right;
+	text-align:center;
+	padding:17px;
+}
+tabs {
+	display:inline-block;
+	outline:pink;
+	height:100%;
+	width:40%;
+	min-width:305px;
+	float:right;
+	text-align:center;
+}
+.researchButton{
+	display:inline-block;
+	width:150px;
+	height:70px;
+	margin:15px;
+	border:3px double black;
+	background: rgba(255, 255, 255, .3);
+	padding:0;
+	position:relative;
+}
+.researchButton:hover {
+	color:white;
+	background-color:rgba(100, 100, 100, .5);
+	cursor:pointer;
+}
+	
+.resText {
+	position:absolute; 
+	text-align:center; 
+	width:100%; margin:0;
+	line-height:30px;
+	padding-top:15px;
+}
+.resBar {
+	height:65px;
+	background-color:rgba(98, 161, 113, .5);
+	width:0%;
+}
+div.JobBox { 
+	width:250px;
+	text-align:center;
+	margin:auto;
+	padding: 0 5px;
+	border:3px solid black;    
+	margin-top:10px;
+	height:100%;
+	background-size:cover;
+}
+div.userAdd { 
+	width:180px;
+	position: relative; 
+	left: 2px; 
+	display: inline-block;
+	padding:3px;
+	background:rgba(255, 255, 255, .85);
+	border:1px solid black;
+	text-align:left;
+}
+div.userAdd:hover{
+	cursor:pointer;
+	background-color:rgba(100,200,100,0.8);
+}
+span.workers {
+	padding:1px;
+	margin:auto;
+	width:250px;
+	font-size:1.1em;
+	margin-bottom:10pt;
+	background: rgba(255, 255, 255, .7);
+	border:1px solid black;
+}
+span.bkgrn {
+	background: rgba(255, 255, 255, .85);
+	font-size:1.4em;
+	border:1px solid black;
+	margin: 0;
+	padding:0;
+}
+div.userRemove {
+	width:40px;
+	position: relative;
+	right: 2px;
+	display: inline-block;
+	padding:3px;
+	background:rgba(255, 255, 255, .85);
+	border:1px solid black;
+	border-left:none;
+	margin:0;
+}
+div.userRemove:hover{
+	cursor:pointer;
+	background-color:rgba(200,100,100,0.8);
+}
+.council{
+	text-align:center;
+	color:white;
+	display:inline-block;
+	margin:auto;
+	border:3px double black;
+	background:linear-gradient(rgba(10,10,10,0.5),rgba(10,10,10,0.5)),url(woodback.jpg);
+	height:100px;
+	width:450px;
+	position:relative;
+	margin-top:12px;
+	padding-top:10px;
+}
+.council:hover {
+	cursor:pointer;
+	border-color:grey;
+}
+
+
+body { 
+	background-image:linear-gradient(rgba(200,250,250,0.5),rgba(255,200,200,0.5)),  url(mountains2.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center; 
+	background-size:cover;
+}
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 40pt;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.alert {
+    padding: 200px 70px 500px 70px;
+    background-color: black;
+    color: white;
+    font-size:1.5em;
+}
+
+.buildingButton{
+	color:white;
+	display:inline-block;
+	width:200px;
+	margin:3px;
+	border:3px solid black;
+	background:linear-gradient(rgba(10,10,10,0.5),rgba(10,10,10,0.5)),url(woodback.jpg);
+	padding:0;
+	position:relative;
+}
+.buildingButton:hover {
+	cursor:pointer;
+	border-color:grey;
+}
+.buildBar {
+	height:35px;
+	background-color:rgba(98, 161, 113, .5);
+	width:0%;
+}
+.councilbuildBar {
+	padding-top:0;
+	height:100px;
+	background-color:rgba(98, 161, 113, .5);
+	width:0%;
+}
+.buildText {
+	position:absolute; 
+	text-align:center; 
+	width:100%; margin:0;
+	line-height:30px;
+	padding:5px;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    border:1px solid black;
+    background-color: rgba(0,0,0,.8); 
+    color: white;
+    text-align: left;
+    border-radius: 2px;
+    padding: 0 10px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    right: -10px;
+	white-space: nowrap;
+    margin-left: 0;
+    opacity: 0;
+	font-size:12pt;
+
+}
+.buildingButton:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.council:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.researchButton:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

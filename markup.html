@@ -3,222 +3,9 @@
 <head>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
-* {
-   box-sizing:border-box;
-}
-container {
-	width:100%;
-	height: 100%;
-}
-header {
-	padding:.2em;
-	color: lightgrey;
-	background-color: black;
-	clear: both;
-	text-align: center;
-	width:100%;
-	min-width:1000px;
-	float:center;
-}
-footer {
-	position:absolute;
-	bottom:0;
-	padding:.2em;
-	color: white;
-	background-color: black;
-	clear: both;
-	text-align: center;
-	width:100%;
-	min-width:1000px;
-	float:center;
-}
-.hide {
-	visibility: hidden;
-}
-.show {
-	visibility: visible;
-}
-.none {
-	display:none;
-}
-.butt {
-	width:500px;
-	color:black;
-	border:3px solid grey;
-	padding:10px;
-	background-color:white;
-	visibility:block;
-}
-.butt:hover {
-	color:white;
-	background-color:grey;
-	cursor:pointer;
-}
-resources {
-	float:left;
-	width: 20%;
-	margin: 0;
-	padding:1em;
-	text-align: left;
-	height:800px;
-	border-right:3px solid black;
-	border-left:3px solid black;
-}
-buttons {
-	display:inline-block;
-	height:100%;
-	width:80%;
-	margin:auto;
-	float:right;
-	text-align:center;
-	padding:17px;
-}
-tabs {
-	display:inline-block;
-	outline:pink;
-	height:100%;
-	width:40%;
-	min-width:305px;
-	float:right;
-	text-align:center;
-}
-.researchButton{
-	display:inline-block;
-	width:150px;
-	height:70px;
-	margin:15px;
-	border:3px double black;
-	background: rgba(255, 255, 255, .3);
-	padding:0;
-	position:relative;
-}
-.researchButton:hover {
-	color:white;
-	background-color:rgba(100, 100, 100, .5);
-	cursor:pointer;
-}
-	
-.resText {
-	position:absolute; 
-	text-align:center; 
-	width:100%; margin:0;
-	line-height:30px;
-	padding-top:15px;
-}
-.resBar {
-	height:65px;
-	background-color:rgba(98, 161, 113, .5);
-	width:0%;
-}
-div.JobBox { 
-	width:250px;
-	text-align:center;
-	margin:auto;
-	padding:5px;
-	border:2px ridge rgb(142, 107, 81);    
-	margin-top:10px;
-	height:100%;
-	background-size:cover;
-}
-div.userAdd {
-	float:left; 
-	position: relative; 
-	left: 2px; 
-	display: inline-block;
-}
-span.workers {
-	padding:1px;
-	margin:auto;
-	width:250px;
-	font-size:1.1em;
-	margin-bottom:10pt;
-	background: rgba(255, 255, 255, .7);
-	border:1px solid black;
-}
-span.bkgrn {
-	background: rgba(255, 255, 255, .7);
-	font-size:1.4em;
-	border:1px solid black;
-	margin: 0;
-	padding:0;
-}
-div.userRemove {
-	float:right;
-	position: relative;
-	right: 2px;
-	display: inline-block;
-}
-.council {
-	margin:auto;
-	text-size:1.2em;
-	background-color:rgba(150,200,250,0.8);
-	height:100%;
-	width:400px;
-	color:white;
-	text-align:center;
-	padding:15px;
-	border:3px double black;
-}
-.council:hover {
-	color:white;
-	background-color:grey;
-	cursor:pointer;
-}
-body { 
-	background-image:linear-gradient(rgba(225,250,250,0.8),rgba(255,200,200,0.8)),  url(mountains2.jpg);
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: center; 
-	background-size:cover;
-}
-.closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 40pt;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.alert {
-    padding: 200px 70px 500px 70px;
-    background-color: black;
-    color: white;
-    font-size:1.5em;
-}
-
-.researchButton{
-	display:inline-block;
-	width:150px;
-	height:70px;
-	margin:15px;
-	border:3px double black;
-	background: rgba(255, 255, 255, .3);
-	padding:0;
-	position:relative;
-}
-
-.buildingButton{
-	display:inline-block;
-	width:250px;
-	height:auto;
-	margin:15px;
-	border:3px solid black;
-	background: rgba(255, 255, 255, .3);
-	padding:0;
-	position:relative;
-}
-.buildingButton:hover {
-	color:white;
-	background-color:rgba(100, 100, 100, .5);
-	cursor:pointer;
-}
+<link rel="stylesheet" type="text/css" href="mystyle.css">
 
 
-</style>
 
 <script src="code.js"></script> <!-----------------------------------------------------------------change version number---------->
 
@@ -271,6 +58,7 @@ function ShowPanel(show){
 <div id="farmStuff"></div>
 <p id="millStuff" class="hide"> Lumber: <span id="lumber"> 50 </span> / <span id="lumberMax" class="right">100</span></p></div>  
 <p id="workshopStuff" class="hide"> Stone: <span id="stone"> 50 </span> / <span id="stoneMax" class="right">100</span></p></div>  
+<p id="labStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right">100</span></p></div>
 
 </resources>
 
@@ -288,118 +76,130 @@ function ShowPanel(show){
 <!--/////////////////////////////////////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
 
 <tabs id="first" style="float:left;">
-
 <h2>Jobs</h2>
 
+<div id="camp" class="JobBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspCAMP&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-
-<div id="camp" class="JobBox" style="background-image:linear-gradient(rgba(225,250,250,0.5),rgba(255,200,200,0.5)),  url(camp.jpg); display:inline-block;">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn"><b>&nbspCAMP&nbsp</b></span><br>
-<p style="font-size:25pt;"> </p>
-
-<span class="workers"><b>&nbspFree Workers: <span id="freeworkers">1</span>&nbsp</b></span>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
+		<b>&nbspFree Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp</b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="field" class="JobBox" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(field.jpg); display:inline-block;">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspFIELDS&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="field" class="JobBox" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(field.jpg); display:inline-block;">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .6)"><b>&nbspFIELDS&nbsp</b></span><br>
-<p style="font-size:25pt;"> </p>
+	<div class="userAdd" onclick='moveworker("food",1)'>
+		<b>&nbspHunters: <span id="foodworkers">0</span> / <span id="foodworkersMax">100</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("food",1)'> 
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 
-<div class="userAdd"><button onclick='moveworker("food",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers" style="background: rgba(255, 255, 255, .6)"><b>&nbspHunters: <span id="foodworkers">0</span> / <span id="foodworkersMax">100</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("food",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
-
-<div id="farmJob" class="none">
-<div class="userAdd"><button onclick='moveworker("farm",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers"><b>&nbspFarmers: <span id="farmworkers">0</span> / <span id="farmworkersMax">100</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("farm",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p></div>
-
+	<div id="farmJob" class="none">
+		<div class="userAdd" onclick='moveworker("farm",1)'>
+			<b>&nbspFarmers: <span id="farmworkers">0</span> / <span id="farmworkersMax">100</span>&nbsp</b>
+		</div>
+		<div class="userRemove" onclick='removeworker("farm",1)'>
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
+	</div>
 </div>
 
 
+<div id="forest" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspFOREST&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="forest" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(forest.jpg);">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .8)"><b>&nbspFOREST&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"><button onclick='moveworker("wood",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers" style="background: rgba(255, 255, 255, .8)"><b>&nbspWoodcutters: <span id="woodworkers">0</span> / <span id="woodworkersMax">3</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("wood",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" onclick='moveworker("wood",1)'>
+		<b>&nbspWoodcutters: <span id="woodworkers">0</span> / <span id="woodworkersMax">3</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("wood",1)'>
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="quarry" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspQUARRY&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="quarry" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(quarry.jpg);">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .6)"><b>&nbspQUARRY&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"><button onclick='moveworker("rock",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers"><b>&nbspRockcutters: <span id="rockworkers">0</span> / <span id="rockworkersMax">1</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("rock",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" onclick='moveworker("rock",1)'>
+		<b>&nbspRockcutters: <span id="rockworkers">0</span> / <span id="rockworkersMax">1</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("rock",1)'>
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="millJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspSAWMILLS&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="millJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(mill.jpg);">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .6)"><b>&nbspSAWMILLS&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"><button onclick='moveworker("lumber",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers"><b>&nbspMill Workers: <span id="lumberworkers">0</span> / <span id="lumberworkersMax">3</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("lumber",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" onclick='moveworker("lumber",1)'>
+		<b>&nbspMill Workers: <span id="lumberworkers">0</span> / <span id="lumberworkersMax">1</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("lumber",1)'>
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="workshopJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspWORKSHOPS&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="workshopJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(workshop.jpg);">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .6)"><b>&nbspWORKSHOPS&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"><button onclick='moveworker("stone",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers"><b>&nbspMasons: <span id="stoneworkers">0</span> / <span id="stoneworkersMax">3</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("stone",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" onclick='moveworker("stone",1)'>
+		<b>&nbspMasons: <span id="stoneworkers">0</span> / <span id="stoneworkersMax">1</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("stone",1)'>
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="labJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn"><b>&nbspLABORATORY&nbsp</b></span><br>
+	<p style="font-size:25pt;"> </p>
 
-<div id="studioJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.7),rgba(255,250,250,0.7)), url(workshop.jpg);">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, .6)"><b>&nbspSTUDIO&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"><button onclick='moveworker("research",1)'><i class="fa fa-user"></i></button></div>
-<span class="workers"><b>&nbspResearhcers: <span id="researchworkers">0</span> / <span id="researchworkersMax">3</span>&nbsp</b></span>
-<div class="userRemove"><button onclick='removeworker("research",1)'><i class="fa fa-user-times"></i></button></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd" onclick='moveworker("research",1)'>
+		<b>&nbspResearchers: <span id="researchworkers">0</span> / <span id="researchworkersMax">0</span>&nbsp</b>
+	</div>
+	<div class="userRemove" onclick='removeworker("research",1)'>
+		<b> X </b>
+	</div>
+	<p style="font-size:4pt;"> </p>
 </div>
 
 
+<div id="blank" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+	<p style="font-size:4pt;"> </p>
+	<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
+	<p style="font-size:25pt;"> </p>
 
-<div id="blank" class="JobBox" style="background-color: rgba(250,250,250,.5); border-width: 0; display:inline-block;">
-<p style="font-size:4pt;"> </p>
-<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
-<p style="font-size:25pt;"> </p>
-
-<div class="userAdd"></div>
-<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
-<div class="userRemove"></div>
-<p style="font-size:4pt;"> </p>
+	<div class="userAdd"></div>
+	<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
+	<div class="userRemove"></div>
+	<p style="font-size:4pt;"> </p>
 </div>
-
 
 </tabs>
 
@@ -416,48 +216,99 @@ function ShowPanel(show){
 
 
 <div id="shackBuild" class="buildingButton" onclick='addBuilding("shack")'> 
-	<div id="shackprogress" class="resBar"><p class="resText">
-	  Shack: <span id="shack">1</span> &nbsp&nbsp Cost: <span id="shackCosts">30 wood</span>
+	<div class="tooltiptext">
+		<p>Requires (1) worker to build<br>
+		Cost:&nbsp<span id="shackCosts">30 wood</span><br><br>
+		Adds: space for 1 new settler
+		</p></div>
+	<div id="shackprogress" class="buildBar"><p class="buildText">
+	  Shacks [<span id="shack">1</span>]
 	</p></div></div>
 
 <div id="shedBuild" class="hide buildingButton" onclick='addBuilding("shed")'>
-	<div id="shedprogress" class="resBar"><p class="resText">
-	  Woodsheds: <span id="shed">0</span> &nbsp&nbsp Cost: <span id="shedCosts">30 wood</span>
+	<div class="tooltiptext">
+		<p>Requires (2) workers to build<br>
+		Cost:&nbsp<span id="shedCosts">30 wood</span><br><br>
+		Adds: space for 1 woodcutter<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp50 wood storage
+		</p></div>
+	<div id="shedprogress" class="buildBar"><p class="buildText">
+	  Woodsheds [<span id="shed">0</span>]
  	</p></div></div>
 
 <div id="mineBuild" class="hide buildingButton" onclick='addBuilding("mine")'>
-	<div id="mineprogress" class="resBar"><p class="resText">
-	  Mineshafts: <span id="mine">0</span> &nbsp&nbsp Cost: <span id="mineCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="mineCosts"> </span><br><br>
+		Adds: space for 1 rockcutter<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp50 rock storage
+		</p></div>
+	<div id="mineprogress" class="buildBar"><p class="buildText">
+	  Mineshafts [<span id="mine">0</span>]
  	</p></div></div>
 
 <div id="farmBuild" class="hide buildingButton" onclick='addBuilding("farm")'>
-	<div id="farmprogress" class="resBar"><p class="resText">
-	  Farms: <span id="farm">0</span> &nbsp&nbsp Cost: <span id="farmCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="farmCosts"> </span><br><br>
+		Adds: space for 2 farmers<br>
+		</p></div>
+	<div id="farmprogress" class="buildBar"><p class="buildText">
+	  Farms [<span id="farm">0</span>]
 	</p></div></div>
 
 <div id="barnBuild" class="hide buildingButton" onclick='addBuilding("barn")'>
-	<div id="barnprogress" class="resBar"><p class="resText">
-	  Barns: 	<span id="barn">0</span> &nbsp&nbsp Cost: <span id="barnCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="barnCosts"> </span><br><br>
+		Adds: 100 wood storage<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 rock storage<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 food storage
+		</p></div>
+	<div id="barnprogress" class="buildBar"><p class="buildText">
+	  Barns [<span id="barn">0</span>]
 	</p></div></div>
 
 <div id="millBuild" class="hide buildingButton" onclick='addBuilding("mill")'>
-	<div id="millprogress" class="resBar"><p class="resText">	
-	  Sawmills: <span id="mill">0</span> &nbsp&nbsp Cost: <span id="millCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="millCosts"> </span><br><br>
+		Adds: space for 3 mill workers<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 lumber storage
+		</p></div>	
+	<div id="millprogress" class="buildBar"><p class="buildText">	
+	  Sawmills [<span id="mill">0</span>]
 	  </p></div></div>
 
 <div id="workshopBuild" class="hide buildingButton" onclick='addBuilding("workshop")'>
-	<div id="workshopprogress" class="resBar"><p class="resText">
-	  Workshops: <span id="workshop">0</span> &nbsp&nbsp Cost: <span id="workshopCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="workshopCosts"> </span><br><br>
+		Adds: space for 3 masons<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp200 stone storage
+		</p></div>
+	<div id="workshopprogress" class="buildBar"><p class="buildText">
+	  Workshops [<span id="workshop">0</span>]
 	  </p></div></div>
 
 <div id="hutBuild" class="hide buildingButton" onclick='addBuilding("hut")'>
-	<div id="hutprogress" class="resBar"><p class="resText">
-	  Huts: <span id="hut">0</span> &nbsp&nbsp Cost: <span id="hutCosts">" "</span>
+	<div class="tooltiptext">
+		<p>Requires (3) workers to build<br>
+		Cost:&nbsp<span id="hutCosts"> </span><br><br>
+		Adds: space for 1 new settler<br>
+		</p></div>
+	<div id="hutprogress" class="buildBar"><p class="buildText">
+	  Huts [<span id="hut">0</span>]
 	  </p></div></div>
 
-<div id="studioBuild" class="hide buildingButton" onclick='addBuilding("studio")'>
-	<div id="studioprogress" class="resBar"><p class="resText">
-	  Studios: <span id="studio">0</span> &nbsp&nbsp Cost: <span id="studioCosts">" "</span>
+<div id="labBuild" class="hide buildingButton" onclick='addBuilding("lab")'>
+	<div class="tooltiptext">
+		<p>Requires (4) workers to build<br>
+		Cost:&nbsp<span id="labCosts"> </span><br><br>
+		Adds: space for 1 researcher<br>
+		</p></div>
+	<div id="labprogress" class="buildBar"><p class="buildText">
+	  Lab Space [<span id="lab">0</span>]
 	  </p></div></div>
 
 </tabs>
@@ -473,26 +324,54 @@ function ShowPanel(show){
 
 <tabs class="none" id="third">
 
-<h2>Research and Planning</h2>
+<h2>Research</h2>
 
 <div class="researchButton" id="FarmEquip" onclick='SwapActiveRes("FarmEquip")'>
-<div id="resBar1" class="resBar"><p class="resText">
-Farm Equipment</p></div></div>
+	<div id="FarmEquipresBar" class="resBar">
+		<p class="resText">Farm Equipment</p>
+	</div>
+	<div class="tooltiptext">
+		<br>Takes 1000 research<br>
+		Uses 2 wood and 1 lumber per research<br><br>
+		Improves farmers' food output by 50%<br><br>
+	</div>
+</div>
 
 <div class="researchButton" id="StoneAxe" onclick='SwapActiveRes("StoneAxe")'>
-<div id="ResTest" class="resBar"><p class="resText">
-Stone Axes</p></div></div>
+	<div id="StoneAxeresBar" class="resBar">
+		<p class="resText">Stone Axes</p>
+	</div>
+	<dvi class="tooltiptext">
+		<br>Takes 1500 research<br>
+		Uses 1 lumber and 3 stone per research<br><br>
+		Improves woodcutter output by 50%<br><br>
+	</div>
+</div>
 
-<div class="researchButton" id="Smelting" onclick='SwapActiveRes("Smelting")'>
-<div id="ResTest" class="resBar"><p class="resText">
-Smelting</p></div></div>
+<div class="researchButton hide" id="Smelting" onclick='SwapActiveRes("Smelting")'>
+	<div id="SmeltingresBar" class="resBar">
+		<p class="resText">Smelting</p>
+	</div>
+	<dvi class="tooltiptext">
+		<br>Takes 2000 research<br>
+		Uses 5 wood and 3 rock per research<br><br>
+		Unlocks metal resouces<br><br>
+	</div>
+</div>
 
-<div class="researchButton" id="Metalwork" onclick='SwapActiveRes("Metalwork")'>
-<div id="ResTest" class="resBar"><p class="resText">
-Metalworking</p></div></div>
+<div class="researchButton hide" id="Metalwork" onclick='SwapActiveRes("Metalwork")'>
+	<div id="MetalworkresBar" class="resBar">
+		<p class="resText">Metalworking</p>
+	</div>
+	<dvi class="tooltiptext">
+		<br>Takes 3500 research<br>
+		Uses 1 metal per research<br><br>
+		Allows something something metal?<br><br>
+	</div>	
+</div>
 
-<div class="researchButton"><div id="ResTest" class="resBar"><p class="resText">research thing"</p></div></div>
-<div class="researchButton"><div id="ResTest" class="resBar"><p class="resText">text here</p></div></div>
+<div class="researchButton hide"><div id="ResTest" class="resBar"><p class="resText">research thing"</p></div></div>
+<div class="researchButton hide"><div id="ResTest" class="resBar"><p class="resText">text here</p></div></div>
 
 
 
@@ -506,11 +385,20 @@ Metalworking</p></div></div>
 <tabs class="none" id="fourth">
 <h2>Council Hall<h2>
 
-<div class="council" id="buildCounc" onclick="BuildCouncil()"><p>Build a Town Hall in which the Council can meet.</p>
-<p>Cost: 200 wood, 200 rock, 400 lumber, 300 stone</p>
-</div>
-</tabs>
 
+<div id="buildCounc" class="council" onclick='addBuilding("councilhall")'> 
+	<div class="tooltiptext">
+		<p>Requires (10) workers to build<br>
+		Cost: 200 wood, 200 rock,<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp400 lumber, 300 stone<br><br>
+		Unlocks research
+		</p></div>
+	<div id="councilhallprogress" class="councilbuildBar"><p class="buildText">
+	  Build a Town Hall in which<br>the Council can meet.
+	</p></div></div>
+
+
+
+<div class="hide" id="council1">The next meeting will be held after sufficient progress is made</div>
 
 
 
