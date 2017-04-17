@@ -7,8 +7,18 @@ var Stuff = { //the production of materials of all kinds
 	farm:{workers:0,	buildingwork:0.1,	maxworkers:0,									workbonus:1,			   unlocked:0, make:{food:3}		},
 	lumber:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:100, 	workbonus:1, storebonus:1, unlocked:0, make:{lumber:1,wood:-.5}	},
 	stone:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:0, 	workbonus:1, storebonus:1, unlocked:0, make:{stone:1,rock:-1}	},
+	copper:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{copper:.1, rock:-2}},
+	tin:{workers:0,		buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
+	bronze:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
+	gold:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
+	coal:{workers:0,		buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
+	iron:{},
+	steel:{},
+	zinc:{},//unlock some metals as you make more mines - trade for others that you don't have in your area
+	brass:{},
 
-	
+
+
 	research:{workers:0,	buildingwork:0,		maxworkers:0,					workbonus:1,		   unlocked:0},
 	
 /* Ideas for stuff to add
@@ -28,7 +38,7 @@ var Buildings = {  //if addWorker property key is "free", it will actually add f
 	mill:	{count:0, buildWorkers:3, buildTime:10,unlocked:false, addstorage:{lumber:300}, 	addworker:{lumber:3},	cost:{wood:300, rock:50},	unlock:"lumber",costratio:2.5,	needsStuffJobs:true,	buildOnce:false,	statement:"Process the wood into boards at the sawmill"},
 	workshop:{count:0,buildWorkers:3, buildTime:12,unlocked:false, addstorage:{stone:200},		addworker:{stone:3},	cost:{lumber:200,rock:200},	unlock:"stone",	costratio:2.5,	needsStuffJobs:true,	buildOnce:false,	statement:"Workshops will allow masons to cut raw rock into stone"},
 	hut:	{count:0, buildWorkers:3, buildTime:8, unlocked:false, 								addworker:{free:1},		cost:{lumber:200,stone:100},unlock:"free",	costratio:1.2,	needsStuffJobs:false,	buildOnce:false,	statement:"With the boards from the mill and cut stones you can build new housing structures"},
-	studio: {count:0, buildWorkers:4, buildTime:20,unlocked:false, 			addworker:{research:1},		 cost:{wood:100,lumber:300,stone:200},		unlock:"research",costratio:1.3,needsStuffJobs:true,	buildOnce:false,	statement:"During the first meeting, the Council decideds to begin research and planning to recover lost technologies./nYou can now build additional space at the back for the Town Hall for research."},
+	lab: {count:0, buildWorkers:4, buildTime:20,unlocked:false, 			addworker:{research:1},		 cost:{wood:100,lumber:300,stone:200},		unlock:"research",costratio:1.3,needsStuffJobs:true,	buildOnce:false,	statement:"During the first meeting, the Council decideds to begin research and planning to recover lost technologies.<br>You can now build laboratory space at the back of the Town Hall for research."},
 
 
 	councilhall:{count:0,buildWorkers:10, buildTime:50,  unlocked:false,						cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlock:"free", 	costratio:1,	needsStuffJobs:false,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held soon."},
@@ -129,7 +139,7 @@ function addBuilding(buildkey){
 	if(canbuild && buildBuild == "no"){
 
 		//set everything up for construction function
-		buildBuild = buildkey;
+		buildBuild = buildkey; //this will cause buildUp() to start running true in the game loop
 		buildWorkers =  Buildings[buildkey]["buildWorkers"];
 		Stuff.free.workers -= buildWorkers;
 		document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
@@ -146,42 +156,16 @@ function addBuilding(buildkey){
 			Stuff[keyy]["stored"]-=actualcost;
 			document.getElementById(keyy).innerHTML = Stuff[keyy]["stored"];
 		
-			costTxt += Math.round(actualcost*Buildings[buildkey]["costratio"]) + "&nbsp" + keyy + ",&nbsp";
+			costTxt += Math.round(actualcost*Buildings[buildkey]["costratio"]) + "&nbsp" + keyy + "<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
 		}
-		costTxt = costTxt.slice(0,-6);
+		costTxt = costTxt.slice(0,-56);
 
 
 		if (!Buildings[buildkey]["buildOnce"]){
 			document.getElementById(buildkey+"Costs").innerHTML = costTxt;	 
 		}
 
-		//add storage space
-		for(var keyyy in Buildings[buildkey]["addstorage"]){
-			Stuff[keyyy]["maxstored"]+=Buildings[buildkey]["addstorage"][keyyy];
-			document.getElementById(keyyy + "Max").innerHTML = Stuff[keyyy]["maxstored"];
-		}
 
-		//add worker space (and free workers)
-		for(var key4 in Buildings[buildkey]["addworker"]){
-
-			if(key4 == "free"){
-				Stuff.free.workers+=Buildings[buildkey]["addworker"]["free"];
-				allworkers+=Buildings[buildkey]["addworker"]["free"];
-				document.getElementById("freeworkers").innerHTML = Stuff["free"]["workers"];
-			} else {
-			Stuff[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
-			document.getElementById(key4 + "workersMax").innerHTML = Stuff[key4]["maxworkers"];
-			}
-		}
-
-
-		//fianlly add the building (adding last prevent errors with calculating "actualcost")
-
-		Buildings[buildkey]["count"]++;
-
-		if (!Buildings[buildkey]["buildOnce"]){
-			document.getElementById(buildkey).innerHTML = Buildings[buildkey]["count"];
-		}
 
 		//no we can't :(
 	} else if (buildBuild != "no"){
@@ -198,8 +182,47 @@ function buildUp(){
 
 	if (construction<100){
 		construction+=interval;
+		if(construction>99){
+			construction = 100;
+		}
 		document.getElementById(buildBuild + "progress").style.width = construction.toString() + "%"; //add html + css for the progress bars
 	} else {
+		finishBuilding(buildBuild);
+	}
+}
+
+function finishBuilding(buildkey){
+	//re-direct to special building calls
+	if(buildkey == "councilhall"){
+		finishCouncil();
+	} else {
+
+
+		//add storage space
+		for(var keyyy in Buildings[buildkey]["addstorage"]){
+			Stuff[keyyy]["maxstored"]+=Buildings[buildkey]["addstorage"][keyyy];
+			document.getElementById(keyyy + "Max").innerHTML = Stuff[keyyy]["maxstored"];
+		}
+		//add worker space (and free workers)
+		for(var key4 in Buildings[buildkey]["addworker"]){
+			if(key4 == "free"){
+				Stuff.free.workers+=Buildings[buildkey]["addworker"]["free"];
+				allworkers+=Buildings[buildkey]["addworker"]["free"];
+				document.getElementById("freeworkers").innerHTML = Stuff["free"]["workers"];
+				document.getElementById("totalWorkers").innerHTML = allworkers;
+			} else {
+			Stuff[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
+			document.getElementById(key4 + "workersMax").innerHTML = Stuff[key4]["maxworkers"];
+			}
+		}
+
+		//finally add the building (adding last prevent errors with calculating "actualcost")
+		Buildings[buildkey]["count"]++;
+		if (!Buildings[buildkey]["buildOnce"]){
+			document.getElementById(buildkey).innerHTML = Buildings[buildkey]["count"];
+		}
+
+		//and reset freeworkers, construction bar, and buildBuild to "no"
 		Stuff.free.workers += buildWorkers;
 		document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
 		construction = 0;
@@ -207,8 +230,6 @@ function buildUp(){
 		buildBuild = "no";
 	}
 }
-
-
 /////////////////////////////////////////////////////////////////////////////unlocking buildings, resources//////////////////////////////////////////////////////////////////////////////////
 function unlock(unlockkey){
 
@@ -247,15 +268,16 @@ function unlock(unlockkey){
 
 ////////////////////////////////////////////////////////////////////////////research////////////////////////////////////////////////////////////////////////////////////
 function SwapActiveRes(x){
-	
 	ActiveRes = x;
+	document.getElementById("research").innerHTML = Research[x]["completion"];
+	document.getElementById("researchMax").innerHTML = Research[x]["totalRes"];
 }//this probably is not needed? need to make buttons and stuff
 
 var Research = {
-	FarmEquip:	{prize:0, resCost:{wood:2,lumber:1}, 	completion:0, done:false},
-	StoneAxe:	{prize:1, resCost:{lumber:1,stone:3}, 	completion:0, done:false},
-	Smelting:	{prize:2, resCost:{wood:5,rock:3},	completion:0, done:false},
-	Metalwork:	{prize:3, resCost:{metal:1},		completion:0, done:false},
+	FarmEquip:	{prize:0, resCost:{wood:2,lumber:1}, 	totalRes:1000, completion:0, done:false},
+	StoneAxe:	{prize:1, resCost:{lumber:1,stone:3}, 	totalRes:1500, completion:0, done:false},
+	Smelting:	{prize:2, resCost:{wood:5,rock:3},		totalRes:2000, completion:0, done:false},
+	Metalwork:	{prize:3, resCost:{metal:1},			totalRes:3500, completion:0, done:false},
 
 }
 
@@ -271,24 +293,24 @@ function researchIncr(resUp){ //somewhy research progresses even though no resea
 
 			if(Stuff[resKey]["stored"]-incr<0){
 				make = false;
-				console.log("not enough for research");
+				console.log("not enough of some resource for research");
 			}
 		}
 
 		if(make) {
-			console.log("researching...");
 			for(var incrKey in Research[resUp]["resCost"]){
 
-				Stuff[incrKey]["stored"]-= Research[resUp]["resCost"][resKey]*Stuff["research"]["workers"]*Stuff["research"]["workbonus"];
+				Stuff[incrKey]["stored"]-= Research[resUp]["resCost"][incrKey]*Stuff["research"]["workers"]*Stuff["research"]["workbonus"];
 				document.getElementById(incrKey).innerHTML = Stuff[incrKey]["stored"];
 			}
-			Research[resUp]["completion"]+= Stuff["research"]["workers"];
-			strg = Research[resUp]["completion"] + "%";
-			document.getElementById("resBar1").style.width = strg;
-
-			if(Research[resUp]["completion"]==100){
-				doBonus(resUp);
+			Research[resUp]["completion"]+= Stuff["research"]["workers"]; 
+			document.getElementById("research").innerHTML = Research[resUp]["completion"];
+			document.getElementById(resUp + "resBar").style.width = Research[resUp]["completion"]/Research[resUp]["totalRes"]*100 + "%";
+			if(Research[resUp]["completion"]>=Research[resUp]["totalRes"]){
+				console.log("research done!");
 				Research[resUp]["done"] = true;
+				doBonus(resUp);
+				ActiveRes = " ";
 			}
 		}
 	}
@@ -297,7 +319,8 @@ function researchIncr(resUp){ //somewhy research progresses even though no resea
 function doBonus(resUp){
 	switch (Research[resUp]["prize"]) {
 	    case 0:
-		document.getElementById("statement"),innerHTML = "Research complete: Farm equipment improves farmer output by 50%"
+			document.getElementById("statement"),innerHTML = "Research complete: Farm equipment improves farmer output by 50%";
+			alert("case0");
 	        Stuff.farm.workbonus = Stuff.farm.workbonus*1.5;
 	        break;
 	    case 1:
@@ -322,15 +345,17 @@ function doBonus(resUp){
 
 
 ////////////////////////////////////////////////////////////////////////////miscilanious functions working on////////////////////////////////////////////////////////////////////////////////////
-function BuildCouncil(){
-	console.log("BuildCouncil() run");
-	if(addBuilding("councilhall")){
-		Buildings.councilhall.unlocked = true;
-		document.getElementById("buildCounc").style.display = "none";
-		document.getElementById("statement").innerHTML = "During the first meeting, the Council decideds to begin research and planning to recover lost technologies./nYou can now build additional space at the back for the Town Hall for research.";
-		document.getElementById("butt3").style.display = "inline";
-		unlock("studio")
-	}
+
+function finishCouncil(){
+	Buildings.councilhall.unlocked = true;
+	document.getElementById("buildCounc").style.display = "none";
+	document.getElementById("statement").innerHTML = "During the first meeting, the Council decideds to begin research and planning to recover lost technologies./nYou can now build additional space at the back for the Town Hall for research.";
+	document.getElementById("butt3").style.display = "inline";
+	unlock("lab");
+	document.getElementById("council1").style.visibility = "visible";
+	Stuff.free.workers += Buildings.councilhall.buildWorkers;
+	document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
+	buildBuild = "no";
 }
 
 
@@ -389,8 +414,8 @@ function run(){
 	}
 
 	//*******************************************
-	//check for events met to unlock new content
-	//*******************************************
+//check for events met to unlock new content
+	
 
 	if(Buildings.shack.count==2&&shackToken1==0){
 		document.getElementById("statement").innerHTML = "Soon another wanderer joins you in your work. More will surely come and stay if you have space to house them."; counter1 = 0;
@@ -456,11 +481,11 @@ function run(){
 		document.getElementById("butt4").style.display = "inline";
 	}
 
-	//phase 1 done?//
+//phase 1 done? - phase 2 unlocks from research - more phase 3 unlocks below//
+	//*******************************************
 
 
-
-	//start the construction of new building
+	//continue the construction of new building
 	if (buildBuild != "no"){
 		buildUp()
 	}
@@ -469,7 +494,7 @@ function run(){
 	//////increment research///////////////////
 
 	if(ActiveRes != " " && !Research[ActiveRes]["done"]){
-		console.log("trying to research");
+		console.log("trying to research" + ActiveRes);
 		researchIncr(ActiveRes);
 	}
 
@@ -512,7 +537,7 @@ function run(){
 
 //document.getElementById('demo').innerHTML = Date();
 
-} setInterval(run,500);
+} setInterval(run,300);
 
 
 ////////////////////////////////end of game loop//////////////////////////////
@@ -565,7 +590,6 @@ function createMansions() {
 */
 
 /* Story ideas
-"You are currently overseeing construction of another building"
 
 Once you build up enough, barbarians attack you (must maintain troops and improve their armor/weapons - later can build walls or other fortifications to reduce number of soldiers needed for protection)
 Once the city is very large whoever started the Great War comes for you
@@ -573,7 +597,8 @@ Say that you grow old and you pick a new leader after some time - could be relat
 Some sort of exploring/making contact with the Great City or other civilizations
 Electrical power
 Add a hint button? - na, this can be handled in a subreddit thread
-Add in that it take free workers in the camp to build buildings (a certain number for a type of building) maybe it takes longer the more you have built? time*fnc(count,ratio)
-Add in one researcher - in council hall make a buildings for "add space in the hall for reseachers" to increase the numer of researchers max
 Mkae it take random time for new workers to join up?
+Make buildBuild into an array and the call for buildUp in a for key in obj loop to have multiple buildings at the same time
+
+"As the town grows in size and reputation, more skilled workers are attracted. They offer insight and specialty on increasingly complex opperations"
 */
