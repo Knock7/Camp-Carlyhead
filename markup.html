@@ -7,44 +7,20 @@
 
 
 
-<script src="code.js"></script> <!-----------------------------------------------------------------change version number---------->
+<script src="script.js"></script> <!-----------------------------------------------------------------change version number---------->
 
 </head>
 
 
-<body onload='populate()'>
-
-<script>
-var select = " "; //to pick the destination panel
-var Tabs = ["first", "second", "third", "fourth", "fifth"];
-var mark1 = "first";
-var mark2 = "second";
-function Panel(select){
-if(!(mark1 == select || mark2 == select)){
-mark2 = mark1;
-mark1 = select;
-	for(i=0;i<Tabs.length; i++) { 
-		if(mark1 == Tabs[i] || mark2 == Tabs[i]){
-			document.getElementById(select).style.display = "block";
-			
-		} else {
-			document.getElementById(Tabs[i]).style.display = "none";
-		}
-	}
-}
-}
-function ShowPanel(show){
-	document.getElementById("show").style.visibility = "visible";
-}
-</script>
+<body>
 
 <header id="closeMe" class="alert">
-	<h1 class="closebtn" onclick="this.parentElement.style.display='none';populate()">&times;</h1>
+	<h1 class="closebtn">&times;</h1>
 	<h2>Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a stream and a field with wild animals you can hunt, and begin work on a more permanent residence.</h2>
 </header>
 
 <header>
-	<h1 id="title" onclick="testFunc()">A Lonely Beginning</h1>
+	<h1 id="title">A Lonely Beginning</h1>
 	<h3 id="statement" style="color:lightgrey;">&nbsp</h3>
 </header>
 
@@ -56,150 +32,156 @@ function ShowPanel(show){
 <p id="woodStuff" > Wood: <span id="wood"> 100 </span> / <span id="woodMax" class="right">100</span></p> 
 <p id="rockStuff" class="hide"> Rock: <span id="rock"> 0 </span> / <span id="rockMax" class="right">100</span></p>   
 <div id="farmStuff"></div>
-<p id="millStuff" class="hide"> Lumber: <span id="lumber"> 50 </span> / <span id="lumberMax" class="right">100</span></p></div>  
-<p id="workshopStuff" class="hide"> Stone: <span id="stone"> 50 </span> / <span id="stoneMax" class="right">100</span></p></div>  
-<p id="labStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right">100</span></p></div>
+<p id="millStuff" class="hide"> Lumber: <span id="lumber"> 0 </span> / <span id="lumberMax" class="right">0</span></p></div>  
+<p id="workshopStuff" class="hide"> Stone: <span id="stone"> 0 </span> / <span id="stoneMax" class="right">0</span></p></div>  
+<p id="labStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p></div>
 
+
+<!-- can only unlock one resource per id right now. maybe put "unlock stuff ids"" in main object?-->
 </resources>
 
 
 <buttons>
-<span id="butt1" class="butt none" onclick='Panel("first")'>JOBS</span>
-<span id="butt2" class="butt none" onclick='Panel("second")'>BUILDINGS</span>
-<span id="butt3" class="butt none" onclick='Panel("third")'>RESEARCH</span>
-<span id="butt4" class="butt none" onclick='Panel("fourth")'>COUNCIL</span>
-<span id="butt5" class="butt none" onclick='Panel("fifth")'>Fifth</span>
+<span id="butt1" class="butt none">JOBS</span>
+<span id="butt2" class="butt none">BUILDINGS</span>
+<span id="butt3" class="butt none">RESEARCH</span>
+<span id="butt4" class="butt none">COUNCIL</span>
+<span id="butt5" class="butt none">Fifth Panel</span>
 </buttons>
 
 
 
 <!--/////////////////////////////////////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
 
-<tabs id="first" style="float:left;">
-<h2>Jobs</h2>
+<tabs id="pan1" style="float:left;">
+	<h2>Jobs</h2>
 
-<div id="camp" class="JobBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspCAMP&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
+	<div id="camp" class="JobBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspCAMP&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
 
-	<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
-		<b>&nbspFree Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp</b>
-	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
-
-
-<div id="field" class="JobBox" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(field.jpg); display:inline-block;">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspFIELDS&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("food",1)'>
-		<b>&nbspHunters: <span id="foodworkers">0</span> / <span id="foodworkersMax">100</span>&nbsp</b>
-	</div>
-	<div class="userRemove" onclick='removeworker("food",1)'> 
-		<b> X </b>
-	</div>
-	<p style="font-size:4pt;"> </p>
-
-	<div id="farmJob" class="none">
-		<div class="userAdd" onclick='moveworker("farm",1)'>
-			<b>&nbspFarmers: <span id="farmworkers">0</span> / <span id="farmworkersMax">100</span>&nbsp</b>
+		<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
+			<b>&nbspFree Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp</b>
 		</div>
-		<div class="userRemove" onclick='removeworker("farm",1)'>
+		<p style="font-size:4pt;"> </p>
+	</div>
+
+	<div id="field" class="JobBox" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(field.jpg); display:inline-block;">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspFIELDS&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd">
+			<b>&nbspHunters: <span id="foodworkers">0</span> / <span id="foodworkersMax">100</span>&nbsp</b>
+		</div>
+		<div class="userRemove"> 
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
+
+		<div id="farmJob" class="none">
+			<div class="userAdd">
+				<b>&nbspFarmers: <span id="farmworkers">0</span> / <span id="farmworkersMax">100</span>&nbsp</b>
+			</div>
+			<div class="userRemove">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+	</div>
+
+	<div id="forest" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspFOREST&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd">
+			<b>&nbspWoodcutters: <span id="woodworkers">0</span> / <span id="woodworkersMax">3</span>&nbsp</b>
+		</div>
+		<div class="userRemove">
 			<b> X </b>
 		</div>
 		<p style="font-size:4pt;"> </p>
 	</div>
-</div>
 
+	<div id="quarry" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspQUARRY&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
 
-<div id="forest" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspFOREST&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("wood",1)'>
-		<b>&nbspWoodcutters: <span id="woodworkers">0</span> / <span id="woodworkersMax">3</span>&nbsp</b>
+		<div class="userAdd">
+			<b>&nbspRockcutters: <span id="rockworkers">0</span> / <span id="rockworkersMax">1</span>&nbsp</b>
+		</div>
+		<div class="userRemove">
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<div class="userRemove" onclick='removeworker("wood",1)'>
-		<b> X </b>
+
+	<div id="millJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspSAWMILLS&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd">
+			<b>&nbspMill Workers: <span id="lumberworkers">0</span> / <span id="lumberworkersMax">1</span>&nbsp</b>
+		</div>
+		<div class="userRemove">
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
 
+	<div id="workshopJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspWORKSHOPS&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
 
-<div id="quarry" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspQUARRY&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("rock",1)'>
-		<b>&nbspRockcutters: <span id="rockworkers">0</span> / <span id="rockworkersMax">1</span>&nbsp</b>
+		<div class="userAdd">
+			<b>&nbspMasons: <span id="stoneworkers">0</span> / <span id="stoneworkersMax">1</span>&nbsp</b>
+		</div>
+		<div class="userRemove">
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<div class="userRemove" onclick='removeworker("rock",1)'>
-		<b> X </b>
+
+	<div id="labJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbspLABORATORY&nbsp</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd">
+			<b>&nbspResearchers: <span id="researchworkers">0</span> / <span id="researchworkersMax">0</span>&nbsp</b>
+		</div>
+		<div class="userRemove">
+			<b> X </b>
+		</div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
 
+	<div id="blank" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+		<p style="font-size:4pt;"> </p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
+		<p style="font-size:25pt;"> </p>
 
-<div id="millJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspSAWMILLS&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("lumber",1)'>
-		<b>&nbspMill Workers: <span id="lumberworkers">0</span> / <span id="lumberworkersMax">1</span>&nbsp</b>
+		<div class="userAdd"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
+		<div class="userRemove"></div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<div class="userRemove" onclick='removeworker("lumber",1)'>
-		<b> X </b>
+
+	<div id="blank2" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+		<p style="font-size:4pt;"> </p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
+		<div class="userRemove"></div>
+		<p style="font-size:4pt;"> </p>
 	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
-
-
-<div id="workshopJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspWORKSHOPS&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("stone",1)'>
-		<b>&nbspMasons: <span id="stoneworkers">0</span> / <span id="stoneworkersMax">1</span>&nbsp</b>
-	</div>
-	<div class="userRemove" onclick='removeworker("stone",1)'>
-		<b> X </b>
-	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
-
-
-<div id="labJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn"><b>&nbspLABORATORY&nbsp</b></span><br>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd" onclick='moveworker("research",1)'>
-		<b>&nbspResearchers: <span id="researchworkers">0</span> / <span id="researchworkersMax">0</span>&nbsp</b>
-	</div>
-	<div class="userRemove" onclick='removeworker("research",1)'>
-		<b> X </b>
-	</div>
-	<p style="font-size:4pt;"> </p>
-</div>
-
-
-<div id="blank" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
-	<p style="font-size:4pt;"> </p>
-	<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
-	<p style="font-size:25pt;"> </p>
-
-	<div class="userAdd"></div>
-	<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
-	<div class="userRemove"></div>
-	<p style="font-size:4pt;"> </p>
-</div>
 
 </tabs>
 
@@ -207,15 +189,13 @@ function ShowPanel(show){
 
 
 
-
-
 <!--/////////////////////////////////////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
 
-<tabs id="second">
+<tabs id="pan2">
 <h2>Buildings</h2>
 
 
-<div id="shackBuild" class="buildingButton" onclick='addBuilding("shack")'> 
+<div id="shackBuild" class="buildingButton"> 
 	<div class="tooltiptext">
 		<p>Requires (1) worker to build<br>
 		Cost:&nbsp<span id="shackCosts">30 wood</span><br><br>
@@ -225,7 +205,7 @@ function ShowPanel(show){
 	  Shacks [<span id="shack">1</span>]
 	</p></div></div>
 
-<div id="shedBuild" class="hide buildingButton" onclick='addBuilding("shed")'>
+<div id="shedBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (2) workers to build<br>
 		Cost:&nbsp<span id="shedCosts">30 wood</span><br><br>
@@ -236,7 +216,7 @@ function ShowPanel(show){
 	  Woodsheds [<span id="shed">0</span>]
  	</p></div></div>
 
-<div id="mineBuild" class="hide buildingButton" onclick='addBuilding("mine")'>
+<div id="mineBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="mineCosts"> </span><br><br>
@@ -247,7 +227,7 @@ function ShowPanel(show){
 	  Mineshafts [<span id="mine">0</span>]
  	</p></div></div>
 
-<div id="farmBuild" class="hide buildingButton" onclick='addBuilding("farm")'>
+<div id="farmBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="farmCosts"> </span><br><br>
@@ -257,7 +237,7 @@ function ShowPanel(show){
 	  Farms [<span id="farm">0</span>]
 	</p></div></div>
 
-<div id="barnBuild" class="hide buildingButton" onclick='addBuilding("barn")'>
+<div id="barnBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="barnCosts"> </span><br><br>
@@ -269,18 +249,18 @@ function ShowPanel(show){
 	  Barns [<span id="barn">0</span>]
 	</p></div></div>
 
-<div id="millBuild" class="hide buildingButton" onclick='addBuilding("mill")'>
+<div id="millBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="millCosts"> </span><br><br>
 		Adds: space for 3 mill workers<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 lumber storage
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp300 lumber storage
 		</p></div>	
 	<div id="millprogress" class="buildBar"><p class="buildText">	
 	  Sawmills [<span id="mill">0</span>]
 	  </p></div></div>
 
-<div id="workshopBuild" class="hide buildingButton" onclick='addBuilding("workshop")'>
+<div id="workshopBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="workshopCosts"> </span><br><br>
@@ -291,7 +271,7 @@ function ShowPanel(show){
 	  Workshops [<span id="workshop">0</span>]
 	  </p></div></div>
 
-<div id="hutBuild" class="hide buildingButton" onclick='addBuilding("hut")'>
+<div id="hutBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
 		Cost:&nbsp<span id="hutCosts"> </span><br><br>
@@ -301,7 +281,7 @@ function ShowPanel(show){
 	  Huts [<span id="hut">0</span>]
 	  </p></div></div>
 
-<div id="labBuild" class="hide buildingButton" onclick='addBuilding("lab")'>
+<div id="labBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (4) workers to build<br>
 		Cost:&nbsp<span id="labCosts"> </span><br><br>
@@ -322,11 +302,11 @@ function ShowPanel(show){
 
 <!--/////////////////////////////////////////////////////////////////research tab//////////////////////////////////////////////////////////////////////////-->
 
-<tabs class="none" id="third">
+<tabs class="none" id="pan3">
 
 <h2>Research</h2>
 
-<div class="researchButton" id="FarmEquip" onclick='SwapActiveRes("FarmEquip")'>
+<div class="researchButton" id="FarmEquip">
 	<div id="FarmEquipresBar" class="resBar">
 		<p class="resText">Farm Equipment</p>
 	</div>
@@ -337,7 +317,7 @@ function ShowPanel(show){
 	</div>
 </div>
 
-<div class="researchButton" id="StoneAxe" onclick='SwapActiveRes("StoneAxe")'>
+<div class="researchButton" id="StoneAxe">
 	<div id="StoneAxeresBar" class="resBar">
 		<p class="resText">Stone Axes</p>
 	</div>
@@ -348,7 +328,7 @@ function ShowPanel(show){
 	</div>
 </div>
 
-<div class="researchButton hide" id="Smelting" onclick='SwapActiveRes("Smelting")'>
+<div class="researchButton hide" id="Smelting">
 	<div id="SmeltingresBar" class="resBar">
 		<p class="resText">Smelting</p>
 	</div>
@@ -359,7 +339,7 @@ function ShowPanel(show){
 	</div>
 </div>
 
-<div class="researchButton hide" id="Metalwork" onclick='SwapActiveRes("Metalwork")'>
+<div class="researchButton hide" id="Metalwork">
 	<div id="MetalworkresBar" class="resBar">
 		<p class="resText">Metalworking</p>
 	</div>
@@ -382,39 +362,38 @@ function ShowPanel(show){
 
 <!--/////////////////////////////////////////////////////////////////council tab//////////////////////////////////////////////////////////////////////////-->
 
-<tabs class="none" id="fourth">
+<tabs class="none" id="pan4">
 <h2>Council Hall<h2>
 
 
-<div id="buildCounc" class="council" onclick='addBuilding("councilhall")'> 
+<div id="buildCounc" class="council"> 
 	<div class="tooltiptext">
 		<p>Requires (10) workers to build<br>
-		Cost: 200 wood, 200 rock,<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp400 lumber, 300 stone<br><br>
-		Unlocks research
-		</p></div>
-	<div id="councilhallprogress" class="councilbuildBar"><p class="buildText">
-	  Build a Town Hall in which<br>the Council can meet.
-	</p></div></div>
+			Cost: 200 wood, 200 rock,<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp400 lumber, 300 stone<br><br>
+			Unlocks research
+		</p>
+	</div>
+	<div id="councilhallprogress" class="councilbuildBar">
+		<p class="buildText">
+	  		Build a Town Hall in which<br>the Council can meet.
+		</p>
+	</div>
+</div>
 
 
 
 <div class="hide" id="council1">The next meeting will be held after sufficient progress is made</div>
+</tabs>
 
 
 
 
 
-
-<tabs class="none" id="fifth"><p> this is the 5th section</p>
+<tabs class="none" id="pan5"><p> this is the 5th section</p>
 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
 </tabs>
 
 
-<!--
-<div>
-<button onclick="testFunc()">Try it</button>
-</div>
--->
 
 
 
