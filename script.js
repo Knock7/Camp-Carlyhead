@@ -75,8 +75,9 @@ var ActiveRes = " ";	//to set active research
 var make = true;	//to tell whether to make a research or resource increment (no if would be < 0 )
 var strg = "";
 var num = 1;			//to tell how many workers to add or remove
-var buildBuild = "no"	//if no, not building, otherwise building whatever is in the string
-var buildWorkers = 0;	//number of free workers to hold for construction
+var buildBuild = [];	//if empty, not building, otherwise building whatever is in the array - can have multiple values of same building
+var buildConstruct = [];//used to store completion of building with same index in buildBuild (0 to 100)
+var buildWorkers = 0;	//number of free workers to currently used for construction
 var time = 1000;		//time to construct a building
 var interval = 10;		//ammount of construction to do each run() cycle
 var construction = 0; 	//completion from 0 to 100 of the current building
@@ -217,16 +218,14 @@ function addBuilding(buildkey){
 	txtNotEnough = txtNotEnough.slice(0,-6);//remove the comma and space after the last entry
 
 	//yes we can!
-	if(canbuild && buildBuild == "no"){
+	if(canbuild){
 
 		//set everything up for construction function
-		buildBuild = buildkey; //this will cause buildUp() to start running true in the game loop - change to a push() on buildBuild array 
-		buildWorkers =  Buildings[buildkey]["buildWorkers"];
-		Stuff.free.workers -= buildWorkers;
+		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop - on buildBuild array 
+		buildConstruct.push(0);
+		buildWorkers +=  Buildings[buildkey]["buildWorkers"];
+		Stuff.free.workers -= Buildings[buildkey]["buildWorkers"];
 		document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
-
-		time = Buildings[buildBuild]["buildTime"];
-		interval = 100 / time;
 
  		costTxt = " ";
 		//pay for the building
@@ -262,7 +261,7 @@ function buildUp(){
 
 
 	if (construction<100){
-		construction+=interval;
+		construction+=(100/Buildings[buildkey]["buildTime"]); //need to loop through buildkeys in array 1
 		if(construction>99){
 			construction = 100;
 		}
@@ -439,7 +438,12 @@ function finishCouncil(){
 	buildBuild = "no";
 	construction = 0;
 }
-
+function isEmpty(object) {
+	for(var i in object) {
+		return true;
+	}
+	return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////increment resources////////////////////////////////////////////////////////////////////////////////////
 function incrRes(){ //increments resources (need to fix that it trys to make crafted stuff even when full - but! all positive crafted stuff must be full)
