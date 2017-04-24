@@ -195,7 +195,7 @@ function removeworker(lessworkkey,num){
 
 //////////////////////////////////////////////////////////////////////////add buildings////////////////////////////////////////////////////////////////////////////////
 function addBuilding(buildkey){
-
+console.log("building " + buildkey);
 	var canbuild = true; 
 	txtNotEnough = " ";
 
@@ -248,9 +248,7 @@ function addBuilding(buildkey){
 
 
 		//no we can't :(
-	} else if (buildBuild != "no"){
-		document.getElementById("statement").innerHTML = "You are busy overseeing construction already"; counter1 = 20;
-	} else {
+	}  else {
 
 		document.getElementById("statement").innerHTML = "Not enough "+ txtNotEnough +" to build " + buildkey; counter1 = 20;
 	}
@@ -259,22 +257,26 @@ function addBuilding(buildkey){
 
 function buildUp(){
 
-
-	if (construction<100){
-		construction+=(100/Buildings[buildkey]["buildTime"]); //need to loop through buildkeys in array 1
-		if(construction>99){
-			construction = 100;
+	for(i=0;i<buildBuild.length;i++){
+console.log("buildup() " + buildBuild[i]);
+console.log("buildContruct: " + buildConstruct[i]);
+		if (buildConstruct[i]<100){
+			buildConstruct[i]+=(100/Buildings[buildBuild[i]]["buildTime"]); //need to loop through buildkeys in array 1
+			if(buildConstruct[i]>99){
+				buildConstruct[i] = 100;//so the bar doesn't go over if there is a rounding error
+			}
+			document.getElementById(buildBuild[i] + "progress").style.width = buildConstruct[i].toString() + "%"; //add html + css for the progress bars
+		} else {
+			finishBuilding(buildBuild[i],i);//also send the index so that if there are more than one of a building it knows which to remove
 		}
-		document.getElementById(buildBuild + "progress").style.width = construction.toString() + "%"; //add html + css for the progress bars
-	} else {
-		finishBuilding(buildBuild);
 	}
 }
 
-function finishBuilding(buildkey){
+function finishBuilding(buildkey,index){
+console.log("finish building " + buildkey);
 	//re-direct to special building calls
 	if(buildkey == "councilhall"){
-		finishCouncil();
+		finishCouncil(index);
 	} else {
 
 
@@ -303,11 +305,14 @@ function finishBuilding(buildkey){
 		}
 
 		//and reset freeworkers, construction bar, and buildBuild to "no"
-		Stuff.free.workers += buildWorkers;
+		Stuff.free.workers += Buildings[buildkey]["buildWorkers"];
+console.log(Buildings[buildkey]["buildWorkers"]);
+console.log(Stuff.free.workers + " free workers");
+		buildWorkers -= Buildings[buildkey]["buildWorkers"];
 		document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
-		construction = 0;
-		document.getElementById(buildBuild + "progress").style.width = "0%";
-		buildBuild = "no";
+		document.getElementById(buildkey + "progress").style.width = "0%";
+		buildBuild.splice(index,1);
+		buildConstruct.splice(index,1);
 	}
 }
 /////////////////////////////////////////////////////////////////////////////unlocking buildings, resources//////////////////////////////////////////////////////////////////////////////////
@@ -426,7 +431,7 @@ function doBonus(resUp){
 
 ////////////////////////////////////////////////////////////////////////////miscilanious functions working on////////////////////////////////////////////////////////////////////////////////////
 
-function finishCouncil(){
+function finishCouncil(index){
 	Buildings.councilhall.unlocked = true;
 	document.getElementById("buildCounc").style.display = "none";
 	document.getElementById("statement").innerHTML = "During the first meeting, the Council decideds to begin research and planning to recover lost technologies./nYou can now build additional space at the back for the Town Hall for research.";
@@ -434,9 +439,10 @@ function finishCouncil(){
 	unlock("lab");
 	document.getElementById("council1").style.visibility = "visible";
 	Stuff.free.workers += Buildings.councilhall.buildWorkers;
+	buildWorkers -= Buildings.councilhall.buildWorkers;
 	document.getElementById("freeworkers").innerHTML = Stuff.free.workers;
-	buildBuild = "no";
-	construction = 0;
+	buildBuild.splice(index,1);
+	buildConstruct.splice(index,1);
 }
 function isEmpty(object) {
 	for(var i in object) {
@@ -571,8 +577,8 @@ function run(){
 	//*******************************************
 
 
-	//continue the construction of new building
-	if (buildBuild != "no"){ //change to test whether buildBuild is an empty array - buildBuild.length=0
+	/////////continue the construction of new building
+	if (buildBuild.length>0){
 		buildUp()
 	}
 
@@ -637,10 +643,9 @@ function testFunc(){
 	for(var x in Stuff){
     
 		Stuff[x]["stored"] = Stuff[x]["maxstored"];
-		console.log("inner part");
 	
 	}
-	console.log("clicked");
+	console.log("cheated");
 }
 
 
@@ -684,7 +689,6 @@ Some sort of exploring/making contact with the Great City or other civilizations
 Electrical power
 Add a hint button? - na, this can be handled in a subreddit thread
 Mkae it take random time for new workers to join up?
-Make buildBuild into an array and the call for buildUp in a for key in obj loop to have multiple buildings at the same time
 
 "As the town grows in size and reputation, more skilled workers are attracted. They offer insight and specialty on increasingly complex opperations"
 */
