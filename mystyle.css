@@ -177,12 +177,27 @@ div.userRemove:hover{
 	cursor:pointer;
 	border-color:grey;
 }
-body { 
-	background-image:linear-gradient(rgba(200,250,250,0.5),rgba(255,200,200,0.5)),  url(mountains2.jpg);
+body{ 
+	
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center; 
 	background-size:cover;
+	user-select: none;
+	transition:background-image .5s, opacity .5s;
+	background-image:linear-gradient(rgba(200,250,250,0.5),rgba(255,200,200,0.5)),  url(mountains2.jpg);
+	opacity:1;
+}
+body.alert2{
+	transition:background-image .5s, opacity .5s;
+	opacity: .1;
+	background-image:url(blank.jpg);
+}
+body.normal{ 
+	opacity:1;
+	transition:background-image .5s, opacity .5s;
+	transition-timing-function: ease-out;
+	background-image:linear-gradient(rgba(200,250,250,0.5),rgba(255,200,200,0.5)),  url(mountains2.jpg);
 }
 .closebtn {
     margin-left: 15px;
@@ -262,4 +277,12 @@ body {
 .researchButton:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+.councilMessage{
+	background-image:url("scroll.png");
+	width:450px; 
+	background-size: 450px 100%;
+	padding:25px 80px;
+	margin:auto;
+	font-family: "Times New Roman", serif;
 }
