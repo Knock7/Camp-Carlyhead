@@ -6,19 +6,21 @@
 
 var Stuff = { //the production of materials of all kinds
 
-//every job has a primary resouce for which they are named in the HTML. They may produce/consume other materials too.
-	free:{workers:1, 	unlocked:1},
-	food:{workers:0, 	buildingwork:0, 	maxworkers:100, stored:100, 	maxstored:100, 	workbonus:1, storebonus:1, unlocked:1, make:{food:1}		},
-	wood:{workers:0, 	buildingwork:0, 	maxworkers:3, 	stored:100, 	maxstored:100, 	workbonus:1, storebonus:1, unlocked:0, make:{wood:1}		},
-	rock:{workers:0, 	buildingwork:0, 	maxworkers:1, 	stored:20, 		maxstored:100, 	workbonus:1, storebonus:1, unlocked:0, make:{rock:1}		},
-	farm:{workers:0,	buildingwork:0.1,	maxworkers:0,									workbonus:1,			   unlocked:0, make:{food:3}		},
-	lumber:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:0, 	workbonus:1, storebonus:1, unlocked:0, make:{lumber:1,wood:-.5}	},
-	stone:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:0, 	workbonus:1, storebonus:1, unlocked:0, make:{stone:1,rock:-1}	},
-	copper:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{copper:.1, rock:-2}},
-	tin:{workers:0,		buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
-	bronze:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
-	gold:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
-	coal:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:0, make:{}},
+	//every job has a primary resouce for which they are named in the HTML. They may produce/consume other materials too.
+	//maybe split into two objects - one for resources and one for workers/jobs
+	//add that the buildingwork ammount only gets added if there is at least one worker? or x per worker, x=5 seems good. that is each farmer can collect the passive bonus for 5 farms - can have some buildings with low passive and high worker output and some with high passive and low added worker output (like factories and hydro dams - each added worker only provides a small additional bonus compared to the 'passive' effect of the building)
+	free:{workers:1, 	unlocked:true},
+	food:{workers:0, 	buildingwork:0, 	maxworkers:100, stored:100, 	maxstored:100, 	workbonus:1, storebonus:1, unlocked:true, make:{food:1}		},
+	wood:{workers:0, 	buildingwork:0, 	maxworkers:3, 	stored:100, 	maxstored:100, 	workbonus:1, storebonus:1, unlocked:false, make:{wood:1}		},
+	rock:{workers:0, 	buildingwork:0, 	maxworkers:1, 	stored:20, 		maxstored:100, 	workbonus:1, storebonus:1, unlocked:false, make:{rock:1}		},
+	farm:{workers:0,	buildingwork:0.1,	maxworkers:0,									workbonus:1,			   unlocked:false, make:{food:3}		},
+	lumber:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:0, 	workbonus:1, storebonus:1, unlocked:false, make:{lumber:1,wood:-.5}	},
+	stone:{workers:0, 	buildingwork:0, 	maxworkers:0, 	stored:0, 		maxstored:0, 	workbonus:1, storebonus:1, unlocked:false, make:{stone:1,rock:-1}	},
+	copper:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:false, make:{copper:.1, rock:-2}},
+	tin: {workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:false, make:{}},
+	bronze:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:false, make:{}},
+	gold:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:false, make:{}},
+	coal:{workers:0,	buildingwork:0,		maxworkers:0,	stored:0,		maxstored:0,	workbonus:1, storebonus:1, unlocked:false, make:{}},
 	iron:{},
 	steel:{},
 	zinc:{},//unlock some metals as you make more mines - trade for others that you don't have in your area
@@ -28,15 +30,60 @@ var Stuff = { //the production of materials of all kinds
 
 	research:{workers:0,	buildingwork:0,		maxworkers:0,					workbonus:1,		   unlocked:0},
 	
-/* Ideas for stuff to add
+	/* Ideas for stuff to add
 	cattle(special increment)
 	gold:{workers:0, buildingwork:0, maxworkers:3, stored:0, maxstored:100, workbonus:1, storebonus:1, unlocked:0},
 	marbles:{workers:0, buildingwork:0, maxworkers:0, stored:0, maxstored:100, workbonus:1, storebonus:1, unlocked:0},
-*/
-
+	*/
+	incrRes:function (){ //increments resources (need to fix that it trys to make crafted stuff even when full - but! all positive crafted stuff must be full)
+		for(var x in this){
+			if (Stuff[x]["unlocked"] && x!="free"){ //don't add anthing for free workers
+				var make = true;
+				for(var u in Stuff[x]["make"]){		
+					incr = Stuff[x]["make"][u]*(Stuff[x]["workers"]*Stuff[x]["workbonus"] + Stuff[x]["buildingwork"]);
+					if(Stuff[u]["stored"]+incr<0){
+						make = false; //don't make if it would be less than 0
+					}
+				}
+				if(make) {
+					for(var incrKey in Stuff[x]["make"]){
+						incr = Stuff[x]["make"][incrKey]*(Stuff[x]["workers"]*Stuff[x]["workbonus"] + Stuff[x]["buildingwork"]);
+						max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
+						if(Stuff[incrKey]["stored"]+incr>max){
+							Stuff[incrKey]["stored"] = max;
+						} else {
+							Stuff[incrKey]["stored"]+=incr;
+						}
+						document.getElementById(incrKey).innerHTML = Math.round(Stuff[incrKey]["stored"]*10)/10;
+					}
+				}
+			}
+		}
+	}
 };
 
-var Buildings = {  //if addWorker property key is "free", it will actually add free workers and not space for them     can remove the buildOnce property because just make buy button invis for "true" buildings
+//adding this one - leave 'Stuff' as is for now until this works then delete the repeated entries
+var Jobs = {
+	free:		{workers:1, maxworkers:1,					 unlocked:true},					//this gets skipped in incrRes()
+	researcher: {workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{research:1}},//this gets skipped too
+	hunter:		{workers:0, maxworkers:100, 	workbonus:1, unlocked:true,  make:{food:1}},
+	woodcutter:	{workers:0, maxworkers:3, 		workbonus:1, unlocked:false, make:{wood:1}},
+	rockcutter:	{workers:0, maxworkers:1, 		workbonus:1, unlocked:false, make:{rock:1}},
+	farmer:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{food:3}},
+	millworker:	{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{lumber:1,wood:-.5}},
+	mason:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{stone:1,rock:-1.5}},
+	miner:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{copper:1,coal:1}},//will add more metals (and lower copper output) with research
+
+	//change the mine building to some kind of expanding quarry
+	//should there be different mines - how to organize? or one mine that makes many ores for starters
+	//one smelting factory that can handle a certain amount of several ores - new ores added by research
+
+
+}
+
+
+var Buildings = {  //if addWorker property key is "free", it will actually add free workers and not space for them     can remove the buildOnce property because just make buy button invis for "true" buildings?
+					//make 'unlock' property into an array and change relevant calls below (so that a building can unlock more than one job/resource) also need to split into a unlockRes array and an unlockJob array when I split resrouces and jobs into two objects
 	shack:	{count:1, buildWorkers:1, buildTime:5, unlocked:true, 								addworker:{free:1}, 	cost:{wood:25}, 			unlock:"free",	costratio:1.2,	needsStuffJobs:false,	buildOnce:false,		},
 	farm:	{count:0, buildWorkers:3, buildTime:8, unlocked:false, 								addworker:{farm:2},		cost:{wood:100, rock:75},	unlock:"farm",	costratio:2.5, 	needsStuffJobs:true,	buildOnce:false,	statement:"To free up workers from hunting duties you decided to try farming"},
 	shed:	{count:0, buildWorkers:2, buildTime:5, unlocked:false, addstorage:{wood:50}, 		addworker:{wood:1}, 	cost:{wood:30},				unlock:"free",	costratio:1.5,	needsStuffJobs:false,	buildOnce:false,	statement:"It looks like you could use a place to chop and store more wood"},
@@ -88,9 +135,11 @@ var buildWorkers = 0;	//number of free workers to currently used for constructio
 var time = 1000;		//time to construct a building
 var interval = 10;		//ammount of construction to do each run() cycle
 var construction = 0; 	//completion from 0 to 100 of the current building
+//check this object
 var jobIds = {field:"food",farmJob:"farm",forest:"wood",quarry:"rock",millJob:"lumber",workshopJob:"stone",labJob:"research"}; //add new ids to this list to have click listeners populated
 var container = {};//to store the elements on which we will set the eventListeners (because we can't make new variable names using variable strings)
 var bodyy 				//reference to the HTML node/element <body>
+var knowledge = 0;		//the prestige variable
 
 //variables to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
@@ -148,6 +197,7 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 function populate(){
 	console.log("populated");
 	document.getElementById("statement").innerHTML = "You have built a shack and gathered some supplies. Now your attention turns to bigger plans."; counter1 = 0;	
+	load();
 }
 function panelEvent(e){
 	Panel("pan" + e.currentTarget.id.charAt(e.currentTarget.id.length-1)); //pan0, pan1 strings
@@ -212,15 +262,15 @@ function Panel(select){
 function moveworker(workkey,num){
 
 	if (num === -1){
-		num = Math.min(Stuff[workkey]["maxworkers"]-Stuff[workkey]["workers"],Stuff.free.workers);
+		num = Math.min(Jobs[workkey]["maxworkers"]-Jobs[workkey]["workers"],Jobs.free.workers);
 	}
 
-	if (Stuff[workkey]["workers"]+num <= Stuff[workkey]["maxworkers"] && Stuff.free.workers >= num){
-		Stuff[workkey]["workers"]+=num;
-		Stuff["free"]["workers"]-=num;
+	if (Jobs[workkey]["workers"]+num <= Jobs[workkey]["maxworkers"] && Jobs.free.workers >= num){
+		Jobs[workkey]["workers"]+=num;
+		Jobs["free"]["workers"]-=num;
 
-		document.getElementById(workkey+"workers").innerHTML = Stuff[workkey]["workers"];
-		document.getElementById("freeworkers").innerHTML = Stuff["free"]["workers"];
+		document.getElementById(workkey+"workers").innerHTML = Jobs[workkey]["workers"];
+		document.getElementById("freeworkers").innerHTML = Jobs["free"]["workers"];
 	}
 }
 
@@ -497,41 +547,7 @@ function updateTransition(){
 	bodyy.className = "normal";
 }
 ////////////////////////////////////////////////////////////////////////////increment resources////////////////////////////////////////////////////////////////////////////////////
-function incrRes(){ //increments resources (need to fix that it trys to make crafted stuff even when full - but! all positive crafted stuff must be full)
-	for(var x in Stuff){
-		if (Stuff[x]["unlocked"] && x!="free"){ //don't add anthing for free workers
 
-			var make = true;
-
-			for(var u in Stuff[x]["make"]){		
-
-				incr = Stuff[x]["make"][u]*(Stuff[x]["workers"]*Stuff[x]["workbonus"] + Stuff[x]["buildingwork"]);
-
-				if(Stuff[u]["stored"]+incr<0){
-					make = false; //don't make if it would be less than 0
-				}
-			}
-
-			if(make) {
-
-				for(var incrKey in Stuff[x]["make"]){
-
-			
-					incr = Stuff[x]["make"][incrKey]*(Stuff[x]["workers"]*Stuff[x]["workbonus"] + Stuff[x]["buildingwork"]);
-					max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
-
-
-					if(Stuff[incrKey]["stored"]+incr>max){
-						Stuff[incrKey]["stored"] = max;
-					} else {
-						Stuff[incrKey]["stored"]+=incr;
-					}
-					document.getElementById(incrKey).innerHTML = Math.round(Stuff[incrKey]["stored"]*10)/10;
-				}
-			}
-		}
-	}
-}
 
 
 
@@ -639,7 +655,7 @@ function run(){
 
 
 	//////increment resources///////////////////
-	incrRes();
+	Stuff.incrRes();
 
 
 
@@ -650,7 +666,7 @@ function run(){
 	Stuff.food.stored=(Stuff.food.stored*10-(allworkers*6))/10;
 	if(Stuff.food.stored<1){
 		
-		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener
+		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
 		document.getElementById("statement").innerHTML = "In a food-shortage panic all available workers take to hunting";
 		counter1=0;
 	
@@ -695,10 +711,106 @@ function testFunc(){
 }
 
 
+/////////////////////////////////////////local storage to save the game?///////////////
+
+function storageAvailable(type) {
+	try {
+		var storage = window[type],
+			x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e) {
+		return false;
+	}
+}
+
+//taken from MDN tutorial on Storage
+function saveGame(){
+	if (storageAvailable('localStorage')) {
+		console.log('Yippee! We can use localStorage awesomeness');
+
+		data.set("Stuff", Stuff);
+		data.set("Buildings", Buildings);
+		data.set("Global variables", GlobVar);
+	}
+	else {
+		alert('Too bad, no localStorage for us');
+	}
+}
+
+function load(){//oh this is going to be fun 
+	if (storageAvailable()){
+	//need to check whether these things exist?
+	Stuff = data.get("Stuff");
+	Buildings = data.get("Buildings");
+	GlobVar = data.get("Global variables");
+
+	//and oh gee, how do I even start this
+	//update to the stored values of all resources, maxes, buildings, costs  add refreshAmounts() function
+	for (var i in Stuff){
+		if (Stuff[i]["unlocked"] && i!="free"){
+			document.getElementById(i+"Stuff").style.visibility = "visible";
+			document.getElementById(i) = Stuff[i]["stored"];
+			document.getElementById(i+"Max") = Stuff[i]["maxstored"];
+		}
+	}
+	for (var i in Buildings){
+		if (Buildings[i]["unlocked"]){
+			document.getElementById("")
+		}
+	}
+	//show the values that have been unlocked
+	//if there are more than X people show buttons up to butt3
+	//if there is a councilhall then show butt4
+	
+	}
+}
+
+function prestige(){
+	knowledge += Stuff.free.maxworkers;
+	localStorage.setItem("Knowledge",knowledge);
+	//do I save knowledge and reload the page or reset the stored amounts of everything to 0 and refreshAmounts()?
+	window.location.reload(false);//seems easiest
+	knowledge = localStorage.getItem("Knowledge");
+}
+
+//taken from Alex Grande on stackoverflow, thanks
+var data = {
+  set: function(key, value) {
+    if (!key || !value) {return;}
+
+    if (typeof value === "object") {
+      value = JSON.stringify(value);
+    }
+    localStorage.setItem(key, value);
+  },
+  get: function(key) {
+    var value = localStorage.getItem(key);
+
+    if (!value) {return;}
+
+    // assume it is an object that has been stringified
+    if (value[0] === "{") {
+      value = JSON.parse(value);
+    }
+
+    return value;
+  }
+}
 
 
-
-
+//more ideas for methods - or make these into constructors?
+function addResource(resName, parameters){
+	Stuff[resName]={parameters};
+}
+function addJob(jobName, parameters){
+	Jobs[jobName] = {parameters};
+}
+function addBuildings(buildName, parameters){
+	Buildings[buildName] = {cost:costPara, count:0,}
+}
 
 
 
