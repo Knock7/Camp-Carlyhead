@@ -31,10 +31,9 @@
 	<p> Food: <span id="food"> 50 </span> / <span id="foodMax" class="right">100</span></p>  
 	<p id="woodStuff" > Wood: <span id="wood"> 100 </span> / <span id="woodMax" class="right">100</span></p> 
 	<p id="rockStuff" class="hide"> Rock: <span id="rock"> 0 </span> / <span id="rockMax" class="right">100</span></p>   
-	<div id="farmStuff"></div>
-	<p id="millStuff" class="hide"> Lumber: <span id="lumber"> 0 </span> / <span id="lumberMax" class="right">0</span></p></div>  
-	<p id="workshopStuff" class="hide"> Stone: <span id="stone"> 0 </span> / <span id="stoneMax" class="right">0</span></p></div>  
-	<p id="labStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p></div>
+	<p id="lumberStuff" class="hide"> Lumber: <span id="lumber"> 0 </span> / <span id="lumberMax" class="right">0</span></p>
+	<p id="stoneStuff" class="hide"> Stone: <span id="stone"> 0 </span> / <span id="stoneMax" class="right">0</span></p>  
+	<p id="researchStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p><!-- maybe move this to the Town Hall tab -->
 
 
 	<!-- can only unlock one resource per id right now. maybe put "unlock stuff ids"" in main object?-->
@@ -52,7 +51,7 @@
 
 
 <!--/////////////////////////////////////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
-
+<!-- work on a way to build these in JS and append to the doc - function makeJob(divId, workersName, etc) - if divId already exists add on at end of children, else make new jobBox -->
 <tabs id="pan1" style="float:left;">
 	<h2>Jobs</h2>
 
@@ -80,7 +79,7 @@
 		</div>
 		<p style="font-size:4pt;"> </p>
 
-		<div id="farmJob" class="none">
+		<div id="farmerJob" class="none">
 			<div class="userAdd">
 				<b>&nbspFarmers: <span id="farmers">0</span> / <span id="farmersMax">100</span>&nbsp</b>
 			</div>
@@ -97,7 +96,7 @@
 		<p style="font-size:25pt;"> </p>
 
 		<div class="userAdd">
-			<b>&nbspWoodcutters: <span id="woodwcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp</b>
+			<b>&nbspWoodcutters: <span id="woodcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp</b>
 		</div>
 		<div class="userRemove">
 			<b> X </b>
@@ -119,7 +118,7 @@
 		<p style="font-size:4pt;"> </p>
 	</div>
 
-	<div id="millJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
+	<div id="millworkerJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
 		<p style="font-size:4pt;"> </p>
 		<p><span class="bkgrn"><b>&nbspSAWMILLS&nbsp</b></span></p>
 		<p style="font-size:25pt;"> </p>
@@ -133,7 +132,7 @@
 		<p style="font-size:4pt;"> </p>
 	</div>
 
-	<div id="workshopJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
+	<div id="masonJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
 		<p style="font-size:4pt;"> </p>
 		<p><span class="bkgrn"><b>&nbspWORKSHOPS&nbsp</b></span></p>
 		<p style="font-size:25pt;"> </p>
@@ -147,7 +146,7 @@
 		<p style="font-size:4pt;"> </p>
 	</div>
 
-	<div id="labJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
+	<div id="researcherJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
 		<p style="font-size:4pt;"> </p>
 		<p><span class="bkgrn"><b>&nbspLABORATORY&nbsp</b></span></p>
 		<p style="font-size:25pt;"> </p>
