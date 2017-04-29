@@ -6,8 +6,6 @@
 
 var Stuff = { //the production of materials of all kinds
 
-	//every job has a primary resouce for which they are named in the HTML. They may produce/consume other materials too.
-	//maybe split into two objects - one for resources and one for workers/jobs
 	//add that the buildingwork ammount only gets added if there is at least one worker? or x per worker, x=5 seems good. that is each farmer can collect the passive bonus for 5 farms - can have some buildings with low passive and high worker output and some with high passive and low added worker output (like factories and hydro dams - each added worker only provides a small additional bonus compared to the 'passive' effect of the building)
 	food:{buildingwork:0, 	stored:100, 	maxstored:100, 	storebonus:1, unlocked:true,  },
 	wood:{buildingwork:0, 	stored:100, 	maxstored:100, 	storebonus:1, unlocked:false, },
@@ -17,7 +15,7 @@ var Stuff = { //the production of materials of all kinds
 	copper:{buildingwork:0,	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
 	tin: {buildingwork:0,	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
 	bronze:{buildingwork:0,	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
-	gold:{buildingwork:0,	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
+	gold:{buildingwork:0,	stored:0,		maxstored:99999,storebonus:1, unlocked:false, },//no max on gold - don't display max and set arbitrarily high
 	coal:{buildingwork:0,	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
 	iron:{},
 	steel:{},
@@ -33,7 +31,7 @@ var Stuff = { //the production of materials of all kinds
 	gold:{workers:0, buildingwork:0, maxworkers:3, stored:0, maxstored:100, workbonus:1, storebonus:1, unlocked:0},
 	marbles:{workers:0, buildingwork:0, maxworkers:0, stored:0, maxstored:100, workbonus:1, storebonus:1, unlocked:0},
 	*/
-	incrRes:function (){ //increments resources (need to fix that it trys to make crafted stuff even when full - but! all positive crafted stuff must be full)
+	incrRes:function (){ //increments resources from workers at their jobs (make another function to add passive building work - move 'buildingwork' to Buildings function and make it an object like 'make')
 		console.log("increase resources");
 		for(var x in Jobs){
 			if (Jobs[x]["unlocked"]){
@@ -43,8 +41,14 @@ var Stuff = { //the production of materials of all kinds
 					if(Stuff[u]["stored"]+incr<0){
 						make = false; //don't make if it would be less than 0
 					}
+					var make2 = false;
+					if(make){//don't make somthing if storage is full
+						if(Stuff[u]["stored"]<Stuff[u]["maxstored"] && incr>0){
+							make2 = true;
+						}
+					}
 				}
-				if(make) {
+				if(make&&make2) {
 					for(var incrKey in Jobs[x]["make"]){
 						incr = Jobs[x]["make"][incrKey]*(Jobs[x]["workers"]*Jobs[x]["workbonus"]);
 						max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
@@ -74,15 +78,14 @@ var Jobs = {
 	miner:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{copper:1,coal:1}},//will add more metals (and lower copper output) with research
 
 	//change the mine building to some kind of expanding quarry
-	//should there be different mines - how to organize? or one mine that makes many ores for starters
-	//one smelting factory that can handle a certain amount of several ores - new ores added by research
+	//should there be different mines - how to organize? or one mine that makes many ores for starters - unlock more metals as you add mineshafts (rename current mineshaft)
+	//one smelting factory that can handle a certain amount of several ores - new ores added by research and/or mines
 
 
 }
 
 
-var Buildings = {  //if addWorker property key is "free", it will actually add free workers and not space for them     can remove the buildOnce property because just make buy button invis for "true" buildings?
-					//make 'unlock' property into an array and change relevant calls below (so that a building can unlock more than one job/resource) also need to split into a unlockRes array and an unlockJob array when I split resrouces and jobs into two objects
+var Buildings = {  //if addWorker property key is "freeworker", it will add free workers and not space for them     can remove the buildOnce property because just make buy button invis for "true" buildings?
 					//can move the unlockRes and unlockJob functionality to the unlock_conditional section of the run() function
 	shack:	{count:1, buildWorkers:1, buildTime:5, unlocked:true, 								addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,		},
 	farm:	{count:0, buildWorkers:3, buildTime:8, unlocked:false, 								addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	statement:"To free up workers from hunting duties you decided to try farming"},
@@ -102,6 +105,8 @@ var Buildings = {  //if addWorker property key is "free", it will actually add f
 	cabbin: {addworker:{free:3}}
 	market: {unlock:"gold"} sell food and stuff for gold in separate tab or as a rate  //tech add dock to increase commerce "You have built most of the stuctures that you and your council know how to build, but you remember many other wonderful things from you past lives in the Great City. You allow some settlers to study and draft plans for new types of buildings."
 	fishery: //unlocked by dock tech
+	
+	market ideas - have traders come infrequently to buy certain resources, can get more to come as population grows or other things, eventually a steady trickle of certain resource for gold (no max on gold)
 */
 
 };
@@ -665,7 +670,9 @@ function run(){
 
 
 	//consume food
+	document.getElementById("food").innerHTML = Math.round(Stuff["food"]["stored"]*10)/10;
 	Stuff.food.stored=(Stuff.food.stored*10-(allworkers*6))/10;//should put allworkers as freeworkersMax/maxfreeworkers and clean up "allworkers" variable
+	
 	if(Stuff.food.stored<1){
 		
 		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
