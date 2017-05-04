@@ -13,6 +13,27 @@ all of the values for them stored and access them when making the elements show 
 with stuff i'm going to make anyway but need all the data about the properties listed out somewhere at the start.
 
 
+////code start
+
+var JobBox = documentFragment;
+
+var make = 'whatever job is next'
+
+var newBox = Object.create(JobBox)
+
+newBox.firstchild // na I think I should build it up instead of copying and changing parts - try both ways
+
+
+var newNode = new DocumentFragment();
+
+newNode.addChild
+
+newBox.getElementById
+
+
+
+
+
 2) make research items look better and add option to minimize/hide them - transiton into a small size with an icon/number that you can 
 hover over for a tooltip
 
