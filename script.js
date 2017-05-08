@@ -36,20 +36,23 @@ var Stuff = { //the production of materials of all kinds
 
 
 var Jobs = {
-	freeworker: {workers:1, maxworkers:1,					 unlocked:true   },//this gets skipped in incrRes()
-	researcher: {workers:0, maxworkers:0, 		workbonus:1, unlocked:false, },//this gets skipped too
-	hunter:		{workers:0, maxworkers:100, 	workbonus:1, unlocked:true,  make:{food:1}},
-	woodcutter:	{workers:0, maxworkers:3, 		workbonus:1, unlocked:true,  make:{wood:1}},
-	rockcutter:	{workers:0, maxworkers:1, 		workbonus:1, unlocked:true,  make:{rock:1}},
-	farmer:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{food:3}},
-	millworker:	{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{lumber:1,wood:-.5}},
-	mason:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{stone:1,rock:-1.5}},
-	miner:		{workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{copper:1,coal:1}},//will add more metals (and lower copper output) with research
+	freeworker: {box: "camp", 		workers:1, maxworkers:1,					 unlocked:true   },//this gets skipped in incrRes()
+	researcher: {box: "laboratory",	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, },//this gets skipped too
+	hunter:		{box: "fields", 		workers:0, maxworkers:100, 		workbonus:1, unlocked:true,  make:{food:1}},
+	woodcutter:	{box: "forest", 		workers:0, maxworkers:3, 		workbonus:1, unlocked:true,  make:{wood:1}},
+	rockcutter:	{box: "quarry", 		workers:0, maxworkers:1, 		workbonus:1, unlocked:true,  make:{rock:1}},
+	farmer:		{box: "fields", 		workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{food:3}},
+	millworker:	{box: "riverside", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{lumber:1,wood:-.5}},
+	mason:		{box: "workshops", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{stone:1,rock:-1.5}},
+	miner:		{box: "mine", 		workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{copper:1,coal:1}},//will add more metals (and lower copper output) with research
 
+//	example:	{box: ["jobBox1, jobBox2, jobBox3"], }
 	//change the mine building to some kind of expanding quarry
 	//should there be different mines - how to organize? or one mine that makes many ores for starters - unlock more metals as you add mineshafts (rename current mineshaft)
 	//one smelting factory that can handle a certain amount of several ores - new ores added by research and/or mines
 
+	//after enough advancement, rename the jobBox and change image: camp -> settlement; workshops -> industrial zone
+	
 	incrRes:function (){ //increments resources from workers at their jobs (make another function to add passive building work - move 'buildingwork' to Buildings function and make it an object like 'make')
 		for(var x in Jobs){
 			if (Jobs[x]["unlocked"]){
@@ -86,18 +89,18 @@ var Jobs = {
 
 var Buildings = {  //if addWorker property key is "freeworker", it will add free workers and not space for them     can remove the buildOnce property because just make buy button invis for "true" buildings?
 					//can move the unlockRes and unlockJob functionality to the unlock_conditional section of the run() function
-	shack:	{count:1, buildWorkers:1, buildTime:5, unlocked:true, 	buildingwork:{},								addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,		},
-	farm:	{count:0, buildWorkers:3, buildTime:8, unlocked:false, 	buildingwork:{},			addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	statement:"To free up workers from hunting duties you decided to try farming"},
-	shed:	{count:0, buildWorkers:2, buildTime:5, unlocked:false, 	buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"It looks like you could use a place to chop and store more wood"},
-	mine:	{count:0, buildWorkers:3, buildTime:8, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"Adding a shaft to the mine allows for rock collection and storage"},
-	barn:	{count:0, buildWorkers:3, buildTime:8, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"Even more storage"},
-	mill:	{count:0, buildWorkers:3, buildTime:10,unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{millworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["millworker"],costratio:2.5,		buildOnce:false,	statement:"Process the wood into boards at the sawmill"},
-	workshop:{count:0,buildWorkers:3, buildTime:12,unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	statement:"Workshops will allow masons to cut raw rock into stone"},
-	hut:	{count:0, buildWorkers:3, buildTime:8, unlocked:false, 	buildingwork:{},							addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	statement:"With the boards from the mill and cut stones you can build new housing structures"},
-	lab: 	{count:0, buildWorkers:4, buildTime:20,unlocked:false, 	buildingwork:{},							addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	statement:"During the first meeting, the Council decideds to begin research and planning to recover lost technologies.<br>You can now build laboratory space at the back of the Town Hall for research."},
+	shack:	{count:1, buildWorkers:1, buildTime:50, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,		},
+	farm:	{count:0, buildWorkers:3, buildTime:80, unlocked:false, buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	statement:"To free up workers from hunting duties you decided to try farming"},
+	shed:	{count:0, buildWorkers:2, buildTime:50, unlocked:false, buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"It looks like you could use a place to chop and store more wood"},
+	mine:	{count:0, buildWorkers:3, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"Adding a shaft to the mine allows for rock collection and storage"},
+	barn:	{count:0, buildWorkers:3, buildTime:80, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	statement:"Even more storage"},
+	mill:	{count:0, buildWorkers:3, buildTime:100,unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{millworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["millworker"],costratio:2.5,		buildOnce:false,	statement:"Process the wood into boards at the sawmill"},
+	workshop:{count:0,buildWorkers:3, buildTime:120,unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	statement:"Workshops will allow masons to cut raw rock into stone"},
+	hut:	{count:0, buildWorkers:3, buildTime:80, unlocked:false, buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	statement:"With the boards from the mill and cut stones you can build new housing structures"},
+	lab: 	{count:0, buildWorkers:4, buildTime:200,unlocked:false, buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	statement:"During the first meeting, the Council decideds to begin research and planning to recover lost technologies.<br>You can now build laboratory space at the back of the Town Hall for research."},
 
 
-	councilhall:{count:0,buildWorkers:10, buildTime:50,  unlocked:false,													cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlockRes:[], 	unlockJob:[],			costratio:1,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held soon."},
+	councilhall:{count:0,buildWorkers:10, buildTime:500,  unlocked:false,													cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlockRes:[], 	unlockJob:[],			costratio:1,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held soon."},
 
 	incrRes: function(){//add passive resource production
 		for(var x in Buildings){
@@ -173,14 +176,13 @@ var construction = 0; 	//completion from 0 to 100 of the current building
 var container = {};		//to store the elements on which we will set the eventListeners (because we can't make new variable names using variable strings) - do I even need this though?
 var bodyy 				//reference to the HTML node/element <body>
 var knowledge = 0;		//the prestige variable
-var jobIds = {field:"hunter",farmerJob:"farmer",forest:"woodcutter",quarry:"rockcutter",millworkerJob:"millworker",masonJob:"mason",researcherJob:"researcher"}; //add new ids to this list to have click listeners populated
-
+var JobBoxs = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
 
 //variables to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 	console.log("window has loaded");
 	bodyy = document.getElementsByTagName('body')[0];
-	bodyy.addEventListener("transitionend", updateTransition, true);
+	bodyy.addEventListener("transitionend", updateTransition, true);//ends the white flash when food runs out
 
 	var closeStory = document.querySelector(".closebtn");
 	closeStory.addEventListener("click", function(){closeStory.parentElement.style.display="none";populate();});
@@ -195,15 +197,22 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 
 
 	//add listeners for moving workers' jobs
-	for(var jobkey in jobIds){//do I even need the container object?
-		container[jobkey+"AddButton"] = document.getElementById(jobkey).getElementsByClassName("userAdd")[0];
-		container[jobkey+"AddButton"].addEventListener("click",moveworkerEvent);
+	jobIds = document.querySelectorAll(".userAdd0");
 
-		container[jobkey+"RemButton"] = document.getElementById(jobkey).getElementsByClassName("userRemove")[0];
+	for(i=0;i<jobIds.length;i++){
+		jobIds[i].addEventListener("click",moveworkerEvent);
+		jobIds[i].parentElement.getElementsByClassName("userRemove0")[0].addEventListener("click",removeworkerEvent);
+	}
+/*
+	for(var jobkey in jobIds){//do I even need the container object?
+		
+		document.getElementById(jobkey).getElementsByClassName("userAdd0")[0].addEventListener("click",moveworkerEvent);
+
+		container[jobkey+"RemButton"] = document.getElementById(jobkey).getElementsByClassName("userRemove0")[0];
 		container[jobkey+"RemButton"].addEventListener("click",removeworkerEvent);
 	}
 	//the variables for the job button elements are "fieldAddButton" and "fieldRemButton" etc. not hunterAdd and hunterRem
-
+*/
 
 	//adds event listener for the building buttons
 	var setBuildings = document.querySelectorAll(".buildingButton");
@@ -248,7 +257,12 @@ function moveworkerEvent(e){
 	if(e.altKey) {
 		num = -1;
 	}
-	moveworker(jobIds[e.currentTarget.parentElement.id],num);//uses the ids as keys in jobIds object to get job names (woodcutter, hunter, etc) strings
+	console.log(e.currentTarget.parentElement.id.slice(0,-3));
+
+
+
+	moveworker(e.currentTarget.parentElement.id.slice(0,-3),num);
+
 }
 function removeworkerEvent(e){
 	var num = 1;
@@ -261,7 +275,7 @@ function removeworkerEvent(e){
 	if(e.altKey) {
 		num = -1;
 	}
-	removeworker(jobIds[e.currentTarget.parentElement.id],num);
+	removeworker(e.currentTarget.parentElement.id.slice(0,-3),num);
 }
 function addBuildingEvent(e){
 	addBuilding(e.currentTarget.id.slice(0,-5));
@@ -447,22 +461,36 @@ function finishBuilding(buildkey,index){
 function unlock(unlockkey){
 
 	if(!Buildings[unlockkey]["unlocked"]){
+		//turn this into a function addBuildingButton(buildingkey) to make new building button
 		document.getElementById(unlockkey + "Build").style.visibility = "visible";
-
+		
 
 		for(i=0;i<Buildings[unlockkey]["unlockRes"].length;i++){
 			var tempStuff = Buildings[unlockkey]["unlockRes"][i];
-			Stuff[tempStuff]["unlocked"] = true;//could also change this to a method Stuff.unlock("resource"){Stuff[resource]["unlocked"] = true;}  any reason for a lock() method?
+			Stuff[tempStuff]["unlocked"] = true;
 			document.getElementById(tempStuff).innnerHTML = Stuff[tempStuff]["stored"];
 			document.getElementById(tempStuff+"Max").innnerHTML = Stuff[tempStuff]["maxstored"];
+
+			//replace this with a function addResourceLine(resource) to add a new p element for the new resource
 			document.getElementById(tempStuff+"Stuff").style.visibility = "visible";
 		}
+
+		//add the new jobs that the building unlocks
 		for(i=0;i<Buildings[unlockkey]["unlockJob"].length;i++){
-			var tempJob = Buildings[unlockkey]["unlockJob"][i];
-			Jobs[tempJob]["unlocked"]=true;
-			document.getElementById(tempJob+"s").innerHTML = Jobs[tempJob]["workers"];
-			document.getElementById(tempJob+"sMax").innerHTML = Jobs[tempJob]["maxworkers"]
-			document.getElementById(tempJob+"Job").style.display = "inline-block";
+			newJob = Buildings[unlockkey]["unlockJob"][i];
+			newBox = Jobs[newJob]["box"];
+
+			//if the jobBox for the unlocked job does not exist, make it
+			if(JobBoxs.indexOf(newBox)===-1){
+				JobBoxs.push(newBox);
+				addJobBox(newBox);
+			}
+			addJobElement(newJob,newBox);
+
+			
+			Jobs[newJob]["unlocked"]=true;
+			document.getElementById(newJob+"s").innerHTML = Jobs[newJob]["workers"];
+			document.getElementById(newJob+"sMax").innerHTML = Jobs[newJob]["maxworkers"]
 		}
 
 		var costTxt = " ";
@@ -582,6 +610,55 @@ function isEmpty(object) {
 function updateTransition(){
 	console.log("transition done");
 	bodyy.className = "normal";
+}
+
+//adds the HTML to make a new JobBox in index.html -'boxName' should be in lowercase
+function addJobBox(boxName){
+
+	newDiv = document.createElement("div");
+	newDiv.id = boxName;
+	newDiv.className = "JobBox";
+	newDiv.style = "display: inline-block; background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url("+ boxName.toUpperCase() +".jpg);"
+
+	p1 = document.createElement("p");
+	p1.style = "font-size:4pt;"
+	p1.innerHTML = " ";
+
+	p2 = document.createElement("p");
+	p2.innerHTML = "<span class='bkgrn'><b>&nbsp;"+ boxName +"&nbsp;</b></span>";
+
+	p3 = document.createElement("p");
+	p3.style = "font-size:25pt;";
+	p3.textContent = " ";
+
+	p4 = p1
+	p4.id = "endspace";
+
+	newDiv.appendChild(p1);
+	newDiv.appendChild(p2);
+	newDiv.appendChild(p3);
+	newDiv.appendChild(p4);
+
+	document.getElementById("pan1").insertBefore(newDiv,document.getElementById("blank"));
+
+}
+
+//adds the HTML block to have 
+function addJobElement(jobName, boxName){
+
+	indiv = document.createElement("div");
+	indiv.id = jobName.toLowerCase() + "Job";
+	indiv.innerHTML = "<div class='userAdd'><b>&nbsp;"+ jobName.toUpperCase() +"s: <span id='"+ jobName +"s'>0</span> / <span id='"+ jobName +"sMax'>0</span>&nbsp;</b></div><div class='userRemove'><b> X </b></div><p style='font-size:4pt;'> </p>";
+	indiv.querySelector(".userAdd").addEventListener("click",moveworkerEvent);
+	indiv.querySelector(".userRemove").addEventListener("click",removeworkerEvent);
+
+	document.getElementById(boxName).appendChild(indiv);
+
+	console.log(indiv);
+	//add listeners
+	document.getElementById(jobName+"Job").getElementsByClassName("userAdd")[0].addEventListener("click",moveworkerEvent);
+
+	document.getElementById(jobName+"Job").getElementsByClassName("userRemove")[0].addEventListener("click",removeworkerEvent);	
 }
 ////////////////////////////////////////////////////////////////////////////increment resources////////////////////////////////////////////////////////////////////////////////////
 
@@ -732,10 +809,10 @@ function run(){
 
 //document.getElementById('demo').innerHTML = Date();
 
-} setInterval(run,300);
+} setInterval(run,200);
 
 
-////////////////////////////////end of game loop//////////////////////////////
+//////////////////////////////////////////////////////////end of game loop//////////////////////////////////////////////////////
 
 
 
@@ -842,7 +919,7 @@ var data = {
 }
 
 
-//more ideas for methods - or make these into constructors?
+/*more ideas for methods - or make these into constructors?
 function addResource(resName, parameters){
 	Stuff[resName]={parameters};
 }
@@ -852,7 +929,7 @@ function addJob(jobName, parameters){
 function addBuildings(buildName, parameters){
 	Buildings[buildName] = {cost:costPara, count:0,}
 }
-
+*/
 
 
 

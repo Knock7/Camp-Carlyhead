@@ -22,7 +22,7 @@
 
 <header>
 	<h1 id="title">A Lonely Beginning</h1>
-	<h3 id="statement">&nbsp</h3>
+	<h3 id="statement">&nbsp;</h3>
 </header>
 
 
@@ -56,130 +56,141 @@
 <tabs id="pan1" style="float:left;">
 	<h2>Jobs</h2>
 
-	<div id="camp" class="JobBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
+	<div id="camp" class="JobBox0" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
 		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspCAMP&nbsp</b></span></p>
+		<p><span class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></span></p>
 		<p style="font-size:25pt;"> </p>
 
 		<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
-			<b>&nbspFree Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp</b>
+			<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp;</b>
 		</div>
 		<p style="font-size:4pt;"> </p>
 	</div>
 
-	<div id="field" class="JobBox" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(field.jpg); display:inline-block;">
+	<div id="fields" class="JobBox0" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(fields.jpg); display:inline-block;">
 		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspFIELDS&nbsp</b></span></p>
+		<p><span class="bkgrn"><b>&nbsp;FIELDS&nbsp;</b></span></p>
 		<p style="font-size:25pt;"> </p>
 
-		<div class="userAdd">
-			<b>&nbspHunters: <span id="hunters">0</span> / <span id="huntersMax">100</span>&nbsp</b>
-		</div>
-		<div class="userRemove"> 
-			<b> X </b>
-		</div>
-		<p style="font-size:4pt;"> </p>
-
-		<div id="farmerJob" class="none">
-			<div class="userAdd">
-				<b>&nbspFarmers: <span id="farmers">0</span> / <span id="farmersMax">100</span>&nbsp</b>
+		<div id="hunterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Hunters: <span id="hunters">0</span> / <span id="huntersMax">100</span>&nbsp;</b>
 			</div>
-			<div class="userRemove">
+			<div class="userRemove0"> 
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+<!--		<div id="farmerJob" class="none">
+			<div class="userAdd0">
+				<b>&nbsp;Farmers: <span id="farmers">0</span> / <span id="farmersMax">100</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div> -->
+	</div>
+
+	<div id="forest" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;FOREST&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="woodcutterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Woodcutters: <span id="woodcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
 				<b> X </b>
 			</div>
 			<p style="font-size:4pt;"> </p>
 		</div>
 	</div>
 
-	<div id="forest" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
+	<div id="quarry" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
 		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspFOREST&nbsp</b></span></p>
+		<p><span class="bkgrn"><b>&nbsp;QUARRY&nbsp;</b></span></p>
 		<p style="font-size:25pt;"> </p>
 
-		<div class="userAdd">
-			<b>&nbspWoodcutters: <span id="woodcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp</b>
+		<div id="rockcutterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Rockcutters: <span id="rockcutters">0</span> / <span id="rockcuttersMax">1</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
 		</div>
-		<div class="userRemove">
-			<b> X </b>
+	</div>
+
+<!--	<div id="river" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;RIVERSIDE&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="millworkerJob">
+			<div class="userAdd0">
+				<b>&nbsp;Mill Workers: <span id="millworkers">0</span> / <span id="millworkersMax">1</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
 		</div>
+	</div>
+
+	<div id="workshops" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;WORKSHOPS&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="masonJob">
+			<div class="userAdd0">
+				<b>&nbsp;Masons: <span id="masons">0</span> / <span id="masonsMax">1</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+	</div>
+
+	<div id="laboratory" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;LABORATORY&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="researcherJob">
+			<div class="userAdd0">
+				<b>&nbsp;Researchers: <span id="researchers">0</span> / <span id="researchersMax">0</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+	</div>  -->
+
+	<div id="blank" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+		<p style="font-size:4pt;"> </p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd0"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
+		<div class="userRemove0"></div>
 		<p style="font-size:4pt;"> </p>
 	</div>
 
-	<div id="quarry" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
+	<div id="blank2" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
 		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspQUARRY&nbsp</b></span></p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
 		<p style="font-size:25pt;"> </p>
 
-		<div class="userAdd">
-			<b>&nbspRockcutters: <span id="rockcutters">0</span> / <span id="rockcuttersMax">1</span>&nbsp</b>
-		</div>
-		<div class="userRemove">
-			<b> X </b>
-		</div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="millworkerJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(mill.jpg);">
-		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspSAWMILLS&nbsp</b></span></p>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd">
-			<b>&nbspMill Workers: <span id="millworkers">0</span> / <span id="millworkersMax">1</span>&nbsp</b>
-		</div>
-		<div class="userRemove">
-			<b> X </b>
-		</div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="masonJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(workshop.jpg);">
-		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspWORKSHOPS&nbsp</b></span></p>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd">
-			<b>&nbspMasons: <span id="masons">0</span> / <span id="masonsMax">1</span>&nbsp</b>
-		</div>
-		<div class="userRemove">
-			<b> X </b>
-		</div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="researcherJob" class="JobBox none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(studio.jpg);">
-		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbspLABORATORY&nbsp</b></span></p>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd">
-			<b>&nbspResearchers: <span id="researchers">0</span> / <span id="researchersMax">0</span>&nbsp</b>
-		</div>
-		<div class="userRemove">
-			<b> X </b>
-		</div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="blank" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
-		<p style="font-size:4pt;"> </p>
-		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd"></div>
-		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
-		<div class="userRemove"></div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="blank2" class="JobBox" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
-		<p style="font-size:4pt;"> </p>
-		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp&nbsp</b></span>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd"></div>
-		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp</b></span>
-		<div class="userRemove"></div>
+		<div class="userAdd0"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
+		<div class="userRemove0"></div>
 		<p style="font-size:4pt;"> </p>
 	</div>
 
@@ -198,7 +209,7 @@
 <div id="shackBuild" class="buildingButton"> 
 	<div class="tooltiptext">
 		<p>Requires (1) worker to build<br>
-		Cost:&nbsp<span id="shackCosts">30 wood</span><br><br>
+		Cost:&nbsp;<span id="shackCosts">30 wood</span><br><br>
 		Adds: space for 1 new settler
 		</p></div>
 	<div id="shackprogress" class="buildBar"><p class="buildText">
@@ -208,9 +219,9 @@
 <div id="shedBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (2) workers to build<br>
-		Cost:&nbsp<span id="shedCosts">30 wood</span><br><br>
+		Cost:&nbsp;<span id="shedCosts">30 wood</span><br><br>
 		Adds: space for 1 woodcutter<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp50 wood storage
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50 wood storage
 		</p></div>
 	<div id="shedprogress" class="buildBar"><p class="buildText">
 	  Woodsheds [<span id="shed">0</span>]
@@ -219,9 +230,9 @@
 <div id="mineBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="mineCosts"> </span><br><br>
+		Cost:&nbsp;<span id="mineCosts"> </span><br><br>
 		Adds: space for 1 rockcutter<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp50 rock storage
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50 rock storage
 		</p></div>
 	<div id="mineprogress" class="buildBar"><p class="buildText">
 	  Mineshafts [<span id="mine">0</span>]
@@ -230,7 +241,7 @@
 <div id="farmBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="farmCosts"> </span><br><br>
+		Cost:&nbsp;<span id="farmCosts"> </span><br><br>
 		Adds: space for 2 farmers<br>
 		</p></div>
 	<div id="farmprogress" class="buildBar"><p class="buildText">
@@ -240,10 +251,10 @@
 <div id="barnBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="barnCosts"> </span><br><br>
+		Cost:&nbsp;<span id="barnCosts"> </span><br><br>
 		Adds: 100 wood storage<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 rock storage<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp100 food storage
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100 rock storage<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100 food storage
 		</p></div>
 	<div id="barnprogress" class="buildBar"><p class="buildText">
 	  Barns [<span id="barn">0</span>]
@@ -252,9 +263,9 @@
 <div id="millBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="millCosts"> </span><br><br>
+		Cost:&nbsp;<span id="millCosts"> </span><br><br>
 		Adds: space for 3 mill workers<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp300 lumber storage
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;300 lumber storage
 		</p></div>	
 	<div id="millprogress" class="buildBar"><p class="buildText">	
 	  Sawmills [<span id="mill">0</span>]
@@ -263,9 +274,9 @@
 <div id="workshopBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="workshopCosts"> </span><br><br>
+		Cost:&nbsp;<span id="workshopCosts"> </span><br><br>
 		Adds: space for 3 masons<br>
-		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp200 stone storage
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;200 stone storage
 		</p></div>
 	<div id="workshopprogress" class="buildBar"><p class="buildText">
 	  Workshops [<span id="workshop">0</span>]
@@ -274,7 +285,7 @@
 <div id="hutBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (3) workers to build<br>
-		Cost:&nbsp<span id="hutCosts"> </span><br><br>
+		Cost:&nbsp;<span id="hutCosts"> </span><br><br>
 		Adds: space for 1 new settler<br>
 		</p></div>
 	<div id="hutprogress" class="buildBar"><p class="buildText">
@@ -284,7 +295,7 @@
 <div id="labBuild" class="hide buildingButton">
 	<div class="tooltiptext">
 		<p>Requires (4) workers to build<br>
-		Cost:&nbsp<span id="labCosts"> </span><br><br>
+		Cost:&nbsp;<span id="labCosts"> </span><br><br>
 		Adds: space for 1 researcher<br>
 		</p></div>
 	<div id="labprogress" class="buildBar"><p class="buildText">
@@ -369,7 +380,7 @@
 <div id="buildCounc" class="council"> 
 	<div class="tooltiptext" style="top: 110%;">
 		<p>Requires (10) workers to build<br>
-			Cost: 200 wood, 200 rock,<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp400 lumber, 300 stone<br><br>
+			Cost: 200 wood, 200 rock,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;400 lumber, 300 stone<br><br>
 			Unlocks research
 		</p>
 	</div>

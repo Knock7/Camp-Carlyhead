@@ -105,17 +105,29 @@ tabs {
 	background-color:rgba(98, 161, 113, .5);
 	width:0%;
 }
-div.JobBox { 
+div.JobBox0 { /*the 0 designation is a work-around for the JS generated html being different from the pre-existing one*/
 	width:250px;
 	text-align:center;
-	margin:auto;
+	margin:3px;
 	padding: 0 5px;
 	border:3px solid black;    
 	margin-top:10px;
 	height:100%;
 	background-size:cover;
+	
 }
-div.userAdd { 
+div.JobBox { 
+	width:250px;
+	text-align:center;
+	margin:5px;
+	padding: 0 5px;
+	border:3px solid black;    
+	margin-top:10px;
+	height:100%;
+	background-size:cover;
+	
+}
+div.userAdd0 { /*not sure why but need to set left and right to 2px for jobElements not created by JS, and to 0 for ones that are */
 	width:180px;
 	position: relative; 
 	left: 2px; 
@@ -124,6 +136,22 @@ div.userAdd {
 	background:rgba(255, 255, 255, .85);
 	border:1px solid black;
 	text-align:left;
+	
+}
+div.userAdd { 
+	width:180px;
+	position: relative; 
+	left: 0px; 
+	display: inline-block;
+	padding:3px;
+	background:rgba(255, 255, 255, .85);
+	border:1px solid black;
+	text-align:left;
+
+}
+div.userAdd0:hover{
+	cursor:pointer;
+	background-color:rgba(100,200,100,0.8);
 }
 div.userAdd:hover{
 	cursor:pointer;
@@ -145,7 +173,7 @@ span.bkgrn {
 	margin: 0;
 	padding:0;
 }
-div.userRemove {
+div.userRemove0 {
 	width:40px;
 	position: relative;
 	right: 2px;
@@ -155,6 +183,21 @@ div.userRemove {
 	border:1px solid black;
 	border-left:none;
 	margin:0;
+}
+div.userRemove {
+	width:40px;
+	position: relative;
+	right: 0px;
+	display: inline-block;
+	padding:3px;
+	background:rgba(255, 255, 255, .85);
+	border:1px solid black;
+	border-left:none;
+	margin:0;
+}
+div.userRemove0:hover{
+	cursor:pointer;
+	background-color:rgba(200,100,100,0.8);
 }
 div.userRemove:hover{
 	cursor:pointer;
