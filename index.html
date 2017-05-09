@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="author" content="Knock7">
+<meta name="description" content="This is an incremental game in alpha testing.">
+
+<link rel="stylesheet" type="text/css" href="mystyle.css">
+
+<script src="script.js"></script>
+
+</head>
+
+
+<body>
+
+<header id="closeMe" class="alert">
+	<h1 class="closebtn">&times;</h1>
+	<h2>Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a stream and a field with wild animals you can hunt, and begin work on a more permanent residence.</h2>
+</header>
+
+<header>
+	<h1 id="title">A Lonely Beginning</h1>
+	<h3 id="statement">&nbsp;</h3>
+</header>
+
+
+<resources id="stuff" style="background:linear-gradient(rgba(200,200,200,0.5),rgba(250,250,250,0.8))">
+	<h2 style="text-align:center;"> Resources </h2>
+
+	<p> Food: <span id="food"> 50 </span> / <span id="foodMax" class="right">100</span></p>  
+	<p id="woodStuff" > Wood: <span id="wood"> 100 </span> / <span id="woodMax" class="right">100</span></p> 
+	<p id="rockStuff" class="hide"> Rock: <span id="rock"> 0 </span> / <span id="rockMax" class="right">100</span></p>   
+	<p id="lumberStuff" class="hide"> Lumber: <span id="lumber"> 0 </span> / <span id="lumberMax" class="right">0</span></p>
+	<p id="stoneStuff" class="hide"> Stone: <span id="stone"> 0 </span> / <span id="stoneMax" class="right">0</span></p>  
+	<p id="researchStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p><!-- maybe move this to the Town Hall tab -->
+
+
+</resources>
+
+
+<buttons>
+	<span id="butt1" class="butt none">JOBS</span>
+	<span id="butt2" class="butt none">BUILDINGS</span>
+	<span id="butt3" class="butt none">RESEARCH</span>
+	<span id="butt4" class="butt none">TOWN HALL</span>
+	<span id="butt5" class="butt none">Fifth Panel</span>
+</buttons>
+
+
+
+<!--/////////////////////////////////////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
+
+<tabs id="pan1" style="float:left;">
+	<h2>Jobs</h2>
+
+	<div id="camp" class="JobBox0" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(camp.jpg); display:inline-block;">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
+			<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp;</b>
+		</div>
+		<p style="font-size:4pt;"> </p>
+	</div>
+
+	<div id="fields" class="JobBox0" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(fields.jpg); display:inline-block;">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;FIELDS&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="hunterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Hunters: <span id="hunters">0</span> / <span id="huntersMax">100</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0"> 
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+
+	</div>
+
+	<div id="forest" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;FOREST&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="woodcutterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Woodcutters: <span id="woodcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+	</div>
+
+	<div id="quarry" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
+		<p style="font-size:4pt;"> </p>
+		<p><span class="bkgrn"><b>&nbsp;QUARRY&nbsp;</b></span></p>
+		<p style="font-size:25pt;"> </p>
+
+		<div id="rockcutterJob">
+			<div class="userAdd0">
+				<b>&nbsp;Rockcutters: <span id="rockcutters">0</span> / <span id="rockcuttersMax">1</span>&nbsp;</b>
+			</div>
+			<div class="userRemove0">
+				<b> X </b>
+			</div>
+			<p style="font-size:4pt;"> </p>
+		</div>
+	</div>
+
+	<!--	RIP the fallen jobBoxes -->
+
+	<div id="blank" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+		<p style="font-size:4pt;"> </p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd0"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
+		<div class="userRemove0"></div>
+		<p style="font-size:4pt;"> </p>
+	</div>
+
+	<div id="blank2" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
+		<p style="font-size:4pt;"> </p>
+		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
+		<p style="font-size:25pt;"> </p>
+
+		<div class="userAdd0"></div>
+		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
+		<div class="userRemove0"></div>
+		<p style="font-size:4pt;"> </p>
+	</div>
+
+</tabs>
+
+
+
+
+
+<!--/////////////////////////////////////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
+
+<tabs id="pan2">
+	<h2>Buildings</h2>
+
+
+	<div id="shackBuild" class="buildingButton" style="margin:3px 2px 3px 7px;"> 
+		<div class="tooltiptext">
+			<p>Requires (1) worker to build<br>
+				Cost:&nbsp;<span id="shackCosts">30 wood</span><br><br>
+				Adds: space for 1 new settler
+			</p>
+		</div>
+		<div id="shackprogress" class="buildBar"><p class="buildText">
+		Shacks [<span id="shack">1</span>]</p>
+		</div>
+	</div>
+
+	<!-- this is a placeholder to make the buildings stay in 2 columns -->
+	<div id="buildBlank" class="hide buildingButton">
+		<div class="tooltiptext">
+			<p>Requires (4) workers to build<br>
+			Cost:&nbsp;<span id="labCosts"> </span><br><br>
+			Adds: space for 1 researcher<br>
+			</p></div>
+		<div id="dontneed'" class="buildBar"><p class="buildText">
+		Lab Space [<span id="lab">0</span>]
+		</p></div></div>
+
+	<div id="buildBlank2" class="hide buildingButton">
+		<div class="tooltiptext">
+			<p>Requires (4) workers to build<br>
+			Cost:&nbsp;<span id="labCosts"> </span><br><br>
+			Adds: space for 1 researcher<br>
+			</p></div>
+		<div id="dontneed2" class="buildBar"><p class="buildText">
+		Lab Space [<span id="lab">0</span>]
+		</p></div></div>
+
+
+
+</tabs>
+
+
+
+<!--/////////////////////////////////////////////////////////////////research tab//////////////////////////////////////////////////////////////////////////-->
+
+<tabs class="none" id="pan3">
+
+	<h2>Research</h2>
+
+	<div class="researchButton" id="FarmEquip">
+		<div id="FarmEquipresBar" class="resBar">
+			<p class="resText">Farm Equipment</p>
+		</div>
+		<div class="tooltiptext">
+			<br>Takes 1000 research<br>
+			Uses 2 wood and 1 lumber per research<br><br>
+			Improves farmers' food output by 50%<br><br>
+		</div>
+	</div>
+
+	<div class="researchButton" id="StoneAxe">
+		<div id="StoneAxeresBar" class="resBar">
+			<p class="resText">Stone Axes</p>
+		</div>
+		<dvi class="tooltiptext">
+			<br>Takes 1500 research<br>
+			Uses 1 lumber and 3 stone per research<br><br>
+			Improves woodcutter output by 50%<br><br>
+		</div>
+	</div>
+
+	<div class="researchButton hide" id="Smelting">
+		<div id="SmeltingresBar" class="resBar">
+			<p class="resText">Smelting</p>
+		</div>
+		<dvi class="tooltiptext">
+			<br>Takes 2000 research<br>
+			Uses 5 wood and 3 rock per research<br><br>
+			Unlocks metal resouces<br><br>
+		</div>
+	</div>
+
+	<div class="researchButton hide" id="Metalwork">
+		<div id="MetalworkresBar" class="resBar">
+			<p class="resText">Metalworking</p>
+		</div>
+		<dvi class="tooltiptext">
+			<br>Takes 3500 research<br>
+			Uses 1 metal per research<br><br>
+			Allows something something metal?<br><br>
+		</div>	
+	</div>
+
+	<div class="researchButton hide"><div id="ResTest" class="resBar"><p class="resText">research thing"</p></div></div>
+	<div class="researchButton hide"><div id="ResTest" class="resBar"><p class="resText">text here</p></div></div>
+
+
+
+</tabs> 
+
+
+
+
+<!--/////////////////////////////////////////////////////////////////council tab//////////////////////////////////////////////////////////////////////////-->
+
+<tabs class="none" id="pan4">
+	<h2>Town Hall<h2>
+
+
+	<div id="buildCounc" class="council"> 
+		<div class="tooltiptext" style="top: 110%;">
+			<p>Requires (10) workers to build<br>
+				Cost: 200 wood, 200 rock,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;400 lumber, 300 stone<br><br>
+				Unlocks research
+			</p>
+		</div>
+		<div id="councilhallprogress" class="councilbuildBar">
+			<p class="buildText">
+				Build a Town Hall in which<br>the Council can meet.
+			</p>
+		</div>
+	</div>
+
+	<div class="hide councilMessage" id="council1"><i>During the first meeting, the Council decideds to begin research and planning to recover lost technologies. You can now build labspace at the back for the Town Hall for research.</i>
+	</div>
+
+	<div class="hide councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div>
+	</tabs>
+
+
+
+
+
+	<tabs class="none" id="pan5"><p> this is the 5th section</p>
+	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
+</tabs>
+
+
+
+
+
+
+</body>
+</html>
