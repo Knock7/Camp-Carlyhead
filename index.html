@@ -2,13 +2,13 @@
 <html lang="en-US">
 <head>
 
-<meta charset="utf-8">
-<meta name="author" content="Knock7">
-<meta name="description" content="This is an incremental game in alpha testing.">
+	<meta charset="utf-8">
+	<meta name="author" content="Knock7">
+	<meta name="description" content="This is an incremental game in alpha testing.">
 
-<link rel="stylesheet" type="text/css" href="mystyle.css">
+	<link rel="stylesheet" type="text/css" href="mystyle.css">
 
-<script src="script.js"></script>
+	<script src="script.js"></script>
 
 </head>
 
@@ -29,13 +29,13 @@
 <resources id="stuff" style="background:linear-gradient(rgba(200,200,200,0.5),rgba(250,250,250,0.8))">
 	<h2 style="text-align:center;"> Resources </h2>
 
-	<p> Food: <span id="food"> 50 </span> / <span id="foodMax" class="right">100</span></p>  
+	<p id="foodStuff"> Food: <span id="food"> 50 </span> / <span id="foodMax" class="right">100</span></p>  
 	<p id="woodStuff" > Wood: <span id="wood"> 100 </span> / <span id="woodMax" class="right">100</span></p> 
-	<p id="rockStuff" class="hide"> Rock: <span id="rock"> 0 </span> / <span id="rockMax" class="right">100</span></p>   
+<!--	<p id="rockStuff" class="hide"> Rock: <span id="rock"> 0 </span> / <span id="rockMax" class="right">100</span></p>   
 	<p id="lumberStuff" class="hide"> Lumber: <span id="lumber"> 0 </span> / <span id="lumberMax" class="right">0</span></p>
 	<p id="stoneStuff" class="hide"> Stone: <span id="stone"> 0 </span> / <span id="stoneMax" class="right">0</span></p>  
-	<p id="researchStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p><!-- maybe move this to the Town Hall tab -->
-
+	<p id="researchStuff" class="hide"> Research: <span id="research"> 0 </span> / <span id="researchMax" class="right"> </span></p>
+-->
 
 </resources>
 
@@ -49,9 +49,7 @@
 </buttons>
 
 
-
 <!--/////////////////////////////////////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
-
 <tabs id="pan1" style="float:left;">
 	<h2>Jobs</h2>
 
@@ -62,6 +60,12 @@
 
 		<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .85)">
 			<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="totalWorkers">1</span>&nbsp;</b>
+			<div class="tooltiptext">
+				<p>Every worker consumes <br>
+				<span id="freeworkerMake">1.5 food</span> / sec<br><br>
+				The workers required to construct<br> 
+				new buildings meet here at camp</p>
+			</div>
 		</div>
 		<p style="font-size:4pt;"> </p>
 	</div>
@@ -74,6 +78,9 @@
 		<div id="hunterJob">
 			<div class="userAdd0">
 				<b>&nbsp;Hunters: <span id="hunters">0</span> / <span id="huntersMax">100</span>&nbsp;</b>
+				<div class="tooltiptext">
+					<p>Each hunter makes: <br><span id="huntersMake">2.5 food / sec</span></p>
+				</div>
 			</div>
 			<div class="userRemove0"> 
 				<b> X </b>
@@ -83,40 +90,7 @@
 
 	</div>
 
-	<div id="forest" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(forest.jpg);">
-		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbsp;FOREST&nbsp;</b></span></p>
-		<p style="font-size:25pt;"> </p>
-
-		<div id="woodcutterJob">
-			<div class="userAdd0">
-				<b>&nbsp;Woodcutters: <span id="woodcutters">0</span> / <span id="woodcuttersMax">3</span>&nbsp;</b>
-			</div>
-			<div class="userRemove0">
-				<b> X </b>
-			</div>
-			<p style="font-size:4pt;"> </p>
-		</div>
-	</div>
-
-	<div id="quarry" class="JobBox0 none" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(quarry.jpg);">
-		<p style="font-size:4pt;"> </p>
-		<p><span class="bkgrn"><b>&nbsp;QUARRY&nbsp;</b></span></p>
-		<p style="font-size:25pt;"> </p>
-
-		<div id="rockcutterJob">
-			<div class="userAdd0">
-				<b>&nbsp;Rockcutters: <span id="rockcutters">0</span> / <span id="rockcuttersMax">1</span>&nbsp;</b>
-			</div>
-			<div class="userRemove0">
-				<b> X </b>
-			</div>
-			<p style="font-size:4pt;"> </p>
-		</div>
-	</div>
-
 	<!--	RIP the fallen jobBoxes -->
-
 	<div id="blank" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
 		<p style="font-size:4pt;"> </p>
 		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
@@ -142,11 +116,7 @@
 </tabs>
 
 
-
-
-
 <!--/////////////////////////////////////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
-
 <tabs id="pan2">
 	<h2>Buildings</h2>
 
@@ -159,7 +129,7 @@
 			</p>
 		</div>
 		<div id="shackprogress" class="buildBar"><p class="buildText">
-		Shacks [<span id="shack">1</span>]</p>
+		Shack [<span id="shack">1</span>]</p>
 		</div>
 	</div>
 
@@ -189,9 +159,7 @@
 </tabs>
 
 
-
 <!--/////////////////////////////////////////////////////////////////research tab//////////////////////////////////////////////////////////////////////////-->
-
 <tabs class="none" id="pan3">
 
 	<h2>Research</h2>
@@ -248,10 +216,7 @@
 </tabs> 
 
 
-
-
 <!--/////////////////////////////////////////////////////////////////council tab//////////////////////////////////////////////////////////////////////////-->
-
 <tabs class="none" id="pan4">
 	<h2>Town Hall<h2>
 
@@ -264,7 +229,7 @@
 			</p>
 		</div>
 		<div id="councilhallprogress" class="councilbuildBar">
-			<p class="buildText">
+			<p class="buildText" style="padding-top:17px;">
 				Build a Town Hall in which<br>the Council can meet.
 			</p>
 		</div>
@@ -274,19 +239,15 @@
 	</div>
 
 	<div class="hide councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div>
-	</tabs>
-
-
-
-
-
-	<tabs class="none" id="pan5"><p> this is the 5th section</p>
-	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
 </tabs>
 
 
 
 
+
+<tabs class="none" id="pan5"><p> this is the 5th section</p>
+	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
+</tabs>
 
 
 </body>

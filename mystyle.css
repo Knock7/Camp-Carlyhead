@@ -309,6 +309,14 @@ body.normal{
 	font-size:12pt;
 
 }
+.userAdd0:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.userAdd:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
 .buildingButton:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
