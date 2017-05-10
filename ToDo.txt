@@ -1,5 +1,6 @@
-1) add tooltips for workers (how much stuff they make). 
-With current factor=0.5 and game tick 200ms it will be (make value)*0.5*(1000/200) or (make value)*2.5
+1) fix the food shortage bug. maybe make current workers abandon buildings and start hunting
+
+1.5) move the Buildings[buildkey]["count"]++ occur in finishBuilding() and find a better way to adjust cost (loop through currentBuilding array? - or make a tempCount parameter in the Buildings[building] objects initiallized to 0 and incrimented when a building gets started, decremented what it finished and the cost calculation uses count+tempCount)
 
 2) make research items look better and add option to minimize/hide them - transiton into a small size with an icon/number that you can 
 hover over for a tooltip
