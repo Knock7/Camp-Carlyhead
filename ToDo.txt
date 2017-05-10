@@ -1,43 +1,11 @@
-1) make a document fragment of nodes for each new job box that I can copy with object.create() and then change values, 
-or a constructor that takes the values for name of workers, etc
-
-code could have function createJob(...array)
-
-function addJob(the box to put it in) ie. Forest, Workshop
-this will append the fragment to the right spot in the html - how does this work on loading a saved game?
-
-make a similar constructor for new buildings
-
-it may be best to just have all of the Stuff, Jobs, Buildings objects planned and listed out litterally after all? Yes! have
-all of the values for them stored and access them when making the elements show up in the html. Dont' need to clutter the html 
-with stuff i'm going to make anyway but need all the data about the properties listed out somewhere at the start.
-
-
-////code start
-
-var JobBox = documentFragment;
-
-var make = 'whatever job is next'
-
-var newBox = Object.create(JobBox)
-
-newBox.firstchild // na I think I should build it up instead of copying and changing parts - try both ways
-
-
-var newNode = new DocumentFragment();
-
-newNode.addChild
-
-newBox.getElementById
-
-
-
-
+1) add tooltips for workers (how much stuff they make). 
+With current factor=0.5 and game tick 200ms it will be (make value)*0.5*(1000/200) or (make value)*2.5
 
 2) make research items look better and add option to minimize/hide them - transiton into a small size with an icon/number that you can 
 hover over for a tooltip
 
-3) add some goal like a total population (the coucil has decided that once the town reaches X people they will attempt to start exploring and mapping the surrounding area)
+3) add some new goal like a total population (the coucil has decided that once the town reaches X people they will attempt to start exploring and mapping the surrounding area)
+
 then you can add an explorers guild next to the town hall - rename Town Hall tab?
 explorer missions first few to discover places to make more resrouces - can add jobs to fields or forest - discover a coal mine
 
