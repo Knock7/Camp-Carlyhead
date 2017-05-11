@@ -56,8 +56,8 @@ var Jobs = {
 	freeworker: {box: "camp", 		workers:1, maxworkers:1,					 unlocked:true   },//this gets skipped in incrRes()
 	researcher: {box: "laboratory",	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, },//this gets skipped too
 	hunter:		{box: "fields", 	workers:0, maxworkers:100, 		workbonus:1, unlocked:true,  make:{food:1}},
-	woodcutter:	{box: "forest", 	workers:0, maxworkers:3, 		workbonus:1, unlocked:false,  make:{wood:1}},
-	rockcutter:	{box: "quarry", 	workers:0, maxworkers:1, 		workbonus:1, unlocked:false,  make:{rock:1}},
+	woodcutter:	{box: "forest", 	workers:0, maxworkers:3, 		workbonus:1, unlocked:false, make:{wood:1}},
+	rockcutter:	{box: "quarry", 	workers:0, maxworkers:1, 		workbonus:1, unlocked:false, make:{rock:1}},
 	farmer:		{box: "fields", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{food:3}},
 	millworker:	{box: "riverbank", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{lumber:1,wood:-.5}},
 	mason:		{box: "workshops", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{stone:1,rock:-1.5}},
@@ -106,7 +106,7 @@ var Jobs = {
 		newDiv = document.createElement("div");
 		newDiv.id = boxName;
 		newDiv.className = "JobBox";
-		newDiv.style = "display: inline-block; background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url("+ boxName +".jpg);"
+		newDiv.style = "display: inline-block; background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(images/"+ boxName +".jpg);"
 
 		p1 = document.createElement("p");
 		p1.style = "font-size:4pt;"
@@ -133,21 +133,22 @@ var Jobs = {
 
 	addJobElement: function (jobName, boxName){//came move the check whether box exists up to here
 
+		Jobs[jobName]["unlocked"] = true;
 		makeStr = "";
 		consumeStr ="";
-		consumes = false;
+		
 
 		for (var i in Jobs[jobName]["make"]){
 			if(Jobs[jobName]["make"][i]>0){
 				makeStr += Jobs[jobName]["make"][i]*factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 			} else {
 				consumeStr += Jobs[jobName]["make"][i]*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
-				consumes = true;
 			}
-			if(consumes){
+			if(consumeStr===""){
 				consumeStr = "<br>and consumes:<br>" + consumeStr;
 				console.log(consumeStr);
 			}
+			//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
 		}
 
 		makeStr = makeStr.slice(0,-4);
@@ -155,22 +156,11 @@ var Jobs = {
 
 		indiv = document.createElement("div");
 		indiv.id = jobName.toLowerCase() + "Job";
-		indiv.innerHTML = "<div class='userAdd'><b>&nbsp;"+ jobName.charAt(0).toUpperCase() + jobName.slice(1) +"s: <span id='"+ jobName +"s'>0</span> / <span id='"+ jobName +"sMax'>0</span>&nbsp;</b><div class='tooltiptext'><p>Each "+ jobName +" makes: <br><span id='"+ jobName +"sMake' >"+ makeStr + consumeStr +"</span></p></div></div><div class='userRemove'><b> X </b></div><p style='font-size:4pt;'> </p>";
+		indiv.innerHTML = "<div class='userAdd'><b>&nbsp;"+ jobName.charAt(0).toUpperCase() + jobName.slice(1) +"s: <span id='"+ jobName +"s'>0</span> / <span id='"+ jobName +"sMax'>"+ Jobs[jobName]["maxworkers"] +"</span>&nbsp;</b><div class='tooltiptext'><p>Each "+ jobName +" makes: <br><span id='"+ jobName +"sMake' >"+ makeStr + consumeStr +"</span></p></div></div><div class='userRemove'><b> X </b></div><p style='font-size:4pt;'> </p>";
 		indiv.querySelector(".userAdd").addEventListener("click",moveworkerEvent);
 		indiv.querySelector(".userRemove").addEventListener("click",removeworkerEvent);
 
-		//need to set the max workers and tooltip amounts
-		//current defaults are 0 / 0 which will work for now
-
-
 		document.getElementById(boxName).appendChild(indiv);
-		document.getElementById(jobName+"sMax").innnerHTML = Jobs[jobName]["maxworkers"];
-		console.log(jobName +" max workers set to "+ Jobs[jobName]["maxworkers"]);
-
-		//add listeners
-	//	document.getElementById(jobName+"Job").getElementsByClassName("userAdd")[0].addEventListener("click",moveworkerEvent);
-
-	//	document.getElementById(jobName+"Job").getElementsByClassName("userRemove")[0].addEventListener("click",removeworkerEvent);	
 	},
 
 
@@ -288,7 +278,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
 //
 
-//variables to litsen to
+//elements to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 
 	bodyy = document.getElementsByTagName('body')[0];
@@ -313,16 +303,7 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 		jobIds[i].addEventListener("click",moveworkerEvent);
 		jobIds[i].parentElement.getElementsByClassName("userRemove0")[0].addEventListener("click",removeworkerEvent);
 	}
-/*
-	for(var jobkey in jobIds){//do I even need the container object?
-		
-		document.getElementById(jobkey).getElementsByClassName("userAdd0")[0].addEventListener("click",moveworkerEvent);
 
-		container[jobkey+"RemButton"] = document.getElementById(jobkey).getElementsByClassName("userRemove0")[0];
-		container[jobkey+"RemButton"].addEventListener("click",removeworkerEvent);
-	}
-	//the variables for the job button elements are "fieldAddButton" and "fieldRemButton" etc. not hunterAdd and hunterRem
-*/
 
 	//adds event listener for the building buttons
 	var setBuildings = document.querySelectorAll(".buildingButton");
@@ -562,7 +543,7 @@ function finishBuilding(buildkey,index){
 		buildConstruct.splice(index,1);
 	}
 }
-/////////////////////////////////////////////////////////////////////////////unlocking buildings and the resources those buildings unlock////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////unlocking buildings and the resources those buildings start with////////////////////////////////////////////////////////////////////////////////// 
 function unlock(unlockkey){
 
 	if(!Buildings[unlockkey]["unlocked"]){
@@ -624,12 +605,18 @@ function SwapActiveRes(x){
 }
 
 var Research = {
-	FarmEquip:	{prize:0, resCost:{wood:2,lumber:1}, 	totalRes:1000, completion:0, done:false},
-	StoneAxe:	{prize:1, resCost:{lumber:1,stone:3}, 	totalRes:1500, completion:0, done:false},
-	Smelting:	{prize:2, resCost:{wood:5,rock:3},		totalRes:2000, completion:0, done:false},
-	Metalwork:	{prize:3, resCost:{metal:1},			totalRes:3500, completion:0, done:false},
+	FarmEquip:	{prize:0, name:"Farm Equipment",	resCost:{wood:2,lumber:1}, 	totalRes:1000, completion:0, done:false, reward:"Improves farmers' food output by 50%"},
+	StoneAxe:	{prize:1, name:"Stone Axes",		resCost:{lumber:1,stone:3}, 	totalRes:1500, completion:0, done:false, reward:"'wins' the game for now"},
+	Smelting:	{prize:2, name:"Smelting",			resCost:{wood:5,rock:3},		totalRes:2000, completion:0, done:false},
+	Metalwork:	{prize:3, name:"Metalworking",		resCost:{metal:1},			totalRes:3500, completion:0, done:false},
 
-
+	addResearchButton: function(research){
+		div = document.createElement("div");
+		div.className = "researchButton"
+		div.id = research;
+		//need to generate string for 'uses' variable
+		div.innerHTML = "<div id ='"+ research + "resBar' class='resbar'><p class='resText'>"+Research[research]["name"]+"</P></div><div class='tooltiptext'><br>Takes "+Research[research]["totalRes"]+" research<br>Uses"+uses+" per research<br><br>"+Research[research]["reward"]+"<br><br></div>";
+	}
 }
 
 function researchIncr(resUp){
@@ -677,9 +664,11 @@ function doBonus(resUp){
 	        break;
 	    case 1:
 	        Stuff.wood.workbonus = Jobs.woodcutter.workbonus*1.5;
+			alert("You win the game so far! What should come next?");
 			console.log("case 1");
 	        break;
 	    case 2:
+			//need to add a newResearchButton() function;
 	        console.log("case 2");
 	        break;
 	    case 3:
@@ -720,7 +709,7 @@ function isEmpty(object) {
 }
 function updateTransition(){
 	console.log("updateTransition()")
-	//bodyy.className = "normal";
+	bodyy.className = "normal";
 }
 
 
@@ -737,10 +726,9 @@ function run(){
 		}
 	}
 
-	//*******************************************
-//check for events met to unlock new content
-	
 
+
+//check for events met to unlock new content
 	if(Buildings.shack.count==2&&shackToken1==0){
 		document.getElementById("statement").innerHTML = "Soon another wanderer joins you in your work. More will surely come and stay if you have space to house them."; counter1 = 0;
 		shackToken1 = 1;
@@ -749,11 +737,11 @@ function run(){
 	//add forest box and woodcutter job
 	if(Buildings.shack.count==3&&shackToken3==0){
 		
+		Stuff.wood.unlocked=true;
+
 		Jobs.addJobBox("forest");
 		Jobs.addJobElement("woodcutter","forest");
 
-
-		Stuff.wood.unlocked=true;
 		document.getElementById("statement").innerHTML = "You should head back into the forest to cut more wood to continue building"; counter1 = 0;
 		shackToken3 = 1;
 	}
@@ -826,10 +814,10 @@ function run(){
 	}
 
 //phase 1 done? - phase 2 unlocks from research - more phase 3 unlocks below?//
-//*******************************************
+//******************************************
 
 
-	/////////continue the construction of new building
+	/////////continue the construction of new buildings
 	if (buildBuild.length>0){
 		buildUp()
 	}
@@ -839,30 +827,28 @@ function run(){
 		researchIncr(ActiveRes);
 	}
 
-
 	//////increment resources///////////////////
 	Jobs.incrRes();
 	Buildings.incrRes();
 
-
-
-	//consume food
+	///////consume food/////////////////////////
 	document.getElementById("food").innerHTML = Stuff["food"]["stored"].toFixed(1);
 	Stuff.food.stored=(Stuff.food.stored*10-(allworkers*6*factor))/10;//should put allworkers as freeworkersMax/maxfreeworkers and clean up "allworkers" variable
 	
 	//panic if there is not enough food
 	if(Stuff.food.stored<1){
-		
+		console.log("food panic!");
 		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
-		bodyy.className = "normal";
+		//bodyy.className = "normal";
 		document.getElementById("statement").innerHTML = "In a food-shortage panic all available workers take to hunting";
 		counter1=0;
 	
 		tempFood = 0; 
 
 		for(var i in Jobs){
-			console.log(i);
+			
 			if(Jobs[i]["unlocked"] && i!=="farmer"){
+				console.log("removing " + i);
 				tempFood+=Jobs[i]["workers"];
 				Jobs[i]["workers"] = 0;
 				document.getElementById(i + "s").innerHTML = Jobs[i]["workers"];
@@ -876,7 +862,7 @@ function run(){
 
 
 
-//document.getElementById('demo').innerHTML = Date();
+
 
 } setInterval(run,200);
 
