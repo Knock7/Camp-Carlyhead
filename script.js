@@ -56,8 +56,8 @@ var Jobs = {
 	freeworker: {box: "camp", 		workers:1, maxworkers:1,					 unlocked:true   },//this gets skipped in incrRes()
 	researcher: {box: "laboratory",	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, },//this gets skipped too
 	hunter:		{box: "fields", 	workers:0, maxworkers:100, 		workbonus:1, unlocked:true,  make:{food:1}},
-	woodcutter:	{box: "forest", 	workers:0, maxworkers:3, 		workbonus:1, unlocked:true,  make:{wood:1}},
-	rockcutter:	{box: "quarry", 	workers:0, maxworkers:1, 		workbonus:1, unlocked:true,  make:{rock:1}},
+	woodcutter:	{box: "forest", 	workers:0, maxworkers:3, 		workbonus:1, unlocked:false,  make:{wood:1}},
+	rockcutter:	{box: "quarry", 	workers:0, maxworkers:1, 		workbonus:1, unlocked:false,  make:{rock:1}},
 	farmer:		{box: "fields", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{food:3}},
 	millworker:	{box: "riverbank", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{lumber:1,wood:-.5}},
 	mason:		{box: "workshops", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{stone:1,rock:-1.5}},
@@ -163,9 +163,9 @@ var Jobs = {
 		//current defaults are 0 / 0 which will work for now
 
 
-
 		document.getElementById(boxName).appendChild(indiv);
 		document.getElementById(jobName+"sMax").innnerHTML = Jobs[jobName]["maxworkers"];
+		console.log(jobName +" max workers set to "+ Jobs[jobName]["maxworkers"]);
 
 		//add listeners
 	//	document.getElementById(jobName+"Job").getElementsByClassName("userAdd")[0].addEventListener("click",moveworkerEvent);
@@ -179,15 +179,15 @@ var Jobs = {
 
 var Buildings = {  //if addWorker property key is "freeworker", it will add free workers     can remove the buildOnce property because just make buy button invis for "true" buildings?
 					//can move the unlockRes and unlockJob functionality to the unlock_conditional section of the run() function
-	shack:	{name: "Shack", 		count:1, buildWorkers:1, buildTime:25, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false, 	addsText:["space for 1 new settler"],		},
-	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	addsText:["space for 2 farmers"],	statement:"To free up workers from hunting duties you decided to try farming"},
-	shed:	{name: "Woodshed",		count:0, buildWorkers:2, buildTime:25, unlocked:false, buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	addsText:["space for 1 woodcutter", "50 wood storage"],	statement:"It looks like you could use a place to chop and store more wood"},
-	expandQ:{name: "Expand Quarry",	count:0, buildWorkers:3, buildTime:25, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	addsText:["space for 1 rockcutter", "50 rock storage"],	statement:"Clearing access to the quarry allows for more rock collection and storage"},
-	barn:	{name: "Barn",			count:0, buildWorkers:3, buildTime:40, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	addsText:["100 food storage", "100 wood storage", "100 rock storage"],	statement:"You will need even more storage to stockpile resources for larger buildings"},
-	mill:	{name: "Sawmill",		count:0, buildWorkers:3, buildTime:50,unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{millworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["millworker"],costratio:2.5,		buildOnce:false,	addsText:["space for 3 mill workers", "300 lumber storage"],	statement:"Process the wood into boards at the sawmill"},
-	workshop:{name:"Workshop",		count:0,buildWorkers:3, buildTime:60,unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	addsText:["space for 3 masons", "200 stone storage"],	statement:"Workshops will allow masons to cut raw rock into stone"},
-	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	addsText:["space for 1 new settler"],	statement:"With the boards from the mill and cut stones you can build new housing structures"},
-	lab: 	{name: "Laboratory",	count:0, buildWorkers:4, buildTime:100,unlocked:false, buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	addsText:["space for 1 researcher"],	statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
+	shack:	{name: "Shack", 		count:1, buildWorkers:1, buildTime:25, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0, 	addsText:["space for 1 new settler"],		},
+	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	tempCount:0,	addsText:["space for 2 farmers"],	statement:"To free up workers from hunting duties you decided to try farming"},
+	shed:	{name: "Woodshed",		count:0, buildWorkers:2, buildTime:25, unlocked:false, 	buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 woodcutter", "50 wood storage"],	statement:"It looks like you could use a place to chop and store more wood"},
+	expandQ:{name: "Expand Quarry",	count:0, buildWorkers:3, buildTime:25, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 rockcutter", "50 rock storage"],	statement:"Clearing access to the quarry allows for more rock collection and storage"},
+	barn:	{name: "Barn",			count:0, buildWorkers:3, buildTime:40, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["100 food storage", "100 wood storage", "100 rock storage"],	statement:"You will need even more storage to stockpile resources for larger buildings"},
+	mill:	{name: "Sawmill",		count:0, buildWorkers:3, buildTime:50,unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{millworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["millworker"],costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 mill workers", "300 lumber storage"],	statement:"Process the wood into boards at the sawmill"},
+	workshop:{name:"Workshop",		count:0,buildWorkers:3, buildTime:60,unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 masons", "200 stone storage"],	statement:"Workshops will allow masons to cut raw rock into stone"},
+	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 new settler"],	statement:"With the boards from the mill and cut stones you can build new housing structures"},
+	lab: 	{name: "Laboratory",	count:0, buildWorkers:4, buildTime:100,unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],	statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
 
 
 	councilhall:{count:0,buildWorkers:10, buildTime:200,  unlocked:false,													cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlockRes:[], 	unlockJob:[],			costratio:1,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
@@ -251,47 +251,48 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 
 };
 
-//go through and see which of these can be local variables - no need to have them all global probably
-var wrks = 0;		//total number of workers - only updated on TotalWorkers() call	
-var counter1 = 0;	//timer for removing "statement" messages
-var incr = 0; 		//to add resources each step
-var max = 0;  		//to find max storable
-var txtNotEnough = " "; //to say which resources are missing to build a new building
-var allworkers = 1;		//to count up the workers and subtract food consumption
-var tempFood = 0;	//to count workers transfered to hunting in food shortage
-var actualcost = 0;	//to calculate the cost of a purchase from the base cost, "cost," and the cost ratio
-var nextcost = 0;	//to give how much the next building will cost (to display on the webpage)
-var tempKey = 0;	//to give farm and other food production to the "food" Stuff property
-var shackToken1 = 0;	//to let the shack message play once
-var shackToken2 = 0;	//to the the shack2 message play once
-var shackToken3 = 0;
-var shackToken4 = 0;
-var shackToken5 = 0;
-var shackToken6 = 0;
-var shackToken7 = 0;
-var unlockStuff = "";	//to set new materials to unlocked when a certain building is made
-var ActiveRes = " ";	//to set active research
-var make = true;	//to tell whether to make a research or resource increment (no if would be < 0 )
-var strg = "";
-var num = 1;			//to tell how many workers to add or remove
-var buildBuild = [];	//if empty, not building, otherwise building whatever is in the array - can have multiple values of same building
-var buildConstruct = [];//used to store completion of building with same index in buildBuild (0 to 100)
-var buildWorkers = 0;	//number of free workers to currently used for construction
-var time = 1000;		//time to construct a building
-var interval = 10;		//ammount of construction to do each run() cycle
-var construction = 0; 	//completion from 0 to 100 of the current building
-//check this object
-var container = {};		//to store the elements on which we will set the eventListeners (because we can't make new variable names using variable strings) - do I even need this though?
-var bodyy 				//reference to the HTML node/element <body>
-var knowledge = 0;		//the prestige variable
-var JobBoxs = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
-var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
+//GLOBAL VARIABLES - go through and see which of these can be local variables - no need to have them all global probably
+	var wrks = 0;		//total number of workers - only updated on TotalWorkers() call	
+	var counter1 = 0;	//timer for removing "statement" messages
+	var incr = 0; 		//to add resources each step
+	var max = 0;  		//to find max storable
+	var txtNotEnough = " "; //to say which resources are missing to build a new building
+	var allworkers = 1;		//to count up the workers and subtract food consumption
+	var tempFood = 0;	//to count workers transfered to hunting in food shortage
+	var actualcost = 0;	//to calculate the cost of a purchase from the base cost, "cost," and the cost ratio
+	var nextcost = 0;	//to give how much the next building will cost (to display on the webpage)
+	var tempKey = 0;	//to give farm and other food production to the "food" Stuff property
+	var shackToken1 = 0;	//to let the shack message play once
+	var shackToken2 = 0;	//to the the shack2 message play once
+	var shackToken3 = 0;
+	var shackToken4 = 0;
+	var shackToken5 = 0;
+	var shackToken6 = 0;
+	var shackToken7 = 0;
+	var unlockStuff = "";	//to set new materials to unlocked when a certain building is made
+	var ActiveRes = " ";	//to set active research
+	var make = true;	//to tell whether to make a research or resource increment (no if would be < 0 )
+	var strg = "";
+	var num = 1;			//to tell how many workers to add or remove
+	var buildBuild = [];	//if empty, not building, otherwise building whatever is in the array - can have multiple values of same building
+	var buildConstruct = [];//used to store completion of building with same index in buildBuild (0 to 100)
+	var buildWorkers = 0;	//number of free workers to currently used for construction
+	var time = 1000;		//time to construct a building
+	var interval = 10;		//ammount of construction to do each run() cycle
+	var construction = 0; 	//completion from 0 to 100 of the current building
+	//check this object
+	var container = {};		//to store the elements on which we will set the eventListeners (because we can't make new variable names using variable strings) - do I even need this though?
+	var bodyy 				//reference to the HTML node/element <body>
+	var knowledge = 0;		//the prestige variable
+	var JobBoxes = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
+	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
+//
 
 //variables to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 
 	bodyy = document.getElementsByTagName('body')[0];
-	bodyy.addEventListener("transitionend", updateTransition, true);//ends the white flash when food runs out
+	bodyy.addEventListener("transitionend", updateTransition);//ends the white flash when food runs out
 
 	var closeStory = document.querySelector(".closebtn");
 	closeStory.addEventListener("click", function(){closeStory.parentElement.style.display="none";populate();});
@@ -456,8 +457,8 @@ function addBuilding(buildkey){
 
 	//can we build it?
 	for(var key in Buildings[buildkey]["cost"]){
-		//should make actualcost a method in Buildings - Buildings.actualcost("buildkey")
-		actualcost = Math.round(Buildings[buildkey]["cost"][key]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]));
+		//should make actualcost a method in Buildings - Buildings.actualcost("buildkey")? the tempcount stores how many are being built so that cost is updated correctly
+		actualcost = Math.round(Buildings[buildkey]["cost"][key]*Math.pow(Buildings[buildkey]["costratio"],(Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"])));
 
 		if(actualcost>Stuff[key]["stored"]){
 			canbuild = false;
@@ -468,7 +469,7 @@ function addBuilding(buildkey){
 
 	//yes we can!
 	if(canbuild){
-		Buildings[buildkey]["count"]++;
+		Buildings[buildkey]["tempCount"]++;
 		//set everything up for construction function
 		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop - on buildBuild array 
 		buildConstruct.push(0);
@@ -480,7 +481,7 @@ function addBuilding(buildkey){
 		//pay for the building
 		for(var keyy in Buildings[buildkey]["cost"]){
 
-			actualcost = Math.round(Buildings[buildkey]["cost"][keyy]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]-1));   //consider making function actualcost(buildkey,key) which returns value calculated value
+			actualcost = Math.round(Buildings[buildkey]["cost"][keyy]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"]-1));   //consider making function actualcost(buildkey,key) which returns value calculated value
 
 			Stuff[keyy]["stored"]-=actualcost;
 			document.getElementById(keyy).innerHTML = Stuff[keyy]["stored"];
@@ -544,8 +545,8 @@ function finishBuilding(buildkey,index){
 			}
 		}
 
-		//finally add the building (adding last prevent errors with calculating "actualcost")
-		
+		Buildings[buildkey]["tempCount"]--;
+		Buildings[buildkey]["count"]++;
 		if (!Buildings[buildkey]["buildOnce"]){
 			document.getElementById(buildkey).innerHTML = Buildings[buildkey]["count"];
 		}
@@ -561,7 +562,7 @@ function finishBuilding(buildkey,index){
 		buildConstruct.splice(index,1);
 	}
 }
-/////////////////////////////////////////////////////////////////////////////unlocking buildings, resources////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////unlocking buildings and the resources those buildings unlock////////////////////////////////////////////////////////////////////////////////// 
 function unlock(unlockkey){
 
 	if(!Buildings[unlockkey]["unlocked"]){
@@ -587,8 +588,8 @@ function unlock(unlockkey){
 
 			//should move this check to make (and make) jobbox as a call from the addJobElement() method?
 			//if the jobBox for the unlocked job does not exist, make it
-			if(JobBoxs.indexOf(newBox)===-1){
-				JobBoxs.push(newBox);
+			if(JobBoxes.indexOf(newBox)===-1){
+				JobBoxes.push(newBox);
 				Jobs.addJobBox(newBox);
 			}
 			Jobs.addJobElement(newJob,newBox);
@@ -596,7 +597,8 @@ function unlock(unlockkey){
 			
 			Jobs[newJob]["unlocked"]=true;
 			document.getElementById(newJob+"s").innerHTML = Jobs[newJob]["workers"];
-			document.getElementById(newJob+"sMax").innerHTML = Jobs[newJob]["maxworkers"]
+			document.getElementById(newJob+"sMax").innerHTML = Jobs[newJob]["maxworkers"];
+			console.log("2) "+ newJob + " max workers set to: "+ Jobs[newJob]["maxworkers"]);
 		}
 
 		var costTxt = " ";
@@ -652,7 +654,7 @@ function researchIncr(resUp){
 				document.getElementById(incrKey).innerHTML = Stuff[incrKey]["stored"];
 			}
 			Research[resUp]["completion"]+= Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"]; //can add research to efficiency which increase researcher output% but doesn't increase materials cost - need to add a new resEfficiency variable
-			document.getElementById("research").innerHTML = Math.min(Research[resUp]["completion"],Research[resUp][totalRes]);
+			document.getElementById("research").innerHTML = Math.min(Research[resUp]["completion"],Research[resUp]["totalRes"]);
 			document.getElementById(resUp + "resBar").style.width = Research[resUp]["completion"]/Research[resUp]["totalRes"]*100 + "%";
 			if(Research[resUp]["completion"]>=Research[resUp]["totalRes"]){
 
@@ -717,7 +719,8 @@ function isEmpty(object) {
 	return false;
 }
 function updateTransition(){
-	bodyy.className = "normal";
+	console.log("updateTransition()")
+	//bodyy.className = "normal";
 }
 
 
@@ -847,17 +850,18 @@ function run(){
 	document.getElementById("food").innerHTML = Stuff["food"]["stored"].toFixed(1);
 	Stuff.food.stored=(Stuff.food.stored*10-(allworkers*6*factor))/10;//should put allworkers as freeworkersMax/maxfreeworkers and clean up "allworkers" variable
 	
+	//panic if there is not enough food
 	if(Stuff.food.stored<1){
 		
 		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
+		bodyy.className = "normal";
 		document.getElementById("statement").innerHTML = "In a food-shortage panic all available workers take to hunting";
 		counter1=0;
 	
 		tempFood = 0; 
 
-	
-
 		for(var i in Jobs){
+			console.log(i);
 			if(Jobs[i]["unlocked"] && i!=="farmer"){
 				tempFood+=Jobs[i]["workers"];
 				Jobs[i]["workers"] = 0;
