@@ -48,6 +48,19 @@ footer {
 	background-color:grey;
 	cursor:pointer;
 }
+.buttAttn {
+	width:500px;
+	color:black;
+	border:3px solid rgb(114,8,8);
+	padding:10px;
+	background-color:rgb(140,105,105);
+	visibility:block;
+}
+.buttAttn:hover {
+	color:white;
+	background-color:grey;
+	cursor:pointer;
+}
 resources {
 	float:left;
 	width: 20%;
@@ -63,17 +76,15 @@ buttons {
 	height:100%;
 	width:80%;
 	margin:auto;
-	float:right;
 	text-align:center;
 	padding:17px;
 }
 tabs {
+	vertical-align:top;
 	display:inline-block;
-	outline:pink;
 	height:100%;
-	width:40%;
+	width:39.5%;
 	min-width:305px;
-	float:right;
 	text-align:center;
 }
 .researchButton{
@@ -100,7 +111,7 @@ tabs {
 	padding-top:15px;
 }
 .resBar {
-	height:65px;
+	height:56px;
 	background-color:rgba(98, 161, 113, .5);
 	width:0%;
 }
@@ -335,6 +346,41 @@ body.normal{
 	padding:25px 80px;
 	margin:auto;
 	font-family: "Times New Roman", serif;
+}
+.statementLog{
+	position:absolute;
+	top:78px;
+	right:15px;
+	padding:5px;
+	background-color:black;
+	border:2px solid white;
+}
+.statementLog:hover{
+	background-color:lightgray;
+	border-color:darkgrey;
+	cursor:cell;
+}
+.logOut{
+	visibility: hidden;
+    border:2px solid darkgrey;
+    background-color: rgba(61,59,42,1); 
+    color: white;
+    text-align: left;
+    border-radius: 2px;
+    padding: 20px;
+    position: absolute;
+    z-index: 1;
+    top: -2px;
+    right: -2px;
+	white-space: nowrap;
+    margin-left: 0;
+    opacity: 1;
+	font-size:12pt;
+	/*height:200px;
+	width:500px;*/
+}
+.statementLog:hover .logOut{
+	visibility: visible;
 }
 .none {
 	display:none;

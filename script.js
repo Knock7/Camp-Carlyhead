@@ -54,7 +54,7 @@ var Stuff = { //the production of materials of all kinds
 
 var Jobs = {
 	freeworker: {box: "camp", 		workers:1, maxworkers:1,					 unlocked:true   },//this gets skipped in incrRes()
-	researcher: {box: "laboratory",	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, },//this gets skipped too
+	researcher: {box: "laboratory",	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{research:1}},//this gets skipped too
 	hunter:		{box: "fields", 	workers:0, maxworkers:100, 		workbonus:1, unlocked:true,  make:{food:1}},
 	woodcutter:	{box: "forest", 	workers:0, maxworkers:3, 		workbonus:1, unlocked:false, make:{wood:1}},
 	rockcutter:	{box: "quarry", 	workers:0, maxworkers:1, 		workbonus:1, unlocked:false, make:{rock:1}},
@@ -144,15 +144,14 @@ var Jobs = {
 			} else {
 				consumeStr += Jobs[jobName]["make"][i]*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 			}
-			if(consumeStr===""){
-				consumeStr = "<br>and consumes:<br>" + consumeStr;
-				console.log(consumeStr);
-			}
+
 			//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
+		}
+		if(consumeStr!==""){
+			consumeStr = "<br>and consumes:<br>" + consumeStr;	
 		}
 
 		makeStr = makeStr.slice(0,-4);
-		console.log(makeStr);
 
 		indiv = document.createElement("div");
 		indiv.id = jobName.toLowerCase() + "Job";
@@ -276,6 +275,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	var knowledge = 0;		//the prestige variable
 	var JobBoxes = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
 	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
+	var statementLog = "";	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
 //
 
 //elements to litsen to
@@ -319,8 +319,8 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 	}
 
 	//add event listener for council build button
-	var buildCounc = document.getElementById("buildCounc");
-	buildCounc.addEventListener("click",function(){addBuilding("councilhall")});
+	var councilListen;
+	document.getElementById("buildCounc").addEventListener("click", councilListen = function(){addBuilding("councilhall")});
 
 	var councilMessages = document.querySelectorAll(".councilMessage");
 	for (i=0;i<councilMessages.lengh;i++){
@@ -330,7 +330,10 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 }
 
 function populate(){
-	document.getElementById("statement").innerHTML = "You have built a shack and gathered some supplies. Now your attention turns to bigger plans."; counter1 = 0;	
+	var introStr = "You have built a shack and gathered some supplies. Now your attention turns to bigger plans."
+	statementLog = introStr + "<br><br>" + statementLog;
+	document.getElementById("logOut").innerHTML = statementLog;
+	document.getElementById("statement").innerHTML = introStr; counter1 = 0;	
 	load();
 }
 function panelEvent(e){
@@ -380,6 +383,10 @@ function CouncilMessageEvent(e){
 var mark1 = "pan1";
 var mark2 = "pan2";
 function Panel(select){
+	tempNum = select.slice(-1);
+	if(document.getElementById("butt"+tempNum).className === "buttAttn"){
+		document.getElementById("butt"+tempNum).className = "butt";
+	}
     if(select === mark1){
         //do nothing
     } else if(select === mark2){
@@ -450,6 +457,11 @@ function addBuilding(buildkey){
 
 	//yes we can!
 	if(canbuild){
+		if(buildkey==="councilhall"){
+			//remove event listener, hopefully named it right
+			document.getElementById("buildCounc").removeEventListener("click",councilListen);
+
+		}
 		Buildings[buildkey]["tempCount"]++;
 		//set everything up for construction function
 		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop - on buildBuild array 
@@ -592,8 +604,9 @@ function unlock(unlockkey){
 
 		document.getElementById(unlockkey+"Costs").innerHTML = costTxt;
 
+		statementLog = Buildings[unlockkey]["statement"] + "<br><br>" + statementLog;
 		document.getElementById("statement").innerHTML = Buildings[unlockkey]["statement"]; counter1 = 0;
-		
+		document.getElementById("logOut").innerHTML = statementLog;
 	}
 }
 
@@ -602,20 +615,32 @@ function SwapActiveRes(x){
 	ActiveRes = x;
 	document.getElementById("research").innerHTML = Research[x]["completion"];
 	document.getElementById("researchMax").innerHTML = Research[x]["totalRes"];
+	consumeStr = "";
+	for(var i in Research[x]["resCost"]){
+		consumeStr += Research[x]["resCost"][i] + " " + i + " / sec<br>";
+	}
+	document.getElementById("researchersMake").innterHTML = Jobs.researcher.make.research*Jobs.researcher.workbonus*5*factor+" research / sec<br>and consume:<br>"+consumeStr;
 }
 
 var Research = {
-	FarmEquip:	{prize:0, name:"Farm Equipment",	resCost:{wood:2,lumber:1}, 	totalRes:1000, completion:0, done:false, reward:"Improves farmers' food output by 50%"},
-	StoneAxe:	{prize:1, name:"Stone Axes",		resCost:{lumber:1,stone:3}, 	totalRes:1500, completion:0, done:false, reward:"'wins' the game for now"},
-	Smelting:	{prize:2, name:"Smelting",			resCost:{wood:5,rock:3},		totalRes:2000, completion:0, done:false},
-	Metalwork:	{prize:3, name:"Metalworking",		resCost:{metal:1},			totalRes:3500, completion:0, done:false},
+	FarmEquip:	{name:"Farm Equipment",	resCost:{wood:2,lumber:1}, 		totalRes:1000, 	completion:0, done:false, reward:"Farm equipment improves farmers' food output by 50%"},
+	StoneAxe:	{name:"Stone Axes",		resCost:{lumber:1,stone:3}, 	totalRes:1500, 	completion:0, done:false, reward:"'wins' the game for now"},
+	FindOre:	{name:"Ore Finding",	resCost:{food:1,lumber:1},		totalRes:500, 	completion:0, done:false, reward:"Some workers now know how to look for potential mining sites"},
+	Smelting:	{name:"Smelting",			resCost:{wood:5,rock:3},	totalRes:2000, 	completion:0, done:false},
+	Metalwork:	{name:"Metalworking",		resCost:{metal:1},			totalRes:3500, 	completion:0, done:false},
 
 	addResearchButton: function(research){
 		div = document.createElement("div");
 		div.className = "researchButton"
 		div.id = research;
 		//need to generate string for 'uses' variable
-		div.innerHTML = "<div id ='"+ research + "resBar' class='resbar'><p class='resText'>"+Research[research]["name"]+"</P></div><div class='tooltiptext'><br>Takes "+Research[research]["totalRes"]+" research<br>Uses"+uses+" per research<br><br>"+Research[research]["reward"]+"<br><br></div>";
+		var uses = "";
+		for(var i in Research[research]["resCost"]){
+			uses += Research[research]["resCost"][i] + " " + i;
+			uses += " and ";
+		}
+		uses = uses.slice(0,-5);
+		div.innerHTML = "<div id ='"+ research + "resBar' class='resbar'><p class='resText'>"+Research[research]["name"]+"</P></div><div class='tooltiptext'><br>Takes "+Research[research]["totalRes"]+" research<br>Uses "+uses+" per research<br><br>"+Research[research]["reward"]+"<br><br></div>";
 	}
 }
 
@@ -641,11 +666,15 @@ function researchIncr(resUp){
 				document.getElementById(incrKey).innerHTML = Stuff[incrKey]["stored"];
 			}
 			Research[resUp]["completion"]+= Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"]; //can add research to efficiency which increase researcher output% but doesn't increase materials cost - need to add a new resEfficiency variable
-			document.getElementById("research").innerHTML = Math.min(Research[resUp]["completion"],Research[resUp]["totalRes"]);
+
 			document.getElementById(resUp + "resBar").style.width = Research[resUp]["completion"]/Research[resUp]["totalRes"]*100 + "%";
 			if(Research[resUp]["completion"]>=Research[resUp]["totalRes"]){
-
+				Research[resUp]["completion"]=Reseasrch[resUp]["totalRes"];
+				document.getElementById("research").innerHTML = Research[resUp]["totalRes"];
 				Research[resUp]["done"] = true;
+
+				logStatement("Research complete: " + Research[resUp]["reward"]);
+
 				doBonus(resUp);
 				ActiveRes = " ";
 			}
@@ -653,25 +682,38 @@ function researchIncr(resUp){
 	}
 }
 
+//the 'finished' statements get handled in the researchIncr() function so don't have new statements here
 function doBonus(resUp){
-	switch (Research[resUp]["prize"]) {
-	    case 0:
-			document.getElementById("statement"),innerHTML = "Research complete: Farm equipment improves farmer output by 50%";
-			console.log("case 0");
-	        Stuff.farm.workbonus = Jobs.farmer.workbonus*1.5;
-			//some action to close the button
+	switch (resUp) {
+	    case "FarmEquip":			
+			console.log("research case 0");
+	        Jobs.farmer.workbonus = Jobs.farmer.workbonus*1.5;
+			//some action to close the button but this below isn't doing anything
 			document.getElementById("FarmEquip").style.visibility = "hidden";
 	        break;
-	    case 1:
+	    case "StoneAxe":
 	        Stuff.wood.workbonus = Jobs.woodcutter.workbonus*1.5;
-			alert("You win the game so far! What should come next?");
+			//make this show up in town hall instaed of as it does here? need to add a 'add town hall message' sort of function
+			stoneStr = "One of the newest wanderers to join you at camp used to supervise mining opperations near the Great City.<br>He offers to teach the group how to find ore and smelt it."
+			statementLog = stoneStr + "<br><br>" + statementLog;
+			document.getElementById("logOut").innerHTML = statementLog;
+			document.getElementById("council1").textContent = stoneStr;//need the <i>s?
+			//give the town hall button a red color
+			if(mark1!=="pan4"&&mark2!=="pan4"){
+				document.getElementById("butt4").className = "buttAttn";
+			}
 			console.log("case 1");
+			Research.addResearchButton("FindOre");
+			Research.addResearchButton("Smelting");
+
 	        break;
-	    case 2:
+		case "FindOre":
+
+	    case "Smelting":
 			//need to add a newResearchButton() function;
 	        console.log("case 2");
 	        break;
-	    case 3:
+	    case "Metalwork":
 	        console.log("case 3");
 	       	break;
 	    case 4:
@@ -691,7 +733,9 @@ function doBonus(resUp){
 function finishCouncil(index){//some of this can be run in finishBuilding() and then break out right after calling finishCouncil() for parts that are different
 	Buildings.councilhall.unlocked = true;
 	document.getElementById("buildCounc").style.display = "none";
-	document.getElementById("statement").innerHTML = "Council decree at Town Hall"; counter1 = 0;
+	decreeStr = "Council decree at Town Hall";
+	document.getElementById("statement").innerHTML = decreeStr; counter1 = 0;
+
 	document.getElementById("butt3").style.display = "inline";
 	unlock("lab");
 	document.getElementById("council1").style.visibility = "visible";
@@ -711,7 +755,12 @@ function updateTransition(){
 	console.log("updateTransition()")
 	bodyy.className = "normal";
 }
-
+//go through and put this in or just use from now on
+function logStatement(string){
+	statementLog = string + "<br><br>" + statementLog;
+	document.getElementById("logOut").innerHTML = statementLog;
+	document.getElementById("statement").innerHTML = string; counter1 = 0;
+}
 
 ////////////////////////////////////////////////////////////////game loop////////////////////////////////////////////////////////////////////////////////////////
 
@@ -730,7 +779,10 @@ function run(){
 
 //check for events met to unlock new content
 	if(Buildings.shack.count==2&&shackToken1==0){
-		document.getElementById("statement").innerHTML = "Soon another wanderer joins you in your work. More will surely come and stay if you have space to house them."; counter1 = 0;
+		wandererStr = "Soon another wanderer joins you in your work. More will surely come and stay if you have space to house them.";
+		statementLog = wandererStr + "<br><br>" + statementLog;
+		document.getElementById("logOut").innerHTML = statementLog;
+		document.getElementById("statement").innerHTML = wandererStr; counter1 = 0;
 		shackToken1 = 1;
 	}
 
@@ -741,14 +793,19 @@ function run(){
 
 		Jobs.addJobBox("forest");
 		Jobs.addJobElement("woodcutter","forest");
-
-		document.getElementById("statement").innerHTML = "You should head back into the forest to cut more wood to continue building"; counter1 = 0;
+		woodcutStr = "You should head back into the forest and cut more wood to continue building";
+		statementLog = woodcutStr + "<br><br>" + statementLog;
+		document.getElementById("logOut").innerHTML = statementLog;
+		document.getElementById("statement").innerHTML = woodcutStr; counter1 = 0;
 		shackToken3 = 1;
 	}
 
 	//statement - buildings cost more as you build them
 	if(Buildings.shack.count==4&&shackToken2==0){
-		document.getElementById("statement").innerHTML = "As you build more buildings they will require more resources. Why? Because that's what we do in this genre."; counter1 = 0;
+		morebuildStr = "As you build more buildings they will require more resources. Why? Because that's what we do in this genre.";
+		statementLog = morebuildStr + "<br><br>" + statementLog;
+		document.getElementById("logOut").innerHTML = statementLog;
+		document.getElementById("statement").innerHTML = morebuildStr; counter1 = 0;
 		shackToken2 = 1;
 	}
 
@@ -762,8 +819,10 @@ function run(){
 		Stuff.addResourceLine("rock");
 		Stuff.rock.unlocked=true;
 		/////
-
-		document.getElementById("statement").innerHTML = "One of the workers finds a small rocky clearing that can be turned into a quarry"; counter1 = 0;
+		quarryStr = "One of the workers finds a small rocky clearing that can be turned into a quarry";
+		statementLog = quarryStr + "<br><br>" + statementLog;
+		document.getElementById("logOut").innerHTML = statementLog;
+		document.getElementById("statement").innerHTML = quarryStr; counter1 = 0;
 		shackToken4 = 1;
 	}
 
@@ -804,9 +863,17 @@ function run(){
 
 	//makes panel/tabs buttons visible (inline)
 	if(Buildings.shack.count + Buildings.hut.count>15 && shackToken5==0){
-		document.getElementById("statement").innerHTML = "Your little camp has grown into a shanty town. You decide to form a council to govern and make decisions."; counter1 = 0;
+		shantyStr = "Your little camp has grown into a shanty town. You decide to form a council to govern and make decisions.";
+		statementLog = shantyStr + "<br><br>" + statementLog;
+		document.getElementById("logOut").innerHTML = statementLog;
+		document.getElementById("statement").innerHTML = shantyStr; counter1 = 0;
 		document.getElementById("title").innerHTML = "Camp Carlyhead";
 		shackToken5 = 1;
+
+		//give the town hall button a red color
+		if(mark1!=="pan4"&&mark2!=="pan4"){
+			document.getElementById("butt4").className = "buttAttn";
+		}
 
 		document.getElementById("butt1").style.display = "inline";
 		document.getElementById("butt2").style.display = "inline";
