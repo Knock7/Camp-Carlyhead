@@ -1,9 +1,7 @@
-1) fix the food shortage bug. maybe make current workers abandon buildings and start hunting
+1) fix the food shortage bug. maybe make current workers abandon buildings and start hunting? how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space?
 
-1.5) move the Buildings[buildkey]["count"]++ occur in finishBuilding() and find a better way to adjust cost (loop through currentBuilding array? - or make a tempCount parameter in the Buildings[building] objects initiallized to 0 and incrimented when a building gets started, decremented what it finished and the cost calculation uses count+tempCount)
-
-2) make research items look better and add option to minimize/hide them - transiton into a small size with an icon/number that you can 
-hover over for a tooltip
+2) add option to minimize/hide research buttons - transiton into a small size with an icon/number that you can 
+hover over for a tooltip?
 
 3) add some new goal like a total population (the coucil has decided that once the town reaches X people they will attempt to start exploring and mapping the surrounding area)
 
@@ -12,7 +10,7 @@ explorer missions first few to discover places to make more resrouces - can add 
 
 4) add resources and jobs for metal ores and smelting
 
-5) add a log for statements with a dropdown tab
+
 
 
 
