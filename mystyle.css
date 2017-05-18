@@ -105,14 +105,15 @@ tabs {
 	cursor:pointer;
 }
 #exploreButton {
-	background-color:red;
+	background-image: url(image/map.png);
 	border:solid black 2px;
 	margin:auto;
 	padding:7px;
 	text-align:center;
+	width:300px;
 }
 #exploreButton:hover {
-	background-color:blue;
+	background-color:rgba(10,10,250,.5);
 	cursor:pointer;
 }
 .resText {
@@ -281,6 +282,17 @@ body.normal{
     color: white;
     font-size:1.5em;
 }
+.deadBuilding{
+	color:white;
+	display:inline-block;
+	width:200px;
+	margin:3px 6px;
+	border:3px solid black;
+	background:linear-gradient(rgba(115, 126, 142,0.7),rgba(115, 126, 142,0.7)),url(images/woodback.jpg);
+	padding:0;
+	position:relative;
+}
+
 .buildingButton{
 	color:white;
 	display:inline-block;
