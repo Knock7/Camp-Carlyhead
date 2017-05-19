@@ -105,15 +105,27 @@ tabs {
 	cursor:pointer;
 }
 #exploreButton {
-	background-image: url(image/map.png);
-	border:solid black 2px;
+	background-image:linear-gradient(rgba(150,150,150,0.3),rgba(250,250,250,.55)),url(images/map.png); 
+	background-size:100% 100%;
+	border:2px solid black;
 	margin:auto;
+	margin-top:30px;
 	padding:7px;
 	text-align:center;
-	width:300px;
+	width:380px;
+	height:100px;
+	color:black;
+	padding-top:15px;
+
+	position:relative;
+	background-clip:border-box;
+	font-weight: bold;
+	font-size:1.5em;
+
 }
 #exploreButton:hover {
-	background-color:rgba(10,10,250,.5);
+	background-image:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/map.png);
+	color:white;
 	cursor:pointer;
 }
 .resText {
@@ -227,6 +239,8 @@ div.userRemove:hover{
 	background-color:rgba(200,100,100,0.8);
 }
 .council{
+	font-size:1.3em;
+	font-style:italic;
 	text-align:center;
 	color:white;
 	display:inline-block;
@@ -316,7 +330,7 @@ body.normal{
 
 	margin-top:-10px;
 	height:94px;
-	background-color:rgba(98, 161, 113, .5);
+	background-color:rgba(98, 161, 113, .9);
 	width:0%;
 }
 .buildText {
@@ -364,7 +378,13 @@ body.normal{
     visibility: visible;
     opacity: 1;
 }
+#exploreButton:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
 .councilMessage{
+	font-size:1.2em;
+	font-style:italic;
 	background-image:url("images/scroll.png");
 	width:450px; 
 	background-size: 450px 100%;
