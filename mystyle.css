@@ -110,13 +110,11 @@ tabs {
 	border:2px solid black;
 	margin:auto;
 	margin-top:30px;
-	padding:7px;
+	padding:0px;
 	text-align:center;
 	width:380px;
 	height:100px;
 	color:black;
-	padding-top:15px;
-
 	position:relative;
 	background-clip:border-box;
 	font-weight: bold;

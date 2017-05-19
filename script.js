@@ -842,7 +842,7 @@ function doBonus(resUp){
 			div = document.createElement("div");
 			div.id = "exploreButton";
 			div.className = "exploreButton";
-			div.innerHTML = "<div class='tooltiptext' id='exploreTip'><p>Requires (<span id ='exploreWorkers'>1</span>) worker for the exploration party<br>The trip will need <span id='exploreCosts'>30 food</span></p></div><div id='exploreBar' class='buildBar'><p class='buildText'>Send a party to explore and<br> map the surrounding area</p></div>";
+			div.innerHTML = "<div class='tooltiptext' id='exploreTip'><p>Requires (<span id ='exploreWorkers'>1</span>) workers for the exploration party<br>The trip will need <span id='exploreCosts'>30 food</span></p></div><div id='exploreBar' class='buildBar'><p class='buildText' style='margin-left:-5px'>Send a party to explore and<br> map the surrounding area</p></div>";
 			div.addEventListener("click",exploreGo);
 			document.getElementById("pan4").appendChild(div);
 
@@ -907,6 +907,8 @@ function logStatement(string){
 	document.getElementById("logOut").innerHTML = statementLog;
 	document.getElementById("statement").innerHTML = string; counter1 = 0;
 }
+
+///////////////////////////////////////////////////////////////////////////exploring the land////////////////////////////////////////////////////////////////////////////////////
 function exploreGo(){
 	if(exploring){
 		document.getElementById("statement").innerHTML = "We should wait until the last scouting party returns";
@@ -952,7 +954,7 @@ function exploreGo(){
 	}
 }
 function exploreUp(){
-	exploreBar += 20/Math.sqrt(exploreCount);
+	exploreBar += 1/Math.sqrt(exploreCount);
 	if(exploreBar<100){
 		exploreBar = 0;
 		exploreEnd();
@@ -975,6 +977,8 @@ function exploreEnd(){
 		document.getElementById("statement").innerHTML = "The exploring party discovered a potential mining site. You can build a shaft to extract ore"; counter1=0;
 		Stuff.addResourceLine("ore");
 		Buildings.mine.addworker.miner = 1;
+	} else if(exploreCount===14){
+		logStatement("All the the immediate area around the base camp has been mapped. The next expeditions will need to venture futher along the valley or up the foothills.");
 	} else if(exploreCount===15) {
 		logStatement("The last group of explorers barely scared off a wild bearling. They advise that all future exploring missions be armed.");
 		//need to add a place and mechanic for making and storing weapons (need a few expensive items - should have a making... bar in the armory and only whole numbered items)
@@ -984,6 +988,7 @@ function exploreEnd(){
 	} else {
 		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use";
 	}
+	//add in an ungrade or building with a small penalty to auto-explore if you have enough stuff?
 	exploring = false;
 }
 
