@@ -304,7 +304,6 @@ body.normal{
 	padding:0;
 	position:relative;
 }
-
 .buildingButton{
 	color:white;
 	display:inline-block;
@@ -328,6 +327,11 @@ body.normal{
 
 	margin-top:-10px;
 	height:94px;
+	background-color:rgba(98, 161, 113, .9);
+	width:0%;
+}
+#exploreBar{
+	height:96px;
 	background-color:rgba(98, 161, 113, .9);
 	width:0%;
 }
@@ -379,6 +383,8 @@ body.normal{
 #exploreButton:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+	right:20px;
+	top:105%;
 }
 .councilMessage{
 	font-size:1.2em;
