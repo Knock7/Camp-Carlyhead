@@ -36,7 +36,9 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 
 
 
-
+Thoughts from Matt:
+Make unlocking woodshed more straightforward 
+Map that shows buildings (learn Canvas API?) - function to draw a new block 
 
 
 Thoughts from Nacho:
