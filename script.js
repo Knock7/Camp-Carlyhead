@@ -1055,7 +1055,8 @@ function run(){
 //check for events met to unlock new content
 
 	//win the game for now
-	if(Stuff.copper.stored<5){
+	if(Stuff.copper.stored>5&&Token[99]){
+		Token[99]=false;
 		alert("That's it for now - check back later for more content. Thanks for playing!");
 	}
 
