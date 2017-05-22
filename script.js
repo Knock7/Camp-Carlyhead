@@ -7,38 +7,37 @@
 var Stuff = { //the production of materials of all kinds
 
 	//add that the buildingwork ammount only gets added if there is at least one worker? or x per worker, x=5 seems good. that is each farmer can collect the passive bonus for 5 farms - can have some buildings with low passive and high worker output and some with high passive and low added worker output (like factories and hydro dams - each added worker only provides a small additional bonus compared to the 'passive' effect of the building)
-	food:{ 	stored:100, 	maxstored:100, 	storebonus:1, unlocked:true,  },
-	wood:{ 	stored:100, 	maxstored:100, 	storebonus:1, unlocked:false, },
-	rock:{ 	stored:20, 		maxstored:100, 	storebonus:1, unlocked:false, },
-	lumber:{stored:0, 		maxstored:0, 	storebonus:1, unlocked:false, },
-	stone:{	stored:0, 		maxstored:0, 	storebonus:1, unlocked:false, },
-	clay:{  stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
-	brick:{ stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
-	cu_ore:{stored:0,		maxstored:50,	storebonus:1, unlocked:false, },//decide where to store this maybe make small storage and need to smelt quickly?
-	copper:{stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
-	tin: {	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
-	lead:{},
-	fe_ore:{},//Iron ore and coal make steel
-	steel:{},
-	mercury:{},
-	silver:{},
-	bronze:{stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
-	gold:{	stored:0,		maxstored:99999,storebonus:1, unlocked:false, },//no max on gold - don't display max and set arbitrarily high
-	coal:{	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },//use coal to improve smelting
-	iron:{},
-	steel:{},
-	zinc:{},//unlock some metals as you make more mines - trade for others that you don't have in your area
-	brass:{},
+	food:{ name:"Food", 	stored:100, 	maxstored:100, 	storebonus:1, unlocked:true,  color:"rgb(0,0,0)"},
+	wood:{ name:"Wodd",		stored:100, 	maxstored:100, 	storebonus:1, unlocked:false, },
+	rock:{ name:"Rock",		stored:20, 		maxstored:100, 	storebonus:1, unlocked:false, },
+	lumber:{name:"Lumber",	stored:0, 		maxstored:0, 	storebonus:1, unlocked:false, },
+	stone:{	name:"Stone",	stored:0, 		maxstored:0, 	storebonus:1, unlocked:false, },
+	clay:{  name:"Clay",	stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
+	brick:{ name:"Brick",	stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
+	cu_ore:{name:"Copper Ore",stored:0,		maxstored:50,	storebonus:1, unlocked:false, },//decide where to store this maybe make small storage and need to smelt quickly?
+	copper:{name:"Copper",	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
+	tin: {	name:"Tin",		stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
+	lead:{  name:"Lead"},
+	fe_ore:{name:"Iron Ore"},//Iron ore and coal make steel
+	steel:{ name:"Steel"},
+	mercury:{name:"Mercury"},
+	silver:{name:"Silver"},
+	bronze:{name:"Bronze",	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
+	gold:{	name:"Gold",	stored:0,		maxstored:99999,storebonus:1, unlocked:false, },//no max on gold - don't display max and set arbitrarily high
+	coal:{	name:"Coal",	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },//use coal to improve smelting
+	steel:{	name:"Steel"},
+	zinc:{  name:"Zinc"},//unlock some metals as you make more mines - trade for others that you don't have in your area
+	brass:{ name:"Brass"},
 
-	research:{stored:0,		maxstored:0,storebonus:1, unlocked:false, },//think about how this relates to the research object and maybe move it there? or make global variable?
+	research:{name:"Research",stored:0,		maxstored:0,	storebonus:1, unlocked:false, },//think about how this relates to the research object and maybe move it there? or make global variable?
 
-	spear:{stored:0,		maxstored:5,	storebonus:1, unlocked:false },
+	spear:{name:"Spears",	stored:0,		maxstored:5,	storebonus:1, unlocked:false },
 
 	addResourceLine: function(res){
 		Stuff[res]["unlocked"]=true;
 		p = document.createElement("p");
 		p.id = res+"Stuff";
-		p.innerHTML = " "+ res.charAt(0).toUpperCase() + res.slice(1) + ": <span id='"+res+"'> "+ Stuff[res]["stored"] +" </span> / <span id='"+res+"Max' class='right'>"+Stuff[res]["maxstored"]+"</span></p>";
+		p.innerHTML = " "+ Stuff[res]["name"] + ": <span id='"+res+"'> "+ Stuff[res]["stored"] +" </span> / <span id='"+res+"Max' class='right'>"+Stuff[res]["maxstored"]+"</span></p>";
 		
 		document.getElementById("stuff").appendChild(p);
 
@@ -93,7 +92,7 @@ var Jobs = {
 	miner:		{box: "hillside", 	workers:0, maxworkers:0, 		workbonus:1, unlocked:false, make:{cu_ore:.3}},//will add more metals (and lower copper output) with research
 	kilnworker:	{box: "workshops",	workers:0, maxworkers:0,		workbonus:1, unlocked:false, make:{copper:.1,cu_ore:-.5}},//can treat kins specially later (dropdown menu to select which ore (or clay -> brick) and each kiln can do different thing)
 	clayworker: {box: "riverbank",  workers:0, maxworkers:5,		workbonus:1, unlocked:false, make:{clay:2}},
-	brickmaker: {box: "workshops",	workers:0, maxworkers:0,		workbonus:1, unlocked:false, make:{brick:1,clay:-1,wood:-2}},
+	brickmaker: {box: "workshops",	workers:0, maxworkers:4,		workbonus:1, unlocked:false, make:{brick:1,clay:-1,wood:-2}},
 
 	//change the mine building to some kind of expanding quarry
 	//should there be different mines - how to organize? or one mine that makes many ores for starters - unlock more metals as you add mineshafts (rename current mineshaft)
@@ -212,7 +211,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 new settler"],					statement:"With the boards from the mill and cut stones you can build new housing structures"},
 	lab: 	{name: "Laboratory",	count:0, buildWorkers:4, buildTime:100,unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],					statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
 	mine:	{name: "Mineshaft",		count:0, buildWorkers:5, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{},				cost:{lumber:200},							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 2 miners"],						statement:"Adding a mineshaft will allow collection of ores."},
-	warehouse:{name:"Warehouse",	count:0, buildWorkers:5, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{wood:50,rock:50,lumber:50,stone:50,ore:50,clay:50}, addworker:{},cost:{rock:100,lumber:500,stone:300},unlockRes:[],		unlockJob:[],			costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["50 wood storage","50 rock storage","50 lumber storage","50 stone storage","50 ore storage","50 clay storage"], statement:"More versitile than barns, your warehouses are designed to store many kinds of materials."},
+	warehouse:{name:"Warehouse",	count:0, buildWorkers:5, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{wood:50,rock:50,lumber:50,stone:50,cu_ore:50,brick:50}, addworker:{},cost:{rock:100,lumber:500,stone:300},unlockRes:[],		unlockJob:[],			costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["50 wood storage","50 rock storage","50 lumber storage","50 stone storage","50 ore storage","50 clay storage"], statement:"More versitile than barns, your warehouses are designed to store many kinds of materials."},
 	kiln:	{name: "Kiln",			count:0, buildWorkers:3, buildTime:30, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{kilnworker:1},	cost:{brick:200,stone:50},					unlockRes:[],			unlockJob:["kilnworker"],costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["space for one kilnworker"], statement:"Kilns will let us smelt ore and perhaps do other things later."},
 	//give kilns a drop-down menu for picking what to do - turn wood to charcoal, turn clay to brick, turn ore to metal - different recipe based on what is selected. keep track of number of kilns and kilnworkers but treat consumption/generation separately?
 	councilhall:{name: "Town Hall", count:0, buildWorkers:10, buildTime:200,  unlocked:false, tempCount:0, 												cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlockRes:[], 	unlockJob:[],			costratio:1,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
@@ -258,7 +257,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 		}
 		addsText = addsText.slice(0,-70);
 
-		newBuild.innerHTML = "<div class='tooltiptext'><p>Requires ("+ Buildings[buildingName]["buildWorkers"] +") workers to build<br>Cost:&nbsp;<span id='"+ buildingName +"Costs'> </span><br><br>Adds: <span id='"+ buildingName +"Adds'"+ addsText +"</span></p></div><div id='"+ buildingName +"progress' class='buildBar'><p class='buildText'>"+ Buildings[buildingName]["name"] +" [<span id='"+ buildingName +"'>0</span>]</p></div>";
+		newBuild.innerHTML = "<div class='tooltiptext'><p>Requires ("+ Buildings[buildingName]["buildWorkers"] +") workers to build<br>Cost:&nbsp;<span id='"+ buildingName +"Costs'> </span><br><br>Adds: <span id='"+ buildingName +"Adds'>"+ addsText +"</span></p></div><div id='"+ buildingName +"progress' class='buildBar'><p class='buildText'>"+ Buildings[buildingName]["name"] +" [<span id='"+ buildingName +"'>0</span>]</p></div>";
 
 		newBuild.addEventListener("click",addBuildingEvent);
 
@@ -315,6 +314,14 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	var exploreCount = 1;		//number of free workers to go on an exploring trip
 	var token6 = true;
 	var token7 = true;
+	var token8 = true;
+	var token9 = true;
+	var token10 = true;
+	var token11 = true;//make an array and use it instead of all these token variables (clean up code):
+	var tokens = [];
+	for (i=0;i<20;i++){
+		tokens[i]=true;
+	}
 	var exploring = false;	//is there an active exploring party?
 	var exploreBar = 0;		//progress of the exploring party
 	var exploreStuff={food:30};//round stuff when deciding to use it
@@ -666,7 +673,7 @@ function SwapActiveRes(x){
 	for(var i in Research[x]["resCost"]){
 		consumeStr += Research[x]["resCost"][i]*5*factor + " " + i + " / sec<br>";
 	}
-	document.getElementById("researchersMake").innerHTML = Jobs.researcher.make.research*Jobs.researcher.workbonus*5*factor+" research / sec<br>and consume:<br>"+consumeStr;
+	document.getElementById("researchersMake").innerHTML = Jobs.researcher.make.research*Jobs.researcher.workbonus*5*factor+" research / sec<br>and consumes:<br>"+consumeStr;
 }
 
 var Research = {
@@ -899,6 +906,8 @@ function doBonus(resUp){
 	        break;
 	    case "Brickmaking":
 			Jobs.addJobElement("brickmaker");
+			Stuff.addResourceLine("brick");
+			Buildings.workshop.addworker.brickmaker = 2;
 	        console.log("case 5");
 	        break;
 	    case 6:
@@ -1018,14 +1027,13 @@ function exploreEnd(){
 		document.getElementById("mineBuild").className = "buildingButton";
 		document.getElementById("mineBuild").addEventListener("click",addBuildingEvent);
 		document.getElementById("statement").innerHTML = "The exploring party discovered another potential mining site. You can build a shaft to extract ore"; counter1=0;
-		Stuff.addResourceLine("cu_ore");
 		Buildings.mine.addworker.miner = 1;
 	} else if(exploreCount===10){
 		logStatement("The exploring party found a site by the river to extract clay.");
 		Stuff.addResourceLine("clay");
 		Jobs.addJobElement("clayworker");
 		Research.addResearchButton("Brickmaking");
-		Stuff.addResourceLine("brick");
+		
 	} else if(exploreCount===14){
 		logStatement("All the the immediate area around the base camp has been mapped. The next expeditions will need to venture futher along the valley or up the foothills.");
 	} else if(exploreCount===15) {
@@ -1035,7 +1043,7 @@ function exploreEnd(){
 		//also need a way to return some of the special items (and lose some of them each trip). for now just lose all of them
 		exploreStuff.spear = 1;
 	} else {
-		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use";
+		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; counter1=10;
 	}
 	//add in an ungrade or building with a small penalty to auto-explore if you have enough stuff?
 	exploring = false;
@@ -1130,7 +1138,7 @@ function run(){
 		unlock("hut");
 	}
 	//makes panel/tabs buttons visible (inline)
-	if(Buildings.shack.count + Buildings.hut.count>15 && shackToken5==0){
+	if(Buildings.shack.count + Buildings.hut.count>=20 && shackToken5==0){
 		shantyStr = "Your little camp has grown into a shanty town. You decide to form a council to govern and make decisions.";
 		statementLog = shantyStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
@@ -1153,14 +1161,21 @@ function run(){
 		alertPanel("pan3");
 	}
 	//remove the first mine as useless
+	if(Buildings.mine.tempCount===1&&token8){
+		document.getElementById("mineBuild").removeEventListener("click",addBuildingEvent);
+		token8 = false;
+	}
 	if(Buildings.mine.count===1&&token7){
 		token7=false;
 		logStatement("The first mine yielded no usable resources. Another site must be located.")
-		document.getElementById("mineBuild").removeEventListener("click",addBuildingEvent);
 		document.getElementById("mineBuild").className = "deadBuilding";
 	}
+	if(Buildings.mine.count===2&&token8){
+		logStatement("This mine produces copper ore which can be smelted into copper.")
+		Stuff.addResourceLine("cu_ore");
+	}
 	//unlocks warehouse
-	if(Stuff.cu_ore.unlocked){
+	if(Stuff.clay.unlocked&&Stuff.cu_ore.stored>10&&Stuff.clay.stored>10){
 		unlock("warehouse");
 	}
 
