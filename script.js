@@ -15,7 +15,7 @@ var Stuff = { //the production of materials of all kinds
 	clay:{  name:"Clay",	stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
 	brick:{ name:"Brick",	stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
 	cu_ore:{name:"Copper Ore",stored:0,		maxstored:50,	storebonus:1, unlocked:false, },//decide where to store this maybe make small storage and need to smelt quickly?
-	copper:{name:"Copper",	stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
+	copper:{name:"Copper",	stored:0,		maxstored:50,	storebonus:1, unlocked:false, },
 	tin: {	name:"Tin",		stored:0,		maxstored:0,	storebonus:1, unlocked:false, },
 	lead:{  name:"Lead"},
 	fe_ore:{name:"Iron Ore"},//Iron ore and coal make steel
@@ -212,7 +212,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	lab: 	{name: "Laboratory",	count:0, buildWorkers:4, buildTime:100,unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],					statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
 	mine:	{name: "Mineshaft",		count:0, buildWorkers:5, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{},				cost:{lumber:200},							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 2 miners"],						statement:"Adding a mineshaft will allow collection of ores."},
 	warehouse:{name:"Warehouse",	count:0, buildWorkers:5, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{wood:50,rock:50,lumber:50,stone:50,cu_ore:50,brick:50}, addworker:{},cost:{rock:100,lumber:500,stone:300},unlockRes:[],		unlockJob:[],			costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["50 wood storage","50 rock storage","50 lumber storage","50 stone storage","50 ore storage","50 clay storage"], statement:"More versitile than barns, your warehouses are designed to store many kinds of materials."},
-	kiln:	{name: "Kiln",			count:0, buildWorkers:3, buildTime:30, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{kilnworker:1},	cost:{brick:200,stone:50},					unlockRes:[],			unlockJob:["kilnworker"],costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["space for one kilnworker"], statement:"Kilns will let us smelt ore and perhaps do other things later."},
+	kiln:	{name: "Kiln",			count:0, buildWorkers:3, buildTime:30, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{kilnworker:1},	cost:{brick:200,stone:50},					unlockRes:["copper"],	unlockJob:["kilnworker"],costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["space for one kilnworker"], statement:"Kilns will let us smelt ore and perhaps do other things later."},
 	//give kilns a drop-down menu for picking what to do - turn wood to charcoal, turn clay to brick, turn ore to metal - different recipe based on what is selected. keep track of number of kilns and kilnworkers but treat consumption/generation separately?
 	councilhall:{name: "Town Hall", count:0, buildWorkers:10, buildTime:200,  unlocked:false, tempCount:0, 												cost:{wood:200, rock:200, lumber:400, stone:300}, 	unlockRes:[], 	unlockJob:[],			costratio:1,	buildOnce:true,	statement:"The Council Hall has been constructed. The first meeting will be held immediately."},
 
@@ -286,13 +286,6 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	var actualcost = 0;	//to calculate the cost of a purchase from the base cost, "cost," and the cost ratio
 	var nextcost = 0;	//to give how much the next building will cost (to display on the webpage)
 	var tempKey = 0;	//to give farm and other food production to the "food" Stuff property
-	var shackToken1 = 0;	//to let the shack message play once
-	var shackToken2 = 0;	//to the the shack2 message play once
-	var shackToken3 = 0;
-	var shackToken4 = 0;
-	var shackToken5 = 0;
-	var shackToken6 = 0;
-	var shackToken7 = 0;
 	var unlockStuff = "";	//to set new materials to unlocked when a certain building is made
 	var ActiveRes = " ";	//to set active research
 	var make = true;	//to tell whether to make a research or resource increment (no if would be < 0 )
@@ -312,15 +305,9 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
 	var statementLog = "";	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
 	var exploreCount = 1;		//number of free workers to go on an exploring trip
-	var token6 = true;
-	var token7 = true;
-	var token8 = true;
-	var token9 = true;
-	var token10 = true;
-	var token11 = true;//make an array and use it instead of all these token variables (clean up code):
-	var tokens = [];
-	for (i=0;i<20;i++){
-		tokens[i]=true;
+	var Token = [];
+	for (i=0;i<100;i++){
+		Token[i]=true;
 	}
 	var exploring = false;	//is there an active exploring party?
 	var exploreBar = 0;		//progress of the exploring party
@@ -1024,6 +1011,7 @@ function exploreEnd(){
 		Jobs.addJobElement("miner");
 	} else if(exploreCount===7) {
 		console.log("explore event2");
+		Token[10]=false;
 		document.getElementById("mineBuild").className = "buildingButton";
 		document.getElementById("mineBuild").addEventListener("click",addBuildingEvent);
 		document.getElementById("statement").innerHTML = "The exploring party discovered another potential mining site. You can build a shaft to extract ore"; counter1=0;
@@ -1065,15 +1053,21 @@ function run(){
 
 
 //check for events met to unlock new content
-	if(Buildings.shack.count==2&&shackToken1==0){
+
+	//win the game for now
+	if(Stuff.copper.stored<5){
+		alert("That's it for now - check back later for more content. Thanks for playing!");
+	}
+
+	if(Buildings.shack.count==2&& Token[1]){
 		wandererStr = "Soon another wanderer joins you in your work. More will surely come and stay if you have space to house them.";
 		statementLog = wandererStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = wandererStr; counter1 = 0;
-		shackToken1 = 1;
+		Token[1] = false;
 	}
 	//add forest box and woodcutter job
-	if(Buildings.shack.count==3&&shackToken3==0){
+	if(Buildings.shack.count==3&& Token[2]){
 		
 		Stuff.wood.unlocked=true;
 
@@ -1083,18 +1077,18 @@ function run(){
 		statementLog = woodcutStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = woodcutStr; counter1 = 0;
-		shackToken3 = 1;
+		Token[2] = false;
 	}
 	//statement - buildings cost more as you build them
-	if(Buildings.shack.count==4&&shackToken2==0){
+	if(Buildings.shack.count==4&& Token[3]){
 		morebuildStr = "As you build more buildings they will require more resources. Why? Because that's what we do in this genre.";
 		statementLog = morebuildStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = morebuildStr; counter1 = 0;
-		shackToken2 = 1;
+		Token[3] = false;
 	}
 	//adds hillside box and rockcutter job
-	if(Buildings.shack.count>5&& shackToken4==0){
+	if(Buildings.shack.count>5&& Token[4]){
 
 		Jobs.addJobBox("hillside");
 		Jobs.addJobElement("rockcutter");
@@ -1107,7 +1101,7 @@ function run(){
 		statementLog = quarryStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = quarryStr; counter1 = 0;
-		shackToken4 = 1;
+		Token[4] = false;
 	}
 	//unlocks shed (Woodshed)
 	if(Buildings.shack.count>7){
@@ -1138,13 +1132,13 @@ function run(){
 		unlock("hut");
 	}
 	//makes panel/tabs buttons visible (inline)
-	if(Buildings.shack.count + Buildings.hut.count>=20 && shackToken5==0){
+	if(Buildings.shack.count + Buildings.hut.count>=20 && Token[5]){
 		shantyStr = "Your little camp has grown into a shanty town. You decide to form a council to govern and make decisions.";
 		statementLog = shantyStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = shantyStr; counter1 = 0;
 		document.getElementById("title").innerHTML = "Camp Carlyhead";
-		shackToken5 = 1;
+		Token[5] = false;
 
 		//give the town hall button a red color
 		alertPanel("pan4");
@@ -1154,23 +1148,30 @@ function run(){
 		document.getElementById("butt4").style.display = "inline";
 	}
 	//increase rock and stone production 
-	if(Research.StoneAxe.completion>350&&token6){
-		token6=false;
+	if(Research.StoneAxe.completion>350&&Token[6]){
+		Token[6]=false;
 		logStatement("Stone production is low. Maybe better mason tools would help.");
 		Research.addResearchButton("StoneChisel");
 		alertPanel("pan3");
 	}
 	//remove the first mine as useless
-	if(Buildings.mine.tempCount===1&&token8){
-		document.getElementById("mineBuild").removeEventListener("click",addBuildingEvent);
-		token8 = false;
+	if(Buildings.mine.tempCount===1&&Token[7]){
+		Token[7] = false;
+		if(Token[10]){
+			document.getElementById("mineBuild").removeEventListener("click",addBuildingEvent);
+		}
 	}
-	if(Buildings.mine.count===1&&token7){
-		token7=false;
-		logStatement("The first mine yielded no usable resources. Another site must be located.")
-		document.getElementById("mineBuild").className = "deadBuilding";
+	if(Buildings.mine.count===1&&Token[8]){
+		Token[8]=false;
+		if(Token[10]){
+			logStatement("The first mine yielded no usable resources. Another site must be located.")
+			document.getElementById("mineBuild").className = "deadBuilding";
+		} else {
+			logStatement("The first mine yielded no usable resources. You can try building a mineshaft at the second location.")
+		}
 	}
-	if(Buildings.mine.count===2&&token8){
+	if(Buildings.mine.count===2&&Token[9]){
+		Token[9]=false;
 		logStatement("This mine produces copper ore which can be smelted into copper.")
 		Stuff.addResourceLine("cu_ore");
 	}
