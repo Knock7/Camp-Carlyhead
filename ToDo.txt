@@ -1,14 +1,37 @@
-1) fix the food shortage bug. maybe make current workers abandon buildings and start hunting? how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space?
+1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space?
 
 2) add option to minimize/hide research buttons - transiton into a small size with an icon/number that you can 
-hover over for a tooltip?
+hover over for a tooltip? for now they just disappear.
 
-3) add some new goal like a total population (the coucil has decided that once the town reaches X people they will attempt to start exploring and mapping the surrounding area)
-
+3) add some new goal like a total population (the coucil has decided to improve planning, reduce cost ratios of all buildings
 then you can add an explorers guild next to the town hall - rename Town Hall tab?
-explorer missions first few to discover places to make more resrouces - can add jobs to fields or forest - discover a coal mine
+- discover a coal mine
+- discover iron mine (adding mines changes the ratio of cu/fe/coal output by the miners so that a given miner, say, produces less cu_ore but now produces some fe_ore
 
-4) add resources and jobs for metal ores and smelting
+4) Add some jobs to forrest
+
+5) make jobBoxes into two columns
+
+6) resource rate of change span and stored tabbed (inline boxes with fixed width for resource names)
+
+7) tech to reduce all cost ratios
+
+8) exploring takes an additional 3% food per trip
+
+9) win message for 10 cu and 4 kilns, put work 'win' in the message (can change way the alert box appears?)
+
+10) fix tooltip text for cu_ore
+
+11) fix workshop tooltip text to add brickmakers
+
+12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
+
+13) implement coal and iron mines
+
+14) make kilns be able to select which metals are smelted 
+
+15) add in trading for gold and other resources - later add in gold mine but not until after the market is set up
+
 
 
 
