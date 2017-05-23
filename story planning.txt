@@ -1,0 +1,49 @@
+You set up camp... add: and with the few tools in your travel sack you begin work on..  'small game for hunting' 'river'
+
+Soon another refugee wanders by and you convince him to join you in your work. More wil..
+
+A Lonely Beginning -> 3 workers  Camp [input name]
+
+Your new companions/associates also carry axes. You suggest that you head back..
+
+While wandering into the hills looking for the nightly firewood, one of the workers.. quarry. The rock may be used for new structures.
+
+It looks... so you decide to start building sheds near the forest.
+
+Clearing access... will allow for more rock collection and storage.
+
+To free up some...  . One of the group brought fast-growing seeds. Some walls and trellaces seem to do the trick.
+
+You will need... . You start by constructing simple barns.
+
+As the camp grows and residents becomes more familiar with eachother, some of them begin to share their talents from their past lives in the Great City.
+Most of the refugees did specialized work and are still learning the basic struggle for survival, but they long to rebuild at least part of the society they once knew.
+
+One of the newcomers was a carpenter. She is thankful for the simple shelter you have provided, but obviously wants to lead the construction of better buildings.
+Though you only have fairly simple tools, many showing signs of wear, she insists on setting up a lumberyard.
+[remane sawmill to lumberyard - put it in the forest]
+Also have the statement box be 2 lines high by setting a height value.
+
+With access to rough-cut boards several folk decide to contruct a workshop. For now the space will be used to shape stone slabs for improved buildings, and perhaps later for stone tools. 
+
+[the reduced output of the woodcutters should be starting to show up (make the starting wood production higher too). Could also reduce the output of the lumber]
+
+With boards from the lumberyard and cut stones, the carpenter plans to start building proper huts. 
+You still plan to continue buildings shacks - you are trying to grow the town after all and still need to turn many wanderers away for lack of space.
+
+Though it may be premature, you have high hopes for the future growth of your camp and decide to give the settlement a proper name.
+You also decide it is time to more formally organize, and decide..
+[@20 people rename to Hamlet of [input name]
+
+Farm equip... the researchers design a wodden plow which should improve crop output significantly. 
+
+You notice that the axes that most of your new settlers have brought with them, and the few saws and other metal tools, have been dulling and deteriorating to the point of uselessness.
+It seems that the best course of action is to develope stone axes for felling trees and shaping them into boards.
+
+The most proficient mason, though he was new to cutting rock when he began, thinks he can improve stone chisel design to improve output of both rock and stone.
+
+
+Ideas - start raising cattle to increase food production - allow research for perserving food (increases storage and explorers can use it?)
+later you can start  orchards. any reason to add different types of food? maybe later
+
+add in seasons?
