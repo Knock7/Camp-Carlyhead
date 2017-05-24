@@ -1,8 +1,4 @@
-change woodcutter output to: = pop^-.3*3.75  (/.25)
 
-change lumbercutter output to: pop^-.3*4.5  (/.25)
-
-then after the stone tools upgrade reset to the base (2.5/s) (1)
 ------------------------------------------------------------------------------------------------------------------
 
 You set up camp... add: and with the few tools in your travel sack you begin work on..  'small game for hunting' 'river'
