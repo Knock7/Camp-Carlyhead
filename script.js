@@ -170,6 +170,13 @@ var Jobs = {
 	addJobElement: function (jobName){//came move the check whether box exists up to here
 
 		Jobs[jobName]["unlocked"] = true;
+		newBox = Jobs[jobName]["box"];
+
+		if(JobBoxes.indexOf(newBox)===-1){
+			JobBoxes.push(newBox);
+			Jobs.addJobBox(newBox);
+		}
+
 		makeStr = "";
 		consumeStr ="";
 		
@@ -204,7 +211,7 @@ var Jobs = {
 			return false;
 		}
 
-		document.getElementById(Jobs[jobName]["box"]).appendChild(indiv);
+		document.getElementById(newBox).appendChild(indiv);
 	},
 
 
@@ -214,8 +221,8 @@ var Jobs = {
 var Buildings = {  //if addWorker property key is "freeworker", it will add free workers     can remove the buildOnce property because just make buy button invis for "true" buildings?
 					//can move the unlockRes and unlockJob functionality to the unlock_conditional section of the run() function
 	shack:	{name: "Shack", 		count:1, buildWorkers:1, buildTime:25, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0, 	addsText:["space for 1 new settler"],		},
-	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	tempCount:0,	addsText:["space for 2 farmers"],						statement:"One of the travelers brought with them fast-growing seeds, and to free up workers<br>from hunting duties you decided to try farming. Some walls and trellaces seem to do the trick."},
-	shed:	{name: "Woodshed",		count:0, buildWorkers:2, buildTime:25, unlocked:false, 	buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 woodcutter", "50 wood storage"],	statement:"It looks like you could use a place to chop and store more wood, so you decide to start building sheds just inside the forest."},
+	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	tempCount:0,	addsText:["space for 2 farmers"],						statement:"One of the travelers brought with them fast-growing seeds, and to free up workers<br>from hunting duties you decided to try farming. Some walls and trellices seem to do the trick."},
+	shed:	{name: "Woodshed",		count:0, buildWorkers:2, buildTime:25, unlocked:false, 	buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 woodcutter", "50 wood storage"],	statement:"It looks like you could use a place to chop and store more wood,<br>so you decide to start building sheds just inside the forest."},
 	expandQ:{name: "Expand Quarry",	count:0, buildWorkers:3, buildTime:25, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 rockcutter", "50 rock storage"],	statement:"Clearing access to the quarry will allow for more rock collection and storage."},
 	barn:	{name: "Barn",			count:0, buildWorkers:3, buildTime:40, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["100 food storage", "100 wood storage", "100 rock storage"],	statement:"You will need even more storage to stockpile resources for larger buildings. You can start by constructing simple barns."},
 	lumberyard:{name: "Lumber Yard",count:0, buildWorkers:3, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{lumberworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["lumberworker"],costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 lumber workers", "300 lumber storage"],	statement:"One of the newcomers was a carpenter. She is thankful for the simple shelter you have provided, but obviously wants to lead the<br>construction of better buildings.Though you only have fairly simple tools, many showing signs of wear, she insists on setting up a lumberyard."},
@@ -288,7 +295,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 };
 
 //GLOBAL VARIABLES - go through and see which of these can be local variables - no need to have them all global probably
- var GlobVar = {};
+var GlobVar = {};
 	var wrks = 0;		//total number of workers - only updated on TotalWorkers() call	
 	var counter1 = 0;	//timer for removing "statement" messages
 	var incr = 0; 		//to add resources each step
@@ -545,7 +552,6 @@ function addBuilding(buildkey){
 
  		costTxt = " ";
 		//pay for the building
-
 		for(var keyy in Buildings[buildkey]["cost"]){
 
 			actualcost = Math.round(Buildings[buildkey]["cost"][keyy]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"]-1));   //consider making function actualcost(buildkey,key) which returns value calculated value
@@ -567,7 +573,7 @@ function addBuilding(buildkey){
 		//no we can't :(
 	}  else {
 
-		document.getElementById("statement").innerHTML = "Not enough "+ txtNotEnough +" to build " + Buildings[buildkey]["name"]; counter1 = 20;
+		document.getElementById("statement").innerHTML = "Not enough "+ txtNotEnough +" to build " + Buildings[buildkey]["name"]; counter1 = 40;
 	}
 	return(canbuild);
 }
@@ -652,12 +658,7 @@ function unlock(unlockkey){
 			newJob = Buildings[unlockkey]["unlockJob"][i];
 			newBox = Jobs[newJob]["box"];
 
-			//should move this check to make (and make) jobbox as a call from the addJobElement() method?
-			//if the jobBox for the unlocked job does not exist, make it
-			if(JobBoxes.indexOf(newBox)===-1){
-				JobBoxes.push(newBox);
-				Jobs.addJobBox(newBox);
-			}
+
 			Jobs.addJobElement(newJob);
 
 			
@@ -698,9 +699,9 @@ function SwapActiveRes(x){
 }
 
 var Research = {
-	FarmEquip:	{name:"Farm Equipment",		resCost:{wood:2,lumber:1}, 		totalRes:1000, 	completion:0, done:false, reward:"Improves farmers' food output by 50%", statement:"The researchers design a wodden plow which should improve crop output significantly."},
+	FarmEquip:	{name:"Farm Equipment",		resCost:{wood:2,lumber:1}, 		totalRes:1000, 	completion:0, done:false, reward:"Improves farmers' food output by 50%", statement:"The farmers want to design a wooden plow which should improve crop output significantly."},
 	StoneAxe:	{name:"Stone Axes",			resCost:{lumber:1,stone:2}, 	totalRes:1500, 	completion:0, done:false, reward:"Resets woodcutter and lumberworker output to 2.5/sec", statement:"You notice that the axes that most of your comrads have brought with them, and the few saws and other metal tools, have been dulling and deteriorating<br>to the point of uselessness. It seems that the best course of action is to develope stone axes for felling trees and shaping them into boards"},
-	StoneChisel:{name:"Stone Chisels",		resCost:{lumber:.5,rock:.5,stone:1},totalRes:1000,completion:0,done:false,reward:"Increases output of both masons and rockcutters by 20%", statement:"The most proficient mason, though he was new to cutting rock when he began,<br>thinks he can improve stone chisel design to increase output of both rock and stone."},
+	StoneChisel:{name:"Stone Chisels",		resCost:{lumber:.5,rock:.5,stone:1},totalRes:1000,completion:0,done:false,reward:"Increases output of both masons and rockcutters by 30%", statement:"The most proficient mason, though he was new to cutting rock when he began,<br>thinks he can improve stone chisel design to increase output of both rock and stone."},
 	FindOre:	{name:"Ore Finding",		resCost:{food:1,lumber:1},		totalRes:500, 	completion:0, done:false, reward:"Some workers learn how to look for potential mining sites"},
 	Metalwork:	{name:"Metalworking",		resCost:{metal:1},				totalRes:3500, 	completion:0, done:false},
 	Roads:		{name:"Roadbuilding",		resCost:{wood:1,stone:3},		totalRes:5000,	completion:0, done:false},
@@ -837,8 +838,8 @@ function doBonus(resUp){
 
 	        break;
 		case "StoneChisel":
-			Jobs.rockcutter.workbonus*=1.2;
-			Jobs.mason.workbonus*=1.2;
+			Jobs.rockcutter.workbonus*=1.3;
+			Jobs.mason.workbonus*=1.3;
 
 			makeStr = "";
 			consumeStr = "";
@@ -1068,7 +1069,7 @@ function exploreEnd(){
 		//also need a way to return some of the special items (and lose some of them each trip). for now just lose all of them
 		exploreStuff.spear = 1;
 	} else {
-		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; counter1=10;
+		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; counter1=40;
 	}
 	//add in an ungrade or building with a small penalty to auto-explore if you have enough stuff?
 	exploring = false;
@@ -1081,7 +1082,7 @@ function run(){
 	//clear the message to player after ~some seconds
 	if(document.getElementById("statement").innerHTML!="&nbsp"){
 		counter1++;
-		if(counter1>50) {
+		if(counter1>80) {
 			document.getElementById("statement").innerHTML = "&nbsp";
 			counter1 = 0;
 		}
@@ -1153,7 +1154,7 @@ function run(){
 	if(Buildings.shack.count===7){
 		unlock("shed");
 	}
-	if(Buildings.shack.count===8&&Token[11]){
+	if(Buildings.shack.count===12&&Token[11]){
 		Token[11]=false;
 		logStatement("As the camp grows and residents becomes more familiar with eachother, some of them begin to discuss their past lives in the Great City.<br>Most of the refugees did specialized work and are still learning the basic struggle for survival, but they long to rebuild at least part of the society they once knew.");
 	}
@@ -1187,7 +1188,7 @@ function run(){
 		statementLog = shantyStr + "<br><br>" + statementLog;
 		document.getElementById("logOut").innerHTML = statementLog;
 		document.getElementById("statement").innerHTML = shantyStr; counter1 = 0;
-		document.getElementById("title").innerHTML = "Hamlett of " + name;
+		document.getElementById("title").innerHTML = "Hamlet of " + name;
 		Token[5] = false;
 
 		//give the town hall button a red color
@@ -1304,7 +1305,7 @@ function run(){
 		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
 		//bodyy.className = "normal";
 		document.getElementById("statement").innerHTML = "In a food-shortage panic all available workers take to hunting";
-		counter1=0;
+		counter1=40;
 	
 		tempFood = 0; 
 
