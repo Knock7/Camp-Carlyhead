@@ -4,7 +4,7 @@
 
 	<meta charset="utf-8">
 	<meta name="author" content="Knock7">
-	<meta name="description" content="This is an incremental game in alpha testing.">
+	<meta name="description" content="This is an incremental game in alpha testing. If any of the placeholder images are yours and you would like them removed, I will do so immediately.">
 
 	<link rel="stylesheet" type="text/css" href="mystyle.css">
 
@@ -16,13 +16,13 @@
 <body>
 
 <header id="closeMe" class="alert">
-	<h2>Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a stream and a field with wild animals you can hunt, and begin work on a more permanent residence.</h2>
+	<h2>Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a river and a field with wild berries and small game you can hunt, and with the few tools in your travel sack you begin work on a more permanent residence.</h2>
 	<h1 class="closebtn"><br><i> continue </i><br></h1>
 </header>
 
 <header style="position:relative;">
 	<h1 id="title">A Lonely Beginning</h1>
-	<h3 id="statement">&nbsp;</h3>
+	<h3 id="statement" style="height:30px;">&nbsp;</h3>
 	<div id="statementLog" class="statementLog">
 		Log
 		<div class="logOut">
@@ -55,6 +55,7 @@
 <tabs id="pan1">
 	<h2>Jobs</h2>
 
+	<div id="col1" class="col">
 	<div id="camp" class="JobBox0" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(images/camp.jpg); display:inline-block;">
 		<p style="font-size:4pt;"> </p>
 		<p><span class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></span></p>
@@ -71,7 +72,9 @@
 		</div>
 		<p style="font-size:4pt;"> </p>
 	</div>
+	</div>
 
+	<div id="col2" class="col">
 	<div id="fields" class="JobBox0" style="background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(images/fields.jpg); display:inline-block;">
 		<p style="font-size:4pt;"> </p>
 		<p><span class="bkgrn"><b>&nbsp;FIELDS&nbsp;</b></span></p>
@@ -91,8 +94,9 @@
 		</div>
 
 	</div>
+	</div>
 
-	<!--	RIP the fallen jobBoxes -->
+	<!--	RIP the fallen jobBoxes 
 	<div id="blank" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
 		<p style="font-size:4pt;"> </p>
 		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
@@ -114,6 +118,7 @@
 		<div class="userRemove0"></div>
 		<p style="font-size:4pt;"> </p>
 	</div>
+	-->
 
 </tabs>
 

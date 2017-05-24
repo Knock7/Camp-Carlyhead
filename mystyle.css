@@ -434,3 +434,8 @@ body.normal{
 .none {
 	display:none;
 }
+.col {
+	max-width:260px;
+	display:inline-block;
+	vertical-align:top;
+}
