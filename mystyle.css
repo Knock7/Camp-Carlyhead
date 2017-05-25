@@ -149,16 +149,27 @@ div.JobBox0 { /*the 0 designation is a work-around for the JS generated html bei
 	background-size:cover;
 	
 }
-div.JobBox { 
+div.JobBoxTest { /*the 0 designation is a work-around for the JS generated html being different from the pre-existing one*/
 	width:250px;
 	text-align:center;
 	margin:5px;
-	padding: 0 5px;
+	padding: 0;
 	border:3px solid black;    
 	margin-top:10px;
 	height:100%;
 	background-size:cover;
 	
+}
+div.JobBox { 
+	width:250px;
+	text-align:center;
+	margin:5px;
+	padding: 0;
+	border:3px solid black;    
+	margin-top:10px;
+	height:100%;
+	background-size:cover;
+	display: inline-block;
 }
 div.userAdd0 { /*not sure why but need to set left and right to 2px for jobElements not created by JS, and to 0 for ones that are */
 	width:180px;
@@ -166,7 +177,7 @@ div.userAdd0 { /*not sure why but need to set left and right to 2px for jobEleme
 	left: 2px; 
 	display: inline-block;
 	padding:3px;
-	background:rgba(255, 255, 255, .85);
+	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	text-align:left;
 	
@@ -177,7 +188,7 @@ div.userAdd {
 	left: 0px; 
 	display: inline-block;
 	padding:3px;
-	background:rgba(255, 255, 255, .85);
+	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	text-align:left;
 
@@ -190,6 +201,11 @@ div.userAdd:hover{
 	cursor:pointer;
 	background-color:rgba(100,200,100,0.8);
 }
+.imgBox{
+	background-size:cover;
+	padding-top:30px;
+	height:100%;
+}
 span.workers {
 	padding:1px;
 	margin:auto;
@@ -199,10 +215,10 @@ span.workers {
 	background: rgba(255, 255, 255, .7);
 	border:1px solid black;
 }
-span.bkgrn {
-	background: rgba(255, 255, 255, .85);
+.bkgrn {
+	background: rgba(181, 175, 153, 1);
 	font-size:1.4em;
-	border:1px solid black;
+	border-bottom:1px solid black;
 	margin: 0;
 	padding:0;
 }
@@ -212,7 +228,7 @@ div.userRemove0 {
 	right: 2px;
 	display: inline-block;
 	padding:3px;
-	background:rgba(255, 255, 255, .85);
+	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	border-left:none;
 	margin:0;
@@ -223,7 +239,7 @@ div.userRemove {
 	right: 0px;
 	display: inline-block;
 	padding:3px;
-	background:rgba(255, 255, 255, .85);
+	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	border-left:none;
 	margin:0;

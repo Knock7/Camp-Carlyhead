@@ -46,7 +46,6 @@ var Stuff = { //the production of materials of all kinds
 
 		if(res==="gold"||res==="research"){
 			document.getElementById(res+"Max").innerHTML = "NoMax";
-			console.log("research stored: "+Stuff[res]["stored"]);
 		} else {
 			document.getElementById(res+"Max").innnerHTML = Stuff[res]["maxstored"];
 		}
@@ -65,7 +64,6 @@ var Stuff = { //the production of materials of all kinds
 
 		if(res==="gold"||res==="research"){
 			document.getElementById(res+"Max").innerHTML = "NoMax";
-			console.log("research stored: "+Stuff[res]["stored"]);
 		} else {
 			document.getElementById(res+"Max").innnerHTML = Stuff[res]["maxstored"];
 		}
@@ -135,35 +133,28 @@ var Jobs = {
 	},
 
 	addJobBox: function (boxName){
+		JobBoxes.push(boxName);
 
 		newDiv = document.createElement("div");
 		newDiv.id = boxName;
 		newDiv.className = "JobBox";
-		newDiv.style = "display: inline-block; background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(images/"+ boxName +".jpg);"
 
-		p1 = document.createElement("p");
-		p1.style = "font-size:4pt;"
-		p1.innerHTML = " ";
 
-		p2 = document.createElement("p");
-		p2.innerHTML = "<span class='bkgrn'><b>&nbsp;"+ boxName.toUpperCase() +"&nbsp;</b></span>";
+		d2 = document.createElement("div");
+		d2.className = "bkgrn"
+		d2.innerHTML = "<b>&nbsp;"+ boxName.toUpperCase() +"&nbsp;</b>";
 
-		p3 = document.createElement("p");
-		p3.style = "font-size:25pt;";
-		p3.textContent = " ";
+		d3 = document.createElement("div");
+		d3.className = "imgBox";
+		d3.style = "background-image: linear-gradient(rgba(250,250,250,0.1),rgba(255,250,250,0.1)), url(images/"+ boxName +".jpg);"
 
-		p4 = p1
-		p4.id = "endspace";
-
-		newDiv.appendChild(p1);
-		newDiv.appendChild(p2);
-		newDiv.appendChild(p3);
-		newDiv.appendChild(p4);
+		newDiv.appendChild(d2);
+		newDiv.appendChild(d3);
+		
 
 		document.getElementById("col"+Jobs.nextCol).appendChild(newDiv);
 
 		Jobs.nextCol = Jobs.nextCol===1 ? 2 : 1;
-		console.log(Jobs.nextCol);
 
 	},
 
@@ -172,8 +163,7 @@ var Jobs = {
 		Jobs[jobName]["unlocked"] = true;
 		newBox = Jobs[jobName]["box"];
 
-		if(JobBoxes.indexOf(newBox)===-1){
-			JobBoxes.push(newBox);
+		if(JobBoxes.indexOf(newBox)===-1){		
 			Jobs.addJobBox(newBox);
 		}
 
@@ -211,7 +201,7 @@ var Jobs = {
 			return false;
 		}
 
-		document.getElementById(newBox).appendChild(indiv);
+		document.getElementById(newBox).querySelector(".imgBox").appendChild(indiv);
 	},
 
 
@@ -409,8 +399,6 @@ function panelEvent(e){
 }
 function moveworkerEvent(e){
 	var num = 1;
-	console.log(e);
-	console.log(e.button);
 	if (e.shiftKey) {
 		num = 5;
 	}
@@ -418,10 +406,6 @@ function moveworkerEvent(e){
 		num = 10;
 	}
 	if(e.altKey) {
-		num = -1;
-	}
-	if(e.button===2){
-		console.log("right click");
 		num = -1;
 	}
 
@@ -544,7 +528,7 @@ function addBuilding(buildkey){
 		}
 		Buildings[buildkey]["tempCount"]++;
 		//set everything up for construction function
-		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop - on buildBuild array 
+		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop  
 		buildConstruct.push(0);
 		buildWorkers +=  Buildings[buildkey]["buildWorkers"];
 		Jobs.freeworker.workers -= Buildings[buildkey]["buildWorkers"];
@@ -557,7 +541,8 @@ function addBuilding(buildkey){
 			actualcost = Math.round(Buildings[buildkey]["cost"][keyy]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"]-1));   //consider making function actualcost(buildkey,key) which returns value calculated value
 
 			Stuff[keyy]["stored"]-=actualcost;
-			document.getElementById(keyy).innerHTML = Stuff[keyy]["stored"];
+			console.log(actualcost + " " + Stuff[keyy]["stored"]);
+			document.getElementById(keyy).innerHTML = Stuff[keyy]["stored"].toFixed(1);
 		
 			costTxt += Math.round(actualcost*Buildings[buildkey]["costratio"]) + "&nbsp" + keyy + "<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
 		}
@@ -602,7 +587,9 @@ function finishBuilding(buildkey,index){
 		//add storage space
 		for(var keyyy in Buildings[buildkey]["addstorage"]){
 			Stuff[keyyy]["maxstored"]+=Buildings[buildkey]["addstorage"][keyyy];
-			document.getElementById(keyyy + "Max").innerHTML = Stuff[keyyy]["maxstored"];
+			if(Stuff[keyyy]["unlocked"]){
+				document.getElementById(keyyy + "Max").innerHTML = Stuff[keyyy]["maxstored"];
+			}
 		}
 		//add worker space (and free workers)
 		for(var key4 in Buildings[buildkey]["addworker"]){
@@ -771,7 +758,6 @@ function researchIncr(resUp){
 function doBonus(resUp){
 	switch (resUp) {
 	    case "FarmEquip":			
-			console.log("research case 0");
 	        Jobs.farmer.workbonus = Jobs.farmer.workbonus*1.5;
 
 			makeStr = "";
@@ -797,7 +783,6 @@ function doBonus(resUp){
 			//some action to close the button but this below isn't doing anything
 	        break;
 	    case "StoneAxe":
-			console.log("research case 1");
 	        Jobs.woodcutter.workbonus = 1;
 			Jobs.lumberworker.workbonus = 1;
 			Jobs.woodcutter.make = {wood:1};
@@ -885,7 +870,6 @@ function doBonus(resUp){
 
 			break;
 		case "FindOre":
-			console.log("research case 2");
 			//add an explore button to (mostly unsuccessfully) look for mining sites
 			div = document.createElement("div");
 			div.id = "exploreButton";
@@ -899,10 +883,8 @@ function doBonus(resUp){
 	    case "Smelting":
 			unlock("kiln");
 			//need to add a newResearchButton() function;
-	        console.log("case 2");
 	        break;
 	    case "Metalwork":
-	        console.log("case 3");
 	       	break;
 	    case "Barns1":
 			Buildings.barn.cost.lumber = 50;
@@ -926,17 +908,14 @@ function doBonus(resUp){
 			costStr = costStr.slice(0,-70);
 			document.getElementById("barnCosts").innerHTML = costStr;
 			
-			
-	        console.log("case 4");
 	        break;
 	    case "Brickmaking":
 			Jobs.addJobElement("brickmaker");
 			Stuff.addResourceLine("brick");
 			Buildings.workshop.addworker.brickmaker = 2;
-	        console.log("case 5");
 	        break;
 	    case 6:
-	        console.log("case 6");
+	        break;
 	}
 }
 
@@ -990,9 +969,8 @@ function exploreGo(){
 	if(exploring){
 		document.getElementById("statement").innerHTML = "We should wait until the last scouting party returns";
 	} else {
-		exploreNum = (exploreCount);
-		exploreNumNext = (exploreCount+1);
-		console.log("exploring...");
+		exploreNum = (exploreCount)*Math.pow(1.05,exploreCount-1);//the cost for this expedition
+		exploreNumNext = (exploreCount+1)*Math.pow(1.05,exploreCount);
 
 		//need certain number of free workers and food for them to carry
 		var go = true;	
@@ -1022,8 +1000,7 @@ function exploreGo(){
 			Jobs.freeworker.workers -= exploreNum;
 			document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 			exploreBar = 0;
-			
-			console.log("exploreCount: "+exploreCount);		
+				
 			exploring = true;
 		} else {
 			document.getElementById("statement").innerHTML = noGoStr;
@@ -1043,12 +1020,10 @@ function exploreEnd(){
 	document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 	exploreCount++;
 	if(exploreCount===4){
-		console.log("explore event1")
 		logStatement("The exploring party discovered a potential mining site. You can build a shaft to extract ore");
 		Buildings.addBuildingButton("mine");
 		Jobs.addJobElement("miner");
 	} else if(exploreCount===7) {
-		console.log("explore event2");
 		Token[10]=false;
 		document.getElementById("mineBuild").className = "buildingButton";
 		document.getElementById("mineBuild").addEventListener("click",addBuildingEvent);
@@ -1075,6 +1050,14 @@ function exploreEnd(){
 	exploring = false;
 }
 
+function Cheat(){
+	cheating = true;
+	time = 100;
+}
+function UnCheat(){
+	cheating = false;
+	time = 1;
+}
 ////////////////////////////////////////////////////////////////game loop////////////////////////////////////////////////////////////////////////////////////////
 
 function run(){ 
@@ -1233,7 +1216,6 @@ function run(){
 
 	//adjusts the woodworker and lumberworker output as population grows to account for deteriorating axes
 	if(pop!==allworkers&&document.getElementById("forest")){
-		console.log("need to update woodcutter output");
 		pop = allworkers;
 		var bonus = 0;
 
@@ -1291,7 +1273,9 @@ function run(){
 	Buildings.incrRes();
 	if(cheating){
 		for(var i in Stuff){
-			Stuff[i]["stored"]=Stuff[i]["maxstored"];
+			if(Stuff[i]["unlocked"]){
+				Stuff[i]["stored"]=Stuff[i]["maxstored"];
+			}
 		}
 	}
 
