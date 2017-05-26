@@ -106,7 +106,7 @@ var Jobs = {
 				var make = true;
 				var make2 = false;
 				for(var u in Jobs[x]["make"]){		
-					incr = factor*Jobs[x]["make"][u]*(Jobs[x]["workers"]*Jobs[x]["workbonus"]);//add in buildingwork resource generation in another loop before this one - maybe put the passive generation in a new object in Buildings{} so that a given buildings can make more than one resource - somehow need to link back to workers
+					var incr = GlobVar.factor*Jobs[x]["make"][u]*(Jobs[x]["workers"]*Jobs[x]["workbonus"]);//add in buildingwork resource generation in another loop before this one - maybe put the passive generation in a new object in Buildings{} so that a given buildings can make more than one resource - somehow need to link back to workers
 					if(Stuff[u]["stored"]+incr<0){
 						make = false; //don't make if it would be less than 0
 					}
@@ -118,8 +118,8 @@ var Jobs = {
 				}
 				if(make&&make2) {
 					for(var incrKey in Jobs[x]["make"]){
-						incr = factor*Jobs[x]["make"][incrKey]*(Jobs[x]["workers"]*Jobs[x]["workbonus"]);
-						max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
+						incr = GlobVar.factor*Jobs[x]["make"][incrKey]*(Jobs[x]["workers"]*Jobs[x]["workbonus"]);
+						var max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
 						if(Stuff[incrKey]["stored"]+incr>max){
 							Stuff[incrKey]["stored"] = max;
 						} else {
@@ -133,7 +133,7 @@ var Jobs = {
 	},
 
 	addJobBox: function (boxName){
-		JobBoxes.push(boxName);
+		GlobVar.JobBoxes.push(boxName);
 
 		newDiv = document.createElement("div");
 		newDiv.id = boxName;
@@ -163,7 +163,7 @@ var Jobs = {
 		Jobs[jobName]["unlocked"] = true;
 		newBox = Jobs[jobName]["box"];
 
-		if(JobBoxes.indexOf(newBox)===-1){		
+		if(GlobVar.JobBoxes.indexOf(newBox)===-1){		
 			Jobs.addJobBox(newBox);
 		}
 
@@ -173,9 +173,9 @@ var Jobs = {
 
 		for (var i in Jobs[jobName]["make"]){
 			if(Jobs[jobName]["make"][i]>0){
-				makeStr += Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*factor*5 + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
+				makeStr += Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*GlobVar.factor*5 + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
 			} else {
-				consumeStr += Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*factor*-5 + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
+				consumeStr += Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*GlobVar.factor*-5 + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
 			}
 
 			//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -230,20 +230,20 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 			var make1 = true;
 			var make2 = false;
 			for(var y in Buildings[x]["buildingwork"]){
-				incr = factor*Buildings[x]["buildingwork"][y]*Buildings[x]["count"];
+				var incr = GlobVar.factor*Buildings[x]["buildingwork"][y]*Buildings[x]["count"];
 				if(Stuff[y]["stored"]+incr<0){
 					make1 = false;
 				}
 				if(make1){
-					if(Stuff[y]["stored"]<Stuff[y]["maxstored"] && incr>0){
+					if(Stuff[y]["stored"]<Stuff[y]["maxstored"] && incr>0){//need to account for store bonus - actually the way bonus is implemented I don't think that works...
 						make2 = true;
 					}
 				}
 			}
 			if(make1 && make2){
 				for(var incrKey in Buildings[x]["buildingwork"]){
-					incr = factor*Buildings[x]["buildingwork"][y]*Buildings[x]["count"];
-					max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
+					incr = GlobVar.factor*Buildings[x]["buildingwork"][y]*Buildings[x]["count"];
+					var max  =  Stuff[incrKey]["maxstored"]*Stuff[incrKey]["storebonus"];
 					if(Stuff[incrKey]["stored"]+incr>max){
 						Stuff[incrKey]["stored"] = max;
 					} else {
@@ -283,59 +283,38 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 */
 
 };
-
+	
 //GLOBAL VARIABLES - go through and see which of these can be local variables - no need to have them all global probably
-var GlobVar = {};
-	var wrks = 0;		//total number of workers - only updated on TotalWorkers() call	
-	var counter1 = 0;	//timer for removing "statement" messages
-	var incr = 0; 		//to add resources each step
-	var max = 0;  		//to find max storable
-	var txtNotEnough = " "; //to say which resources are missing to build a new building
-	var allworkers = 1;		//to count up the workers and subtract food consumption
-	var tempFood = 0;	//to count workers transfered to hunting in food shortage
-	var actualcost = 0;	//to calculate the cost of a purchase from the base cost, "cost," and the cost ratio
-	var nextcost = 0;	//to give how much the next building will cost (to display on the webpage)
-	var tempKey = 0;	//to give farm and other food production to the "food" Stuff property
-	var unlockStuff = "";	//to set new materials to unlocked when a certain building is made
-	var ActiveRes = " ";	//to set active research
-	var make = true;	//to tell whether to make a research or resource increment (no if would be < 0 )
-	var strg = "";
-	var num = 1;			//to tell how many workers to add or remove
-	var buildBuild = [];	//if empty, not building, otherwise building whatever is in the array - can have multiple values of same building
-	var buildConstruct = [];//used to store completion of building with same index in buildBuild (0 to 100)
-	var buildWorkers = 0;	//number of free workers to currently used for construction
-	var time = 1;		//time to construct a building
-	var interval = 10;		//ammount of construction to do each run() cycle
-	var construction = 0; 	//completion from 0 to 100 of the current building
-	//check this object
-	var container = {};		//to store the elements on which we will set the eventListeners (because we can't make new variable names using variable strings) - do I even need this though?
-	var bodyy 				//reference to the HTML node/element <body>
-	var knowledge = 0;		//the prestige variable
-	var JobBoxes = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
-	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
-	var statementLog = "";	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
-	var exploreCount = 1;	//number of free workers to go on an exploring trip
-	var exploreNum = 1;		//resources each worker will need on the trip
-	var exploreNumNext = 2; //next party will need
-	var Token = [];
-	for (i=0;i<100;i++){
-		Token[i]=true;
-	}
-	var exploring = false;	//is there an active exploring party?
-	var exploreBar = 0;		//progress of the exploring party
-	var exploreStuff={food:36};//round stuff when deciding to use it
-	var cheating = false;
-	var degrade = ["woodcutter","lumberworker"]; //which workers lose effectiveness over time (can reset to other)
-	var pop = 1; 			//total population to start - used with degrade
-	var name = ""			//name player gives to the settlement
-
+var GlobVar = {
+	counter1 : 0,	//timer for removing "statement" messages
+	allworkers : 1,		//to count up the workers and subtract food consumption
+	ActiveRes : " ",	//to set active research
+	buildBuild : [],	//if empty, not building, otherwise building whatever is in the array - can have multiple values of same building
+	buildConstruct : [],//used to store completion of building with same index in buildBuild (0 to 100)
+	buildWorkers : 0,	//number of free workers to currently used for construction
+	time : 1,			//cheat time to construct a building
+	knowledge : 0,		//the prestige variable
+	JobBoxes : ["camp", "fields", "forest"],//keeps track of all the job boxes that have been created (or made visible)
+	factor : 0.5, 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
+	statementLog : "",	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
+	exploreCount : 1,	//number of free workers to go on an exploring trip
+	exploreNum : 1,		//resources each worker will need on the trip
+	exploreNumNext : 2, //next party will need
+	Token : [],
+	exploring : false,	//is there an active exploring party?
+	exploreBar : 0,		//progress of the exploring party
+	exploreStuff : {food:36}, //round stuff when deciding to use it
+	cheating : false,
+	degrade : ["woodcutter","lumberworker"], //which workers lose effectiveness over time (can reset to other)
+	pop : 1, 			//total population to start - used with degrade
+	name : "",			//name player gives to the settlement
+}
 //
 
 //elements to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 
-	bodyy = document.getElementsByTagName('body')[0];
-	bodyy.addEventListener("transitionend", updateTransition);//ends the white flash when food runs out
+	document.body.addEventListener("transitionend", updateTransition);//ends the white flash when food runs out
 
 	var closeStory = document.querySelector(".closebtn");
 	closeStory.addEventListener("click", function(){closeStory.parentElement.style.display="none";populate();});
@@ -387,14 +366,19 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 		councilMessages[i].addEventListener("click",CouncilMessageEvent);
 	}
 
+	if(GlobVar.Token.length===0){
+		for (i=0;i<100;i++){
+			GlobVar.Token[i]=true;
+		}
+	}
+
+	document.getElementById("save").addEventListener("click",saveGame);
+	document.getElementById("load").addEventListener("click",loadGame);
 }
 
 function populate(){
-	var introStr = "You have built a shack and gathered some supplies. Now your attention turns to bigger plans."
-	statementLog = introStr + "<br><br>" + statementLog;
-	document.getElementById("logOut").innerHTML = statementLog;
-	document.getElementById("statement").innerHTML = introStr; counter1 = 0;	
-	load();
+	logStatement("You have built a shack and gathered some supplies. Now your attention turns to bigger plans.");	
+	loadGame();
 }
 function panelEvent(e){
 	Panel("pan" + e.currentTarget.id.charAt(e.currentTarget.id.length-1)); //pan0, pan1 strings
@@ -499,7 +483,7 @@ function removeworker(lessworkkey,num){
 function addBuilding(buildkey){
 
 	var canbuild = true; 
-	txtNotEnough = " ";
+	var txtNotEnough = " ";
 
 
 	//enough free worekers to build?    
@@ -511,7 +495,7 @@ function addBuilding(buildkey){
 	//can we build it?
 	for(var key in Buildings[buildkey]["cost"]){
 		//should make actualcost a method in Buildings - Buildings.actualcost("buildkey")? the tempcount stores how many are being built so that cost is updated correctly
-		actualcost = Math.round(Buildings[buildkey]["cost"][key]*Math.pow(Buildings[buildkey]["costratio"],(Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"])));
+		var actualcost = Math.round(Buildings[buildkey]["cost"][key]*Math.pow(Buildings[buildkey]["costratio"],(Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"])));
 
 		if(actualcost>Stuff[key]["stored"]){
 			canbuild = false;
@@ -530,9 +514,9 @@ function addBuilding(buildkey){
 		}
 		Buildings[buildkey]["tempCount"]++;
 		//set everything up for construction function
-		buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop  
-		buildConstruct.push(0);
-		buildWorkers +=  Buildings[buildkey]["buildWorkers"];
+		GlobVar.buildBuild.push(buildkey) ; //this will cause buildUp() to start running true in the game loop  
+		GlobVar.buildConstruct.push(0);
+		GlobVar.buildWorkers +=  Buildings[buildkey]["buildWorkers"];
 		Jobs.freeworker.workers -= Buildings[buildkey]["buildWorkers"];
 		document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 
@@ -559,21 +543,21 @@ function addBuilding(buildkey){
 		//no we can't :(
 	}  else {
 
-		document.getElementById("statement").innerHTML = "Not enough "+ txtNotEnough +" to build " + Buildings[buildkey]["name"]; counter1 = 40;
+		document.getElementById("statement").innerHTML = "Not enough "+ txtNotEnough +" to build " + Buildings[buildkey]["name"]; GlobVar.counter1 = 40;
 	}
 	return(canbuild);
 }
 
 function buildUp(){
-	for(i=0;i<buildBuild.length;i++){
-		if (buildConstruct[i]<100){
-			buildConstruct[i]+=(100/Buildings[buildBuild[i]]["buildTime"]*time); //need to loop through buildkeys in array 1
-			if(buildConstruct[i]>=100){
-				buildConstruct[i] = 100;//so the bar doesn't go over if there is a rounding error
+	for(i=0;i<GlobVar.buildBuild.length;i++){
+		if (GlobVar.buildConstruct[i]<100){
+			GlobVar.buildConstruct[i]+=(100/Buildings[GlobVar.buildBuild[i]]["buildTime"]*GlobVar.time); //need to loop through buildkeys in array 1
+			if(GlobVar.buildConstruct[i]>=100){
+				GlobVar.buildConstruct[i] = 100;//so the bar doesn't go over if there is a rounding error
 			}
-			document.getElementById(buildBuild[i] + "progress").style.width = buildConstruct[i].toString() + "%"; //add html + css for the progress bars
+			document.getElementById(GlobVar.buildBuild[i] + "progress").style.width = GlobVar.buildConstruct[i].toString() + "%"; //add html + css for the progress bars
 		} else {
-			finishBuilding(buildBuild[i],i);//also send the index so that if there are more than one of a building it knows which to remove
+			finishBuilding(GlobVar.buildBuild[i],i);//also send the index so that if there are more than one of a building it knows which to remove
 		}
 	}
 }
@@ -596,9 +580,9 @@ function finishBuilding(buildkey,index){
 		for(var key4 in Buildings[buildkey]["addworker"]){
 			if(key4 == "freeworker"){
 				Jobs.freeworker.workers+=Buildings[buildkey]["addworker"]["freeworker"];
-				allworkers+=Buildings[buildkey]["addworker"]["freeworker"];
+				GlobVar.allworkers+=Buildings[buildkey]["addworker"]["freeworker"];
 				document.getElementById("freeworkers").innerHTML = Jobs["freeworker"]["workers"];
-				document.getElementById("totalWorkers").innerHTML = allworkers;
+				document.getElementById("totalWorkers").innerHTML = GlobVar.allworkers;
 			} else {
 			Jobs[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
 			document.getElementById(key4 + "sMax").innerHTML = Jobs[key4]["maxworkers"];
@@ -615,11 +599,11 @@ function finishBuilding(buildkey,index){
 		Jobs.freeworker.workers += Buildings[buildkey]["buildWorkers"];
 
 
-		buildWorkers -= Buildings[buildkey]["buildWorkers"];
+		GlobVar.buildWorkers -= Buildings[buildkey]["buildWorkers"];
 		document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 		document.getElementById(buildkey + "progress").style.width = "0%";
-		buildBuild.splice(index,1);
-		buildConstruct.splice(index,1);
+		GlobVar.buildBuild.splice(index,1);
+		GlobVar.buildConstruct.splice(index,1);
 	}
 }
 /////////////////////////////////////////////////////////////////////////////unlocking buildings and the resources those buildings start with////////////////////////////////////////////////////////////////////////////////// 
@@ -672,10 +656,10 @@ function unlock(unlockkey){
 
 ////////////////////////////////////////////////////////////////////////////research////////////////////////////////////////////////////////////////////////////////////
 function SwapActiveRes(x){
-	if(ActiveRes!==" "){
-		document.getElementById(ActiveRes).className = "researchButton";
+	if(GlobVar.ActiveRes!==" "){
+		document.getElementById(GlobVar.ActiveRes).className = "researchButton";
 	}
-	ActiveRes = x;
+	GlobVar.ActiveRes = x;
 	document.getElementById(x).className = "researchButtonSelected";
 	document.getElementById("research").innerHTML = Research[x]["completion"];
 	document.getElementById("researchMax").innerHTML = Research[x]["totalRes"];
@@ -683,9 +667,9 @@ function SwapActiveRes(x){
 	//change the tooltip for researchers
 	consumeStr = "";
 	for(var i in Research[x]["resCost"]){
-		consumeStr += Research[x]["resCost"][i]*5*factor + " " + i + " / sec<br>";
+		consumeStr += Research[x]["resCost"][i]*5*GlobVar.factor + " " + i + " / sec<br>";
 	}
-	document.getElementById("researchersMake").innerHTML = Jobs.researcher.make.research*Jobs.researcher.workbonus*5*factor+" research / sec<br>and consumes:<br>"+consumeStr;
+	document.getElementById("researchersMake").innerHTML = Jobs.researcher.make.research*Jobs.researcher.workbonus*5*GlobVar.factor+" research / sec<br>and consumes:<br>"+consumeStr;
 }
 
 var Research = {
@@ -720,11 +704,11 @@ function researchIncr(resUp){
 
 	if(!Research[resUp]["done"]){
 
-		make = true;
+		var make = true;
 		
 		for(var resKey in Research[resUp]["resCost"]){
 
-			incr = Research[resUp]["resCost"][resKey]*Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"];
+			var incr = Research[resUp]["resCost"][resKey]*Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"];
 
 			if(Stuff[resKey]["stored"]-incr<0 || !Stuff[resKey]["unlocked"]){//need to check all the required resources before consuming any
 				make = false;
@@ -737,7 +721,7 @@ function researchIncr(resUp){
 				Stuff[incrKey]["stored"]-= Research[resUp]["resCost"][incrKey]*Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"];//dont need to look up Jobs[]*Jobs[] every time this loops
 				document.getElementById(incrKey).innerHTML = Stuff[incrKey]["stored"];
 			}
-			Research[resUp]["completion"]+= time*Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"]; //can add research to efficiency which increase researcher output% but doesn't increase materials cost - need to add a new resEfficiency variable
+			Research[resUp]["completion"]+= GlobVar.time*Jobs["researcher"]["workers"]*Jobs["researcher"]["workbonus"]; //can add research to efficiency which increase researcher output% but doesn't increase materials cost - need to add a new resEfficiency variable
 
 			document.getElementById(resUp + "resBar").style.width = Research[resUp]["completion"]/Research[resUp]["totalRes"]*100 + "%";
 			if(Research[resUp]["completion"]>=Research[resUp]["totalRes"]){
@@ -749,7 +733,7 @@ function researchIncr(resUp){
 				document.getElementById(resUp).style.display = "none";
 
 				doBonus(resUp);
-				ActiveRes = " ";
+				GlobVar.ActiveRes = " ";
 			}
 			document.getElementById("research").innerHTML = Research[resUp]["completion"];
 		}
@@ -768,9 +752,9 @@ function doBonus(resUp){
 		
 			for (var i in Jobs.farmer.make){
 				if(Jobs["farmer"]["make"][i]>0){
-					makeStr += Jobs["farmer"]["make"][i]*Jobs.farmer.workbonus*factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					makeStr += Jobs["farmer"]["make"][i]*Jobs.farmer.workbonus*GlobVar.factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				} else {
-					consumeStr += Jobs["farmer"]["make"][i]*Jobs.farmer.workbonus*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					consumeStr += Jobs["farmer"]["make"][i]*Jobs.farmer.workbonus*GlobVar.factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				}
 
 				//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -797,9 +781,9 @@ function doBonus(resUp){
 		
 			for (var i in Jobs.woodcutter.make){
 				if(Jobs["woodcutter"]["make"][i]>0){
-					makeStr += Jobs["woodcutter"]["make"][i]*Jobs.woodcutter.workbonus*factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					makeStr += Jobs["woodcutter"]["make"][i]*Jobs.woodcutter.workbonus*GlobVar.factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				} else {
-					consumeStr += Jobs["woodcutter"]["make"][i]*Jobs.woodcutter.workbonus*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					consumeStr += Jobs["woodcutter"]["make"][i]*Jobs.woodcutter.workbonus*GlobVar.factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				}
 
 				//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -814,9 +798,9 @@ function doBonus(resUp){
 			document.getElementById("woodcuttersMake").innerHTML = makeStr+consumeStr;
 
 			//make this show up in town hall instaed of as it does here? need to add a 'add town hall message' sort of function
-			stoneStr = "One of the newest wanderers to join your camp used to supervise mining opperations for the Great City. He offers to teach the group how to find ore and smelt it."
-			statementLog = stoneStr + "<br><br>" + statementLog;
-			document.getElementById("logOut").innerHTML = statementLog;//some statements are logged and displayed in the town hall annoucement instead of the normal statement line
+			stoneStr = "One of the newest wanderers to join your camp used to supervise mining operations<br>for the Great City. He offers to teach the group how to find ore and smelt it."
+			GlobVar.statementLog = stoneStr + "<br><br>" + GlobVar.statementLog;
+			document.getElementById("logOut").innerHTML = GlobVar.statementLog;//some statements are logged and displayed in the town hall annoucement instead of the normal statement line
 			//sets the council message
 			document.getElementById("council1").textContent = stoneStr;//need the <i>s?
 			//give the town hall button a red color
@@ -834,9 +818,9 @@ function doBonus(resUp){
 		
 			for (var i in Jobs.rockcutter.make){
 				if(Jobs["rockcutter"]["make"][i]>0){
-					makeStr += Jobs["rockcutter"]["make"][i]*Jobs.rockcutter.workbonus*factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					makeStr += Jobs["rockcutter"]["make"][i]*Jobs.rockcutter.workbonus*GlobVar.factor*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				} else {
-					consumeStr += Jobs["rockcutter"]["make"][i]*Jobs.rockcutter.workbonus*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					consumeStr += Jobs["rockcutter"]["make"][i]*Jobs.rockcutter.workbonus*GlobVar.factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				}
 
 				//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -855,9 +839,9 @@ function doBonus(resUp){
 		
 			for (var i in Jobs.mason.make){
 				if(Jobs["mason"]["make"][i]>0){
-					makeStr += Jobs["mason"]["make"][i]*factor*Jobs.mason.workbonus*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					makeStr += Jobs["mason"]["make"][i]*GlobVar.factor*Jobs.mason.workbonus*5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				} else {
-					consumeStr += Jobs["mason"]["make"][i]*Jobs.mason.workbonus*factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
+					consumeStr += Jobs["mason"]["make"][i]*Jobs.mason.workbonus*GlobVar.factor*-5 + " " + i + " / sec<br>"; //the 5 comes from ticks per second
 				}
 
 				//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -938,17 +922,17 @@ function finishCouncil(index){//some of this can be run in finishBuilding() and 
 	Buildings.councilhall.unlocked = true;
 	document.getElementById("buildCounc").style.display = "none";
 	decreeStr = "Council decree at Town Hall";
-	document.getElementById("statement").innerHTML = decreeStr; counter1 = 0;
+	document.getElementById("statement").innerHTML = decreeStr; GlobVar.counter1 = 0;
 
 	document.getElementById("butt3").style.display = "inline";	
 	alertPanel("pan3");
 	unlock("lab");
 	document.getElementById("council1").style.visibility = "visible";
 	Jobs.freeworker.workers += Buildings.councilhall.buildWorkers;
-	buildWorkers -= Buildings.councilhall.buildWorkers;
+	GlobVar.buildWorkers -= Buildings.councilhall.buildWorkers;
 	document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
-	buildBuild.splice(index,1);
-	buildConstruct.splice(index,1);
+	GlobVar.buildBuild.splice(index,1);
+	GlobVar.buildConstruct.splice(index,1);
 }
 function isEmpty(object) {
 	for(var i in object) {
@@ -958,25 +942,25 @@ function isEmpty(object) {
 }
 function updateTransition(){
 
-	bodyy.className = "normal";
+	document.body.className = "normal";
 }
 //go through and put this in or just use from now on
 function logStatement(string){
-	statementLog = string + "<br><br>" + statementLog;
-	document.getElementById("logOut").innerHTML = statementLog;
+	GlobVar.statementLog = string + "<br><br>" + GlobVar.statementLog;
+	document.getElementById("logOut").innerHTML = GlobVar.statementLog;
 	document.getElementById("statement").className = "orange";
-	document.getElementById("statement").innerHTML = string; counter1 = 0;
+	document.getElementById("statement").innerHTML = string; GlobVar.counter1 = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////exploring the land////////////////////////////////////////////////////////////////////////////////////
 function exploreGo(){
-	if(exploring){
+	if(GlobVar.exploring){
 		document.getElementById("statement").innerHTML = "We should wait until the last scouting party returns";
 	} else {
-		var explorers = Math.floor(Math.log(exploreCount)*2)+1;//how many people will go out exploring
-		var explorersNext = Math.floor(Math.log(exploreCount+1)*2)+1
-		exploreNum = (explorers)*Math.pow(1.05,exploreCount-1);//the cost for this expedition (larger with distance and #of people)
-		exploreNumNext = (explorers+1)*Math.pow(1.05,exploreCount);//cost for next expedition
+		var explorers = Math.floor(Math.log(GlobVar.exploreCount)*2)+1;//how many people will go out exploring
+		var explorersNext = Math.floor(Math.log(GlobVar.exploreCount+1)*2)+1
+		GlobVar.exploreNum = (explorers)*Math.pow(1.05,GlobVar.exploreCount-1);//the cost for this expedition (larger with distance and #of people)
+		GlobVar.exploreNumNext = (explorers+1)*Math.pow(1.05,GlobVar.exploreCount);//cost for next expedition
 
 		//need certain number of free workers and food for them to carry
 		var go = true;	
@@ -985,8 +969,8 @@ function exploreGo(){
 			noGoStr += "free workers, "
 			go = false;
 		}
-		for(var i in exploreStuff){
-			if(Math.round(exploreStuff[i]*exploreNum) > Stuff[i]["stored"]){
+		for(var i in GlobVar.exploreStuff){
+			if(Math.round(GlobVar.exploreStuff[i]*GlobVar.exploreNum) > Stuff[i]["stored"]){
 				go = false;
 				noGoStr += i+", ";
 			}
@@ -996,9 +980,9 @@ function exploreGo(){
  
 		if(go){
 			tooltipStr = "";
-			for (var i in exploreStuff){
-				Stuff[i]["stored"]-=Math.round(exploreStuff[i]*exploreNum);
-				tooltipStr += Math.round(exploreStuff[i]*exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
+			for (var i in GlobVar.exploreStuff){
+				Stuff[i]["stored"]-=Math.round(GlobVar.exploreStuff[i]*GlobVar.exploreNum);
+				tooltipStr += Math.round(GlobVar.exploreStuff[i]*GlobVar.exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
 				//need to add in an update for the tooltip on sending an explore party - don't feel like it right now
 			}
 			tooltipStr = tooltipStr.slice(0,-7);
@@ -1006,71 +990,71 @@ function exploreGo(){
 			document.getElementById("exploreCosts").innerHTML = tooltipStr;
 			Jobs.freeworker.workers -= explorers;
 			document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
-			exploreBar = 0;
+			GlobVar.exploreBar = 0;
 				
-			exploring = true;
+			GlobVar.exploring = true;
 		} else {
 			document.getElementById("statement").innerHTML = noGoStr;
 		}
 	}
 }
 function exploreUp(){
-	exploreBar += time*20/(exploreNum);
-	if(exploreBar>=100){
-		exploreBar = 0;
+	GlobVar.exploreBar += GlobVar.time*20/(GlobVar.exploreNum);
+	if(GlobVar.exploreBar>=100){
+		GlobVar.exploreBar = 0;
 		exploreEnd();
 	}
-	document.getElementById("exploreBar").style.width = exploreBar+"%";
+	document.getElementById("exploreBar").style.width = GlobVar.exploreBar+"%";
 }
 function exploreEnd(){
-	Jobs.freeworker.workers += Math.floor(Math.log(exploreCount)*2)+1;
+	Jobs.freeworker.workers += Math.floor(Math.log(GlobVar.exploreCount)*2)+1;
 	document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
-	exploreCount++;
-	if(exploreCount===4){
+	GlobVar.exploreCount++;
+	if(GlobVar.exploreCount===4){
 		logStatement("The exploring party discovered a potential mining site. You can build a shaft to extract ore");
 		Buildings.addBuildingButton("mine");
 		Jobs.addJobElement("miner");
-	} else if(exploreCount===7) {
-		Token[10]=false;
+	} else if(GlobVar.exploreCount===7) {
+		GlobVar.Token[10]=false;
 		document.getElementById("mineBuild").className = "buildingButton";
 		document.getElementById("mineBuild").addEventListener("click",addBuildingEvent);
-		document.getElementById("statement").innerHTML = "The exploring party discovered another potential mining site. You can build a shaft to extract ore"; counter1=0;
+		document.getElementById("statement").innerHTML = "The exploring party discovered another potential mining site. You can build a shaft to extract ore"; GlobVar.counter1=0;
 		Buildings.mine.addworker.miner = 1;
-	} else if(exploreCount===10){
+	} else if(GlobVar.exploreCount===10){
 		logStatement("The exploring party found a site by the river to extract clay.");
 		Stuff.addResourceLine("clay");
 		Jobs.addJobElement("clayworker");
 		Research.addResearchButton("Brickmaking");
 		
-	} else if(exploreCount===13){
-		logStatement("All the the immediate area around the base camp has been mapped. The next expeditions will need to venture futher along the valley or up the foothills.");
-	} else if(exploreCount===15) {
-		logStatement("The last group of explorers barely scared off a wild bearling. They advise that all future exploring missions be armed.");
+	} else if(GlobVar.exploreCount===13){
+		logStatement("All the the immediate area around the base camp has been mapped.<br>The next expeditions will need to venture futher along the valley or up the foothills.");
+	} else if(GlobVar.exploreCount===15) {
+		logStatement("The last group of explorers barely scared off a wild bearling.<br>They advise that all future exploring missions be armed.");
 		//need to add a place and mechanic for making and storing weapons (need a few expensive items - should have a making... bar in the armory and only whole numbered items)
 		//spears should be in the Stuff object by the resource line should appear somewhere else (different tab or below a line break in resource pannel)
 		//also need a way to return some of the special items (and lose some of them each trip). for now just lose all of them
-		exploreStuff.spear = 1;
+		GlobVar.exploreStuff.spear = 1;
 		tooltipStr = "";
-		for (var i in exploreStuff){
-			tooltipStr += Math.round(exploreStuff[i]*exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
+		for (var i in GlobVar.exploreStuff){
+			tooltipStr += Math.round(GlobVar.exploreStuff[i]*GlobVar.exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
 			//need to add in an update for the tooltip on sending an explore party - don't feel like it right now
 		}
 		tooltipStr = tooltipStr.slice(0,-7);
 		document.getElementById("exploreCosts").innerHTML = tooltipStr;
 	} else {
-		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; counter1=40;
+		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; GlobVar.counter1=40;
 	}
 	//add in an ungrade or building with a small penalty to auto-explore if you have enough stuff?
-	exploring = false;
+	GlobVar.exploring = false;
 }
 
 function Cheat(){
-	cheating = true;
-	time = 100;
+	GlobVar.cheating = true;
+	GlobVar.time = 100;
 }
 function UnCheat(){
-	cheating = false;
-	time = 1;
+	GlobVar.cheating = false;
+	GlobVar.time = 1;
 }
 ////////////////////////////////////////////////////////////////game loop////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1078,17 +1062,16 @@ function run(){
 
 	//clear the message to player after ~some seconds
 	if(document.getElementById("statement").innerHTML!=="&nbsp;"){
-		counter1++;
-		if( counter1<65 && (document.getElementById("statement").className === "statementOff"||document.getElementById("statement").className === "orange")){
+		GlobVar.counter1++;
+		if( GlobVar.counter1<65 && (document.getElementById("statement").className === "statementOff"||document.getElementById("statement").className === "orange")){
 			document.getElementById("statement").className = "statementOn";
 		}
-		if(counter1===65){
+		if(GlobVar.counter1===65){
 			document.getElementById("statement").className = "statementOff";
 		}
-		if(counter1>80) {
+		if(GlobVar.counter1>80) {
 			document.getElementById("statement").innerHTML = "&nbsp;";
-			console.log("nbsp at "+counter1);
-			counter1 = 0;
+			GlobVar.counter1 = 0;
 		}
 	}
 
@@ -1097,40 +1080,40 @@ function run(){
 //check for events met to unlock new content
 
 	//win the game for now
-	if(Stuff.copper.stored>5&&Token[99]&&Buildings.kiln.count>1){
-		Token[99]=false;
+	if(Stuff.copper.stored>5&&GlobVar.Token[99]&&Buildings.kiln.count>1){
+		GlobVar.Token[99]=false;
 		alert("That's it for now - check back later for more content. Thanks for playing!");
 	}
 
-	if(Buildings.shack.count==2&& Token[1]){
+	if(Buildings.shack.count==2&& GlobVar.Token[1]){
 		logStatement("Eventually another refugee wanders nearby, interested in what you are doing, and you convince<br>him to join you in your work. More will surely come and stay if you have space to house them.");
-		Token[1] = false;
+		GlobVar.Token[1] = false;
 	}
 	//add forest box and woodcutter job
-	if(Buildings.shack.count==3&& Token[2]){
+	if(Buildings.shack.count==3&& GlobVar.Token[2]){
 		
 		Stuff.wood.unlocked=true;
 
 		Jobs.addJobBox("forest");
 		Jobs.addJobElement("woodcutter");
 		logStatement("Your new companions also carry axes, sharp for the time being. You suggest <br>that you head back into the forest and cut more wood to continue building.");
-		Token[2] = false;
+		GlobVar.Token[2] = false;
 	}
 	//statement - buildings cost more as you build them
-	if(Buildings.shack.count==4&& Token[3]){
+	if(Buildings.shack.count==4&& GlobVar.Token[3]){
 		logStatement("As you build more buildings they will require more resources. <br>Why? Because that's what happens in this genre.");
-		Token[3] = false;
+		GlobVar.Token[3] = false;
 	}
 	//change name
-	if(Buildings.shack.count===5&& Token[0]){
-		Token[0]=false;
+	if(Buildings.shack.count===5&& GlobVar.Token[0]){
+		GlobVar.Token[0]=false;
 		logStatement("The wilderness is beginning to feel less lonely.");
-		name = prompt("What would you like to name your settlement?");
-		document.getElementById("title").innerHTML = "Camp " + name;
+		GlobVar.name = prompt("What would you like to name your settlement?");
+		document.getElementById("title").innerHTML = "Camp " + GlobVar.name;
 	}
 
 	//adds hillside box and rockcutter job
-	if(Buildings.shack.count===6&& Token[4]){
+	if(Buildings.shack.count===6&& GlobVar.Token[4]){
 
 		Jobs.addJobBox("hillside");
 		Jobs.addJobElement("rockcutter");
@@ -1140,14 +1123,14 @@ function run(){
 		Stuff.rock.unlocked=true;
 		/////
 		logStatement("While wandering into the hills looking for the nightly firewood, one of the workers finds a<br>small rocky clearing that can be turned into a quarry. The rock may be useful for new structures.");
-		Token[4] = false;
+		GlobVar.Token[4] = false;
 	}
 	//unlocks shed (Woodshed)
 	if(Buildings.shack.count===7){
 		unlock("shed");
 	}
-	if(Buildings.shack.count===12&&Token[11]){
-		Token[11]=false;
+	if(Buildings.shack.count===12&&GlobVar.Token[11]){
+		GlobVar.Token[11]=false;
 		logStatement("As the camp grows and residents becomes more familiar with eachother, some of them begin to discuss their past lives in the Great City.<br>Most of the refugees did specialized work and are still learning the basic struggle for survival, but they long to rebuild at least part of the society they once knew.");
 	}
 	//unlocks expandQ (Expand Quarry)
@@ -1175,10 +1158,10 @@ function run(){
 		unlock("hut");
 	}
 	//makes panel/tabs buttons visible (inline)
-	if(Buildings.shack.count + Buildings.hut.count>=20 && Token[5]){
+	if(Buildings.shack.count + Buildings.hut.count>=20 && GlobVar.Token[5]){
 		logStatement("Though it may be premature, you have high hopes for the future growth of your little shanty town and decide to give<br>the settlement a proper name. You also decide it is time to more formally organize, and form a council to govern and make decisions.");
-		document.getElementById("title").innerHTML = "Hamlet of " + name;
-		Token[5] = false;
+		document.getElementById("title").innerHTML = "Hamlet of " + GlobVar.name;
+		GlobVar.Token[5] = false;
 
 		//give the town hall button a red color
 		alertPanel("pan4");
@@ -1188,30 +1171,30 @@ function run(){
 		document.getElementById("butt4").style.display = "inline";
 	}
 	//increase rock and stone production 
-	if(Research.StoneAxe.completion>350&&Token[6]){
-		Token[6]=false;
+	if(Research.StoneAxe.completion>350&&GlobVar.Token[6]){
+		GlobVar.Token[6]=false;
 		logStatement("Stone production is low. Maybe better mason tools would help.");
 		Research.addResearchButton("StoneChisel");
 		alertPanel("pan3");
 	}
 	//remove the first mine as useless
-	if(Buildings.mine.tempCount===1&&Token[7]){
-		Token[7] = false;
-		if(Token[10]){
+	if(Buildings.mine.tempCount===1&&GlobVar.Token[7]){
+		GlobVar.Token[7] = false;
+		if(GlobVar.Token[10]){
 			document.getElementById("mineBuild").removeEventListener("click",addBuildingEvent);
 		}
 	}
-	if(Buildings.mine.count===1&&Token[8]){
-		Token[8]=false;
-		if(Token[10]){
+	if(Buildings.mine.count===1&&GlobVar.Token[8]){
+		GlobVar.Token[8]=false;
+		if(GlobVar.Token[10]){
 			logStatement("The first mine yielded no usable resources. Another site must be located.")
 			document.getElementById("mineBuild").className = "deadBuilding";
 		} else {
 			logStatement("The first mine yielded no usable resources. You can try building a mineshaft at the second location.")
 		}
 	}
-	if(Buildings.mine.count===2&&Token[9]){
-		Token[9]=false;
+	if(Buildings.mine.count===2&&GlobVar.Token[9]){
+		GlobVar.Token[9]=false;
 		logStatement("This mine produces copper ore which can be smelted into copper.")
 		Stuff.addResourceLine("cu_ore");
 	}
@@ -1221,26 +1204,26 @@ function run(){
 	}
 
 	//adjusts the woodworker and lumberworker output as population grows to account for deteriorating axes
-	if(pop!==allworkers&&document.getElementById("forest")){
-		pop = allworkers;
+	if(GlobVar.pop!==GlobVar.allworkers&&document.getElementById("forest")){
+		GlobVar.pop = GlobVar.allworkers;
 		var bonus = 0;
 
-		for(var i=1;i<=pop;i++){
-			bonus+= Math.pow(0.92,pop-i)/pop;
+		for(var i=1;i<=GlobVar.pop;i++){
+			bonus+= Math.pow(0.92,GlobVar.pop-i)/GlobVar.pop;
 		}
 
-		for(var i=0; i<degrade.length; i++){
-			Jobs[degrade[i]]["workbonus"] = bonus;
+		for(var i=0; i<GlobVar.degrade.length; i++){
+			Jobs[GlobVar.degrade[i]]["workbonus"] = bonus;
 		
-			var jobName = degrade[i];
+			var jobName = GlobVar.degrade[i];
 			var makeStr = "";
 			var consumeStr ="";
 
 			for (var i in Jobs[jobName]["make"]){
 				if(Jobs[jobName]["make"][i]>0){
-					makeStr += (Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*factor*5).toFixed(1) + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
+					makeStr += (Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*GlobVar.factor*5).toFixed(1) + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
 				} else {
-					consumeStr += (Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*factor*-5).toFixed(1) + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
+					consumeStr += (Jobs[jobName]["make"][i]*Jobs[jobName]["workbonus"]*GlobVar.factor*-5).toFixed(1) + " " + Stuff[i]["name"].charAt(0).toLowerCase() + Stuff[i]["name"].slice(1) + " / sec<br>"; //the 5 comes from ticks per second
 				}
 
 				//buildings unlock resources for now, eventually research will, but not jobs - can also unlock resources with research or by building a building check in condistions part of run() loop -  remove buildings unlocking resources and make all Stuff.addResourceLine calls form conditions section otherwise I will need to add to Buildings[building][make] array with research, etc. nevermind, that is ok. let the buildings unlock initial things and unlock more by adjusting make array, is good that way
@@ -1260,24 +1243,24 @@ function run(){
 
 
 	/////////continue the construction of new buildings
-	if (buildBuild.length>0){
+	if (GlobVar.buildBuild.length>0){
 		buildUp()
 	}
 
 	//////increment research///////////////////
-	if(ActiveRes != " " && !Research[ActiveRes]["done"]){
-		researchIncr(ActiveRes);
+	if(GlobVar.ActiveRes != " " && !Research[GlobVar.ActiveRes]["done"]){
+		researchIncr(GlobVar.ActiveRes);
 	}
 
 	//continue exploring
-	if(exploring){
+	if(GlobVar.exploring){
 		exploreUp();
 	}
 
 	//////increment resources///////////////////
 	Jobs.incrRes();
 	Buildings.incrRes();
-	if(cheating){
+	if(GlobVar.cheating){
 		for(var i in Stuff){
 			if(Stuff[i]["unlocked"]){
 				Stuff[i]["stored"]=Stuff[i]["maxstored"];
@@ -1287,17 +1270,17 @@ function run(){
 
 	///////consume food/////////////////////////
 	document.getElementById("food").innerHTML = Stuff["food"]["stored"].toFixed(1);
-	Stuff.food.stored=(Stuff.food.stored*10-(allworkers*6*factor))/10;//should put allworkers as freeworkersMax/maxfreeworkers and clean up "allworkers" variable
+	Stuff.food.stored=(Stuff.food.stored*10-(GlobVar.allworkers*6*GlobVar.factor))/10;//should put allworkers as freeworkersMax/maxfreeworkers and clean up "allworkers" variable
 	
 	//panic if there is not enough food
 	if(Stuff.food.stored<1){
 
-		bodyy.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
-		//bodyy.className = "normal";
+		document.body.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
+
 		document.getElementById("statement").innerHTML = "In a food-shortage panic all available workers take to hunting";
-		counter1=40;
+		GlobVar.counter1=40;
 	
-		tempFood = 0; 
+		var tempFood = 0; 
 
 		for(var i in Jobs){
 			
@@ -1368,7 +1351,8 @@ function saveGame(){//add in the Jobs object for storage
 	}
 }
 
-function load(){//oh this is going to be fun 
+function loadGame(){//oh this is going to be fun 
+	console.log("trying tp load...");
 	if (storageAvailable()){
 		//need to check whether these things exist?
 		Stuff = data.get("Stuff");
@@ -1379,24 +1363,30 @@ function load(){//oh this is going to be fun
 		//and oh gee, how do I even start this
 		//update to the stored values of all resources, maxes, buildings, costs  add refreshAmounts() function
 		for (var i in Stuff){
-			if (Stuff[i]["unlocked"]&&(i!=="wood")){
-				Stuff.addResourceLine(i);
+			if (Stuff[i]["unlocked"]){
+				if(i!=="food" && i!=="wood"){
+					Stuff.addResourceLine(i);
+				}
 				document.getElementById(i).innerHTML = Stuff[i]["stored"];
 				document.getElementById(i+"Max").innerHTML = Stuff[i]["maxstored"];
 			}
 		}
 
 		for (var i in Buildings){
-			if (Buildings[i]["unlocked"]&&i!=="shed"){
-				Buildings.addBuildingButton(i);
+			if (Buildings[i]["unlocked"]){
+				if(i!=="shack"){
+					Buildings.addBuildingButton(i);
+				}
 				document.getElementById(i).innerHTML = Buildings[i]["count"];
 				console.log(document.getElementById(i+"Costs").innerHTML);
 				document.getElementById(i+"Costs").innerHTML = "need to refresh?";			
 			}
 		}
 		for(var i in Jobs){
-			if(Jobs[i]["unlocked"]&&i!=="woodcutter"){
-				Jobs.addJobElement(i);
+			if(Jobs[i]["unlocked"]){
+				if(i!=="hunter"){
+					Jobs.addJobElement(i);
+				}
 				document.getElementById(i+"s").innerHTML = Jobs[i]["workers"];
 				document.getElementById(i+"sMax").innerHTML = Jobs[i]["maxworkers"];
 			}
@@ -1404,16 +1394,17 @@ function load(){//oh this is going to be fun
 		//show the values that have been unlocked
 		//if there are more than X people show buttons up to butt3
 		//if there is a councilhall then show butt4
+		//go through tokens in {if else} to see what else needs to be displayed
 	
 	}
 }
 
 function prestige(){
-	knowledge += Jobs.freeworker.maxworkers;
-	localStorage.setItem("Knowledge",knowledge);
+	GlobVar.knowledge += Jobs.freeworker.maxworkers;
+	localStorage.setItem("Knowledge",GlobVar.knowledge);
 	//do I save knowledge and reload the page or reset the stored amounts of everything to 0 and refreshAmounts()?
 	window.location.reload(false);//seems easiest
-	knowledge = localStorage.getItem("Knowledge");
+	GlobVar.knowledge = localStorage.getItem("Knowledge");
 }
 
 //taken from Alex Grande on stackoverflow, thanks

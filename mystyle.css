@@ -447,6 +447,30 @@ body.normal{
 	background-color:black;
 	border:2px solid white;
 }
+#save{
+	position:absolute;
+	top:20px;
+	left:15px;
+	padding:5px;
+	background-color:black;
+	border:2px solid white;
+}
+#save:hover{
+	background-color:gray;
+	cursor:pointer;
+}
+#load{
+	position:absolute;
+	top:60px;
+	left:15px;
+	padding:5px;
+	background-color:black;
+	border:2px solid white;
+}
+#load:hover{
+	background-color:gray;
+	cursor:pointer;
+}
 .statementLog:hover{
 	background-color:lightgray;
 	border-color:darkgrey;
