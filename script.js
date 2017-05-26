@@ -1353,16 +1353,18 @@ function saveGame(){//add in the Jobs object for storage
 
 function loadGame(){//oh this is going to be fun 
 	console.log("trying tp load...");
-	if (storageAvailable()){
+	if (storageAvailable("localStorage")){
 		//need to check whether these things exist?
 		Stuff = data.get("Stuff");
 		Buildings = data.get("Buildings");
 		Jobs = data.get("Jobs");
 		GlobVar = data.get("GlobVar");
+		console.log("got the objects")
 
 		//and oh gee, how do I even start this
 		//update to the stored values of all resources, maxes, buildings, costs  add refreshAmounts() function
 		for (var i in Stuff){
+			console.log("Stuff: "+i);
 			if (Stuff[i]["unlocked"]){
 				if(i!=="food" && i!=="wood"){
 					Stuff.addResourceLine(i);
@@ -1373,6 +1375,7 @@ function loadGame(){//oh this is going to be fun
 		}
 
 		for (var i in Buildings){
+			console.log("Buildings: "+i);
 			if (Buildings[i]["unlocked"]){
 				if(i!=="shack"){
 					Buildings.addBuildingButton(i);
@@ -1383,6 +1386,7 @@ function loadGame(){//oh this is going to be fun
 			}
 		}
 		for(var i in Jobs){
+			console.log("Jobs: "+i);
 			if(Jobs[i]["unlocked"]){
 				if(i!=="hunter"){
 					Jobs.addJobElement(i);
@@ -1396,6 +1400,8 @@ function loadGame(){//oh this is going to be fun
 		//if there is a councilhall then show butt4
 		//go through tokens in {if else} to see what else needs to be displayed
 	
+	} else {
+		console.log("storage not available");
 	}
 }
 
