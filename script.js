@@ -314,14 +314,16 @@ var GlobVar = {};
 	var JobBoxes = ["camp", "fields", "forest"];//keeps track of all the job boxes that have been created (or made visible)
 	var factor = 0.5 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
 	var statementLog = "";	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
-	var exploreCount = 1;		//number of free workers to go on an exploring trip
+	var exploreCount = 1;	//number of free workers to go on an exploring trip
+	var exploreNum = 1;		//resources each worker will need on the trip
+	var exploreNumNext = 2; //next party will need
 	var Token = [];
 	for (i=0;i<100;i++){
 		Token[i]=true;
 	}
 	var exploring = false;	//is there an active exploring party?
 	var exploreBar = 0;		//progress of the exploring party
-	var exploreStuff={food:30};//round stuff when deciding to use it
+	var exploreStuff={food:36};//round stuff when deciding to use it
 	var cheating = false;
 	var degrade = ["woodcutter","lumberworker"]; //which workers lose effectiveness over time (can reset to other)
 	var pop = 1; 			//total population to start - used with degrade
@@ -541,7 +543,6 @@ function addBuilding(buildkey){
 			actualcost = Math.round(Buildings[buildkey]["cost"][keyy]*Math.pow(Buildings[buildkey]["costratio"],Buildings[buildkey]["count"]+Buildings[buildkey]["tempCount"]-1));   //consider making function actualcost(buildkey,key) which returns value calculated value
 
 			Stuff[keyy]["stored"]-=actualcost;
-			console.log(actualcost + " " + Stuff[keyy]["stored"]);
 			document.getElementById(keyy).innerHTML = Stuff[keyy]["stored"].toFixed(1);
 		
 			costTxt += Math.round(actualcost*Buildings[buildkey]["costratio"]) + "&nbsp" + keyy + "<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -665,15 +666,17 @@ function unlock(unlockkey){
 
 		document.getElementById(unlockkey+"Costs").innerHTML = costTxt;
 
-		statementLog = Buildings[unlockkey]["statement"] + "<br><br>" + statementLog;
-		document.getElementById("statement").innerHTML = Buildings[unlockkey]["statement"]; counter1 = 0;
-		document.getElementById("logOut").innerHTML = statementLog;
+		logStatement(Buildings[unlockkey]["statement"]);
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////research////////////////////////////////////////////////////////////////////////////////////
 function SwapActiveRes(x){
+	if(ActiveRes!==" "){
+		document.getElementById(ActiveRes).className = "researchButton";
+	}
 	ActiveRes = x;
+	document.getElementById(x).className = "researchButtonSelected";
 	document.getElementById("research").innerHTML = Research[x]["completion"];
 	document.getElementById("researchMax").innerHTML = Research[x]["totalRes"];
 
@@ -961,6 +964,7 @@ function updateTransition(){
 function logStatement(string){
 	statementLog = string + "<br><br>" + statementLog;
 	document.getElementById("logOut").innerHTML = statementLog;
+	document.getElementById("statement").className = "orange";
 	document.getElementById("statement").innerHTML = string; counter1 = 0;
 }
 
@@ -969,13 +973,15 @@ function exploreGo(){
 	if(exploring){
 		document.getElementById("statement").innerHTML = "We should wait until the last scouting party returns";
 	} else {
-		exploreNum = (exploreCount)*Math.pow(1.05,exploreCount-1);//the cost for this expedition
-		exploreNumNext = (exploreCount+1)*Math.pow(1.05,exploreCount);
+		var explorers = Math.floor(Math.log(exploreCount)*2)+1;//how many people will go out exploring
+		var explorersNext = Math.floor(Math.log(exploreCount+1)*2)+1
+		exploreNum = (explorers)*Math.pow(1.05,exploreCount-1);//the cost for this expedition (larger with distance and #of people)
+		exploreNumNext = (explorers+1)*Math.pow(1.05,exploreCount);//cost for next expedition
 
 		//need certain number of free workers and food for them to carry
 		var go = true;	
 		noGoStr = "Not enough ";
-		if(Jobs.freeworker.workers<exploreNum){
+		if(Jobs.freeworker.workers<explorers){
 			noGoStr += "free workers, "
 			go = false;
 		}
@@ -992,12 +998,13 @@ function exploreGo(){
 			tooltipStr = "";
 			for (var i in exploreStuff){
 				Stuff[i]["stored"]-=Math.round(exploreStuff[i]*exploreNum);
-				tooltipStr += Math.round(exploreStuff[i]*exploreNumNext) + " " + i + "<br>";
+				tooltipStr += Math.round(exploreStuff[i]*exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
 				//need to add in an update for the tooltip on sending an explore party - don't feel like it right now
 			}
-			document.getElementById("exploreWorkers").innerHTML = exploreNumNext;
+			tooltipStr = tooltipStr.slice(0,-7);
+			document.getElementById("exploreWorkers").innerHTML = explorersNext;
 			document.getElementById("exploreCosts").innerHTML = tooltipStr;
-			Jobs.freeworker.workers -= exploreNum;
+			Jobs.freeworker.workers -= explorers;
 			document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 			exploreBar = 0;
 				
@@ -1008,7 +1015,7 @@ function exploreGo(){
 	}
 }
 function exploreUp(){
-	exploreBar += time*20/(exploreCount);
+	exploreBar += time*20/(exploreNum);
 	if(exploreBar>=100){
 		exploreBar = 0;
 		exploreEnd();
@@ -1016,7 +1023,7 @@ function exploreUp(){
 	document.getElementById("exploreBar").style.width = exploreBar+"%";
 }
 function exploreEnd(){
-	Jobs.freeworker.workers += exploreNum;
+	Jobs.freeworker.workers += Math.floor(Math.log(exploreCount)*2)+1;
 	document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 	exploreCount++;
 	if(exploreCount===4){
@@ -1035,7 +1042,7 @@ function exploreEnd(){
 		Jobs.addJobElement("clayworker");
 		Research.addResearchButton("Brickmaking");
 		
-	} else if(exploreCount===14){
+	} else if(exploreCount===13){
 		logStatement("All the the immediate area around the base camp has been mapped. The next expeditions will need to venture futher along the valley or up the foothills.");
 	} else if(exploreCount===15) {
 		logStatement("The last group of explorers barely scared off a wild bearling. They advise that all future exploring missions be armed.");
@@ -1043,6 +1050,13 @@ function exploreEnd(){
 		//spears should be in the Stuff object by the resource line should appear somewhere else (different tab or below a line break in resource pannel)
 		//also need a way to return some of the special items (and lose some of them each trip). for now just lose all of them
 		exploreStuff.spear = 1;
+		tooltipStr = "";
+		for (var i in exploreStuff){
+			tooltipStr += Math.round(exploreStuff[i]*exploreNumNext) + " " + Stuff[i]["name"] + ",&nbsp;";
+			//need to add in an update for the tooltip on sending an explore party - don't feel like it right now
+		}
+		tooltipStr = tooltipStr.slice(0,-7);
+		document.getElementById("exploreCosts").innerHTML = tooltipStr;
 	} else {
 		document.getElementById("statement").innerHTML = "Your explorers map some areas but find nothing of use"; counter1=40;
 	}
@@ -1063,10 +1077,17 @@ function UnCheat(){
 function run(){ 
 
 	//clear the message to player after ~some seconds
-	if(document.getElementById("statement").innerHTML!="&nbsp"){
+	if(document.getElementById("statement").innerHTML!=="&nbsp;"){
 		counter1++;
+		if( counter1<65 && (document.getElementById("statement").className === "statementOff"||document.getElementById("statement").className === "orange")){
+			document.getElementById("statement").className = "statementOn";
+		}
+		if(counter1===65){
+			document.getElementById("statement").className = "statementOff";
+		}
 		if(counter1>80) {
-			document.getElementById("statement").innerHTML = "&nbsp";
+			document.getElementById("statement").innerHTML = "&nbsp;";
+			console.log("nbsp at "+counter1);
 			counter1 = 0;
 		}
 	}
@@ -1082,10 +1103,7 @@ function run(){
 	}
 
 	if(Buildings.shack.count==2&& Token[1]){
-		wandererStr = "Soon another refugee wanders by and you convince him to join you in your work.<br>More will surely come and stay if you have space to house them.";
-		statementLog = wandererStr + "<br><br>" + statementLog;
-		document.getElementById("logOut").innerHTML = statementLog;
-		document.getElementById("statement").innerHTML = wandererStr; counter1 = 0;
+		logStatement("Eventually another refugee wanders nearby, interested in what you are doing, and you convince<br>him to join you in your work. More will surely come and stay if you have space to house them.");
 		Token[1] = false;
 	}
 	//add forest box and woodcutter job
@@ -1095,18 +1113,12 @@ function run(){
 
 		Jobs.addJobBox("forest");
 		Jobs.addJobElement("woodcutter");
-		woodcutStr = "Your new companions also carry axes, sharp for the time being. You suggest <br>that you head back into the forest and cut more wood to continue building";
-		statementLog = woodcutStr + "<br><br>" + statementLog;
-		document.getElementById("logOut").innerHTML = statementLog;
-		document.getElementById("statement").innerHTML = woodcutStr; counter1 = 0;
+		logStatement("Your new companions also carry axes, sharp for the time being. You suggest <br>that you head back into the forest and cut more wood to continue building.");
 		Token[2] = false;
 	}
 	//statement - buildings cost more as you build them
 	if(Buildings.shack.count==4&& Token[3]){
-		morebuildStr = "As you build more buildings they will require more resources. <br>Why? Because that's what happens in this genre.";
-		statementLog = morebuildStr + "<br><br>" + statementLog;
-		document.getElementById("logOut").innerHTML = statementLog;
-		document.getElementById("statement").innerHTML = morebuildStr; counter1 = 0;
+		logStatement("As you build more buildings they will require more resources. <br>Why? Because that's what happens in this genre.");
 		Token[3] = false;
 	}
 	//change name
@@ -1127,10 +1139,7 @@ function run(){
 		Stuff.addResourceLine("rock");
 		Stuff.rock.unlocked=true;
 		/////
-		quarryStr = "While wandering into the hills looking for the nightly firewood, one of the workers finds a<br>small rocky clearing that can be turned into a quarry. The rock may be useful for new structures.";
-		statementLog = quarryStr + "<br><br>" + statementLog;
-		document.getElementById("logOut").innerHTML = statementLog;
-		document.getElementById("statement").innerHTML = quarryStr; counter1 = 0;
+		logStatement("While wandering into the hills looking for the nightly firewood, one of the workers finds a<br>small rocky clearing that can be turned into a quarry. The rock may be useful for new structures.");
 		Token[4] = false;
 	}
 	//unlocks shed (Woodshed)
@@ -1167,10 +1176,7 @@ function run(){
 	}
 	//makes panel/tabs buttons visible (inline)
 	if(Buildings.shack.count + Buildings.hut.count>=20 && Token[5]){
-		shantyStr = "Though it may be premature, you have high hopes for the future growth of your little shanty town and decide to give<br>the settlement a proper name. You also decide it is time to more formally organize, and form a council to govern and make decisions.";
-		statementLog = shantyStr + "<br><br>" + statementLog;
-		document.getElementById("logOut").innerHTML = statementLog;
-		document.getElementById("statement").innerHTML = shantyStr; counter1 = 0;
+		logStatement("Though it may be premature, you have high hopes for the future growth of your little shanty town and decide to give<br>the settlement a proper name. You also decide it is time to more formally organize, and form a council to govern and make decisions.");
 		document.getElementById("title").innerHTML = "Hamlet of " + name;
 		Token[5] = false;
 

@@ -99,6 +99,17 @@ tabs {
 	padding:0;
 	position:relative;
 }
+.researchButtonSelected{
+	font-size:1.2em;
+	display:inline-block;
+	width:160px;
+	height:70px;
+	margin:10px;
+	border:7px ridge rgb(124, 78, 78);
+	background: rgba(166, 186, 216, 1);
+	padding:0;
+	position:relative;
+}
 .researchButton:hover {
 	color:white;
 	background-color:rgba(100, 100, 100, .5);
@@ -270,6 +281,22 @@ div.userRemove:hover{
 .council:hover {
 	cursor:pointer;
 	border-color:grey;
+}
+.statementOn{
+	height:30px;
+	transition-timing-function: linear;
+	transition:color 1.5s;
+	color:white;
+}
+.orange{
+	height:30px;
+	color:orange;
+}
+.statementOff{
+	height:30px;
+	transition-timing-function: linear;
+	transition:color 5s;
+	color:black;
 }
 body{ 
 	
