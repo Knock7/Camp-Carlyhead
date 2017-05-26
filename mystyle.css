@@ -449,11 +449,12 @@ body.normal{
 }
 #save{
 	position:absolute;
-	top:20px;
+	top:10px;
 	left:15px;
 	padding:5px;
 	background-color:black;
 	border:2px solid white;
+	width:48px;
 }
 #save:hover{
 	background-color:gray;
@@ -461,13 +462,27 @@ body.normal{
 }
 #load{
 	position:absolute;
-	top:60px;
+	top:50px;
 	left:15px;
 	padding:5px;
 	background-color:black;
 	border:2px solid white;
+	width:48px;
 }
 #load:hover{
+	background-color:gray;
+	cursor:pointer;
+}
+#export{
+	position:absolute;
+	top:90px;
+	left:15px;
+	padding:5px;
+	background-color:black;
+	border:2px solid white;
+	width:48px;
+}
+#export:hover{
 	background-color:gray;
 	cursor:pointer;
 }
