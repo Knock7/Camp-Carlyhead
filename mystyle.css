@@ -305,6 +305,7 @@ body{
 	background-position: center; 
 	background-size:cover;
 	user-select: none;
+	cursor:default;
 	transition:background-image .5s, opacity .5s;
 	background-image:linear-gradient(rgba(200,250,250,0.5),rgba(255,200,200,0.5)),  url(images/mountains2.jpg);
 	opacity:1;
@@ -419,7 +420,7 @@ body.normal{
     visibility: visible;
     opacity: 1;
 }
-.researchButton:hover .tooltiptext {
+.researchButton:hover .tooltiptext, .researchButtonSelected:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
@@ -447,42 +448,31 @@ body.normal{
 	background-color:black;
 	border:2px solid white;
 }
-#save{
+#save, #load, #export, #import{
 	position:absolute;
-	top:10px;
-	left:15px;
 	padding:5px;
 	background-color:black;
 	border:2px solid white;
-	width:48px;
+	width:60px;
+	text-align:center;
 }
-#save:hover{
-	background-color:gray;
-	cursor:pointer;
+#save{
+	top:10px;
+	left:10px;
 }
 #load{
-	position:absolute;
 	top:50px;
-	left:15px;
-	padding:5px;
-	background-color:black;
-	border:2px solid white;
-	width:48px;
-}
-#load:hover{
-	background-color:gray;
-	cursor:pointer;
+	left:10px;
 }
 #export{
-	position:absolute;
-	top:90px;
-	left:15px;
-	padding:5px;
-	background-color:black;
-	border:2px solid white;
-	width:48px;
+	top:10px;
+	left:75px;
 }
-#export:hover{
+#import{
+	top:50px;
+	left:75px;
+}
+#save:hover, #load:hover, #export:hover, #import:hover{
 	background-color:gray;
 	cursor:pointer;
 }
@@ -520,4 +510,39 @@ body.normal{
 	max-width:260px;
 	display:inline-block;
 	vertical-align:top;
+}
+#exportWindow, #importWindow{
+	z-index: 3;
+	position:absolute;
+	top:120px;
+	left:35%;
+	background-color:white;
+	color:black;
+	text-align: center;
+	/*overflow-wrap: break-word;*/
+	border:2px solid black;
+}
+#exportStr, #importStr{
+	height:400px;
+	width:500px;
+	resize: none;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.exportWindowOn{
+	display:block;
+}
+.exportWindowOff{
+	display:none;
+}
+#closeExport, #closeImport{
+	color:black;
+	background-color:white;
+	height:100%;
+	padding:10px;
+	margin:0;
+}
+#closeExport:hover, #closeImport:hover{
+	cursor:pointer;
+	background-color:lightgray;
 }
