@@ -448,12 +448,13 @@ body.normal{
 	background-color:black;
 	border:2px solid white;
 }
-#save, #load, #export, #import{
+#save, #load, #export, #import, #link, #tips{
 	position:absolute;
 	padding:5px;
 	background-color:black;
 	border:2px solid white;
 	width:60px;
+	height:32px;
 	text-align:center;
 }
 #save{
@@ -472,9 +473,35 @@ body.normal{
 	top:50px;
 	left:75px;
 }
-#save:hover, #load:hover, #export:hover, #import:hover{
+#link{
+	top:90px;
+	left:10px;
+}
+#tips{
+	top:90px;
+	left:75px;
+}
+#save:hover, #load:hover, #export:hover, #import:hover, #link:hover, #tips:hover{
 	background-color:gray;
 	cursor:pointer;
+}
+#tipText{
+	position:relative;
+	bottom:25px;
+	left:-7px;
+	height:250px;
+	width:300px;
+	background-color:black;
+	border:2px solid white;
+	color:white;
+	display:none;
+	margin:0;
+	text-align:left;
+	padding:10px;
+}
+#tips:hover #tipText{
+	display:block;
+	cursor:cell;
 }
 .statementLog:hover{
 	background-color:lightgray;

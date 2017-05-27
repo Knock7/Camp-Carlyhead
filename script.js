@@ -199,7 +199,6 @@ var Jobs = {
   			removeworker(jobName,-1);
 			return false;
 		}
-		console.log("newbox: "+newBox);
 		document.getElementById(newBox).querySelector(".imgBox").appendChild(indiv);
 	};
 
@@ -255,6 +254,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	};
 
 	function addBuildingButton(buildingName){ 
+
 		var newBuild = document.createElement("div");
 		newBuild.id = buildingName + "Build";
 		newBuild.className = "buildingButton";
@@ -375,6 +375,8 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 	document.getElementById("import").addEventListener("click",openImportWindow);
 	document.getElementById("closeExport").addEventListener("click",closeExport);
 	document.getElementById("closeImport").addEventListener("click",closeImport);
+	document.getElementById("link").addEventListener("click",function(){console.log("link to subreddit at some point")});
+	document.getElementById("tips").addEventListener("click",tips=function(){});
 }
 
 function populate(){
@@ -587,7 +589,6 @@ function finishBuilding(buildkey,index){
 				document.getElementById("freeworkersMax").innerHTML = Jobs.freeworker.maxworkers;
 			} else {
 			Jobs[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
-			console.log("key4: "+key4);
 			document.getElementById(key4 + "sMax").innerHTML = Jobs[key4]["maxworkers"];
 			}
 		}
@@ -615,7 +616,7 @@ function unlock(unlockkey){
 	if(!Buildings[unlockkey]["unlocked"]){
 		
 		addBuildingButton(unlockkey);
-		Buildings[unlockkey]["unlocked"] = 1;
+		Buildings[unlockkey]["unlocked"] = true;
 		
 		//adds newly unlocked resources
 		for(i=0;i<Buildings[unlockkey]["unlockRes"].length;i++){
@@ -1016,7 +1017,7 @@ function exploreEnd(){
 	GlobVar.exploreCount++;
 	if(GlobVar.exploreCount===4){
 		logStatement("The exploring party discovered a potential mining site. You can build a shaft to extract ore");
-		addBuildingButton("mine");
+		unlock("mine");
 		addJobElement("miner");
 	} else if(GlobVar.exploreCount===7) {
 		GlobVar.Token[10]=false;
@@ -1292,7 +1293,6 @@ function run(){
 
 				tempFood+=Jobs[i]["workers"];
 				Jobs[i]["workers"] = 0;
-				console.log("trying to set element #"+i+"s to "+ Jobs[i]["workers"]);
 				document.getElementById(i + "s").innerHTML = Jobs[i]["workers"];
 			}
 		}
@@ -1360,7 +1360,7 @@ function saveGame(){//add in the Jobs object for storage
 function exportGame(){
 	document.getElementById("exportWindow").className = "exportWindowOn";
 	var exportStorage = {X_Stuff:Stuff,X_Buildings:Buildings,X_Jobs:Jobs,X_Research:Research,X_GlobVar:GlobVar};
-	document.getElementById("exportStr").innerHTML = JSON.stringify(exportStorage);
+	document.getElementById("exportStr").value = JSON.stringify(exportStorage);
 	document.getElementById("exportStr").select();
 }
 function closeExport(){
@@ -1384,13 +1384,16 @@ function closeImport(){
 }
 
 function loadGame(){//oh this is going to be fun 
-	console.log("trying tp load...");
+	
+	console.log("trying to load...");
 	if (storageAvailable("localStorage") && localStorage.getItem("GlobVar") !== null && localStorage.getItem("GlobVar")[0]==="{"){
+
+		var tempCol = Jobs.nextCol;//to make sure the job boxes sow up correctly
 		//need to check whether these things exist?
 		Stuff = data.get("Stuff");
-		Buildings = data.get("Buildings");
-		Jobs = data.get("Jobs");
-		GlobVar = data.get("GlobVar");
+		Buildings = data.get("Buildings"); 
+		Jobs = data.get("Jobs"); Jobs.nextCol = 1;
+		GlobVar = data.get("GlobVar"); 
 		Research = data.get("Research");
 		console.log("got the objects");
 
@@ -1398,21 +1401,18 @@ function loadGame(){//oh this is going to be fun
 		//update to the stored values of all resources, maxes, buildings, costs; and delete anything that isn't unlocked
 		for (var i in Stuff){
 			if (Stuff[i]["unlocked"]){
-				console.log("unlocked: "+i);
 				if(document.getElementById(i+"Stuff")===null){
 					addResourceLine(i);
 				}
 				document.getElementById(i).innerHTML = Stuff[i]["stored"];
 				document.getElementById(i+"Max").innerHTML = Stuff[i]["maxstored"];
 			} else if(document.getElementById(i+"Stuff")) {
-				console.log("removing "+i);
 				document.getElementById("stuff").removeChild(document.getElementById(i+"Stuff"));
 			}
 		}
 
 		for (var i in Buildings){
 			if (Buildings[i]["unlocked"] && i!=="councilhall"){
-				console.log("unlocked: "+i);
 				if(document.getElementById(i+"Build")===null){					
 					addBuildingButton(i);
 				}
@@ -1420,14 +1420,12 @@ function loadGame(){//oh this is going to be fun
 				document.getElementById(i).innerHTML = Buildings[i]["count"];
 				document.getElementById(i+"Costs").innerHTML = "need to refresh?";			
 			} else if(document.getElementById(i+"Build")) {
-				console.log("removing "+i);
 				document.getElementById("pan2").removeChild(document.getElementById(i+"Build"));
 			}
 		}
 
 		for(var i in Jobs){
 			if(Jobs[i]["unlocked"]){
-				console.log("unlocked: "+i);
 				if(document.getElementById(i+"Job")===null&&i!=="freeworker"){
 					addJobElement(i);
 				}
@@ -1435,22 +1433,18 @@ function loadGame(){//oh this is going to be fun
 				document.getElementById(i+"sMax").innerHTML = Jobs[i]["maxworkers"];
 			}
 			 else if(document.getElementById(i+"Job")) {
-				console.log("removing "+i);
 				document.getElementById(i+"Job").parentElement.removeChild(document.getElementById(i+"Job"));
 			}
 		}
 
 		var jobBoxElem = document.querySelectorAll(".JobBox");
-		console.log("jobBoxes NodeList: "+jobBoxElem+ " with length: "+jobBoxElem.length);
+
 		for(var i=0; i<jobBoxElem.length; i++){
-			console.log("JobBox: "+jobBoxElem[i]+ " and id: "+jobBoxElem[i].id);
 			var box = jobBoxElem[i].id;
 			var keep = false;
 
 			for(var j=0; j<GlobVar.JobBoxes.length; j++){
-				console.log("Does the box ("+box+") show up in GlobVar.jobBoxes."+j+" value: " + GlobVar["JobBoxes"][j]);
 				if(box === GlobVar["JobBoxes"][j]){
-					console.log("adding "+ box);
 					keep = true;
 				}
 			}
@@ -1461,12 +1455,10 @@ function loadGame(){//oh this is going to be fun
 
 		for (var i in Research){
 			if (Research[i]["unlocked"]&& !Research[i]["done"]){
-				console.log("unlocked: "+i);
 				if(i!=="FarmEquip" && i!=="StoneAxe"){					
 					addResearchButton(i);
 				}			
 			} else if(document.getElementById(i)) {
-				console.log("removing "+i);
 				document.getElementById("pan3").removeChild(document.getElementById(i));
 			}
 		}
@@ -1475,7 +1467,7 @@ function loadGame(){//oh this is going to be fun
 		//if there are more than X people show buttons up to butt3
 		//if there is a councilhall then show butt4
 		//go through tokens in {if else} to see what else needs to be displayed
-		if(Buildings.councilhall.unlocked){
+		if(Jobs.freeworker.workers>19){
 			document.getElementById("butt1").style.display = "inline";
 			document.getElementById("butt2").style.display = "inline";
 			document.getElementById("butt4").style.display = "inline";
@@ -1503,7 +1495,7 @@ function loadGame(){//oh this is going to be fun
 		}
 	
 	} else {
-		console.log("storage not available or no save to localStorage");
+		console.log("storage not available or no save in localStorage");
 	}
 }
 
