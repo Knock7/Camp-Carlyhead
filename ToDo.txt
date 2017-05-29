@@ -8,6 +8,8 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 - discover a coal mine
 - discover iron mine (adding mines changes the ratio of cu/fe/coal output by the miners so that a given miner, say, produces less cu_ore but now produces some fe_ore
 
+4) change statements so that they don't get reset too early after appearing. could make the alerts for not enough resources show up somewhere else or have low priority
+
 6) resource rate of change inline divs and stored tabbed (inline boxes with fixed width for resource names)
 
 7) tech to reduce all cost ratios
