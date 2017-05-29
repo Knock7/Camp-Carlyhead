@@ -27,8 +27,8 @@
 	<p id="closeImport">Import</p>
 </div>
 
-<header id="closeMe" class="alert">
-	<h2>Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a river and a field with wild berries and small game you can hunt, and with the few tools in your travel sack you begin work on a more permanent residence.</h2>
+<header id="closeMe" class="alert" style="color:black">
+	<h2 id="intro">Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a river and a field with wild berries and small game you can hunt, and with the few tools in your travel sack you begin work on a more permanent residence.</h2>
 	<h1 class="closebtn"><br><i> continue </i><br></h1>
 </header>
 
@@ -46,18 +46,18 @@
 	<div id="load">Load</div>
 	<div id="export">Export</div>
 	<div id="import">Import</div>
-	<div id="link">[Link]</div>
+	<div id="reset">Reset</div>
 	<div id="tips">Tips
 
 		<div id="tipText">
 						* right-click moves all workers<br>
 						* shift-click moves 5 workers<br><br>
 						If you get stuck, build more buildings,<br>
-						mine more resources, or g-chat me<br><br>
-						There is a pop-up at the end so that you<br>
-						know you have seen all current content<br><br>
+						mine more resources, or g-chat me.<br><br>
+						There is a pop-up at the end letting you<br>
+						know that you have seen all current content.<br><br>
 						Please let me know of any changes you<br>
-						would like to see, or things to add</div>
+						would like to see, or things to add.</div>
 	</div>
 
 </header>
@@ -90,7 +90,7 @@
 		<div class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></div>
 		<div style="height:100%; background-size:cover; padding-top:30px; background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(images/camp.jpg);">
 
-			<div class="userAdd" style="cursor:auto; background-color:rgba(255, 255, 255, .75)">
+			<div class="userAdd" style="cursor:default; background-color:rgba(255, 255, 255, .75)">
 				<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="freeworkersMax">1</span>&nbsp;</b>
 				<div class="tooltiptext">
 					<p>Every worker consumes <br>
@@ -162,7 +162,7 @@
 		<div class="tooltiptext">
 			<p>Requires (1) worker to build<br>
 				Cost:&nbsp;<span id="shackCosts">25 wood</span><br><br>
-				Adds: space for 1 new settler
+				Adds: <span id="shackAdds">space for 1 new settler</span>
 			</p>
 		</div>
 		<div id="shackprogress" class="buildBar"><p class="buildText">
@@ -170,12 +170,12 @@
 		</div>
 	</div>
 
-	<!-- this is a placeholder to make the buildings stay in 2 columns -->
+	<!-- this is a placeholder to make the buildings stay in 2 or 3 columns -->
 	<div id="buildBlank" class="hide buildingButton">
 		<div class="tooltiptext">
 			<p>Requires (4) workers to build<br>
 			Cost:&nbsp;<span id="labCosts"> </span><br><br>
-			Adds: space for 1 researcher<br>
+			Adds: space for 1 xxxxxx<br>
 			</p></div>
 		<div id="dontneed'" class="buildBar"><p class="buildText">
 		Lab Space [<span id="lab">0</span>]
@@ -185,7 +185,7 @@
 		<div class="tooltiptext">
 			<p>Requires (4) workers to build<br>
 			Cost:&nbsp;<span id="labCosts"> </span><br><br>
-			Adds: space for 1 researcher<br>
+			Adds: space for 1 xxxxxx<br>
 			</p></div>
 		<div id="dontneed2" class="buildBar"><p class="buildText">
 		Lab Space [<span id="lab">0</span>]
@@ -246,7 +246,7 @@
 		</div>
 	</div>
 
-	<div class="hide councilMessage" id="council1"><i>During the first meeting, the Council decideds to begin research and planning to recover lost technologies. You can now build labspace at the back of the Town Hall for research.</i>
+	<div class="hide councilMessage" id="council1"><i>During the first meeting, the Council decideds to begin research and planning to recover lost technologies. As time goes on, and new resources become available, differnt settlers may propose research projects to improve tools, or lead the design of new buildings. You can now build labspace at the back of the Town Hall for research.</i>
 	</div>
 
 	<div class="none councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div>

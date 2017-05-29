@@ -323,7 +323,7 @@ body.normal{
 }
 .closebtn {
     margin-left: 15px;
-    color: green;
+    color: black;
     font-weight: bold;
     float: right;
     font-size: 40pt;
@@ -448,7 +448,7 @@ body.normal{
 	background-color:black;
 	border:2px solid white;
 }
-#save, #load, #export, #import, #link, #tips{
+#save, #load, #export, #import, #reset, #tips{
 	position:absolute;
 	padding:5px;
 	background-color:black;
@@ -473,7 +473,7 @@ body.normal{
 	top:50px;
 	left:75px;
 }
-#link{
+#reset{
 	top:90px;
 	left:10px;
 }
@@ -481,7 +481,7 @@ body.normal{
 	top:90px;
 	left:75px;
 }
-#save:hover, #load:hover, #export:hover, #import:hover, #link:hover, #tips:hover{
+#save:hover, #load:hover, #export:hover, #import:hover, #reset:hover, #tips:hover{
 	background-color:gray;
 	cursor:pointer;
 }
@@ -489,15 +489,15 @@ body.normal{
 	position:relative;
 	bottom:25px;
 	left:-7px;
-	height:250px;
-	width:300px;
+	height:265px;
+	width:350px;
 	background-color:black;
 	border:2px solid white;
 	color:white;
 	display:none;
 	margin:0;
 	text-align:left;
-	padding:10px;
+	padding:25px;
 }
 #tips:hover #tipText{
 	display:block;
