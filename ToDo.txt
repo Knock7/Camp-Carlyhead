@@ -8,19 +8,9 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 - discover a coal mine
 - discover iron mine (adding mines changes the ratio of cu/fe/coal output by the miners so that a given miner, say, produces less cu_ore but now produces some fe_ore
 
-4) Add some jobs to forrest
-
-5) make jobBoxes into two columns
-
-6) resource rate of change span and stored tabbed (inline boxes with fixed width for resource names)
+6) resource rate of change inline divs and stored tabbed (inline boxes with fixed width for resource names)
 
 7) tech to reduce all cost ratios
-
-8) exploring takes an additional 3% food per trip
-
-9) win message for 10 cu and 4 kilns, put work 'win' in the message (can change way the alert box appears?)
-
-10) fix tooltip text for cu_ore
 
 11) fix workshop tooltip text to add brickmakers
 
