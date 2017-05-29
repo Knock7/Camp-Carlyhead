@@ -658,7 +658,7 @@ function unlock(unlockkey){
 		var costTxt = " ";
 
 		for(var key in Buildings[unlockkey]["cost"]){//make this output the same as the update cost output from addBuilding()
-			costTxt += Buildings[unlockkey]["cost"][key] + "&nbsp" + key + ",&nbsp";
+			costTxt += Buildings[unlockkey]["cost"][key].toFixed(1) + "&nbsp" + key + ",&nbsp";
 		}
 
 		costTxt = costTxt.slice(0,-6);
