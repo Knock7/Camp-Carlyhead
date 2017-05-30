@@ -33,6 +33,7 @@ fix tabs:
   make jobs constant
   switch between other stuff in second panel, make currently-selected tab highlighted
  not calling .toFixed(1) somewhere for resource updates, and need to use it on lumberworker tooltip
+ gray out building if not enough resources
  
 
 
