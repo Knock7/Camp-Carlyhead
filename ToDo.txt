@@ -27,6 +27,14 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 16) need some distant insentive that will require research -> want more researchers -> need more income -> need more workers -> need more houses
 
 
+Thoughts from Matt G:
+make loadGame() auto-run on page load, and add auto-save - maybe every 5 minutes
+fix tabs:
+  make jobs constant
+  switch between other stuff in second panel, make currently-selected tab highlighted
+ not calling .toFixed(1) somewhere for resource updates, and need to use it on lumberworker tooltip
+ 
+
 
 Thoughts from Christine:
 Pottery
@@ -35,7 +43,7 @@ ok on people
 wants to explore more
 
 
-Thoughts from Matt:
+Thoughts from Matt C:
 Make unlocking woodshed more straightforward 
 Map that shows buildings (learn Canvas API?) - function to draw a new block 
 
