@@ -26,6 +26,7 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 
 16) need some distant insentive that will require research -> want more researchers -> need more income -> need more workers -> need more houses
 
+17) have explorers need to venture away from the river and need to carry water in clay pots. when the party leave, the pots get reduced. no need to have water as a resource. all of the food should be used but party returns about 90% of other resources. (%chance to lose a given resource so you can sometimes lose wagons). some of the random chance josh talked about.
 
 Thoughts from Matt G:
 make loadGame() auto-run on page load, and add auto-save - maybe every 5 minutes
@@ -61,3 +62,7 @@ Thoughs from Mitch:
 
 Thoughts from Brian:
 Gold, trading
+
+Thoughts from Josh L:
+
+Thoughts from Kelsey:
