@@ -1,4 +1,4 @@
-1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space?
+1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space? or people are busy building buildings.
 
 2) add option to minimize/hide research buttons - transiton into a small size with an icon/number that you can 
 hover over for a tooltip? for now they just disappear.
