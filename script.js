@@ -101,7 +101,6 @@ var Jobs = {
 function incrRes(){ //increments resources from workers at their jobs (make another function to add passive building work - move 'buildingwork' to Buildings function and make it an object like 'make')
 	var now = Date.now();
 	var deltaTime = (now - GlobVar.previousTime)/1000;//time in seconds since last resource update
-	GlobVar.previousTime = now;
 
 	///////consume food/////////////////////////
 	var eatFood = -(Jobs.freeworker.maxworkers*.6*GlobVar.factor)*deltaTime*5;
@@ -1430,6 +1429,9 @@ function run(){
 	//////increment resources///////////////////
 	incrRes();
 
+	//
+	GlobVar.previousTime = Date.now();
+
 	//output the rate values and the stored amounts
 	for(var i in Stuff){
 		if(Stuff[i]["unlocked"]){
@@ -1594,6 +1596,15 @@ function loadGame(){
 function finishLoad(){//oh this is going to be fun ***Need to recalculate the costs and worker outputs***
 	
 	console.log("trying to load...");
+	//load up the resources (may be a better way to do this - want to make sure that the resources get maxed out correctly)
+	var delta = (Date.now() - GlobVar.previousTime)/100;//convert to 100 parts with units milliseconds
+	var time = Date.now() - delta;
+
+	for(var i=0;i<100;i++){
+		console.log(i+" previousTime: "+GlobVar.previousTime);
+		incrRes();
+		console.log("stone: "+Stuff.stone.stored);
+	}
 	
 
 	//update to the stored values of all resources, maxes, buildings, costs; and delete anything that isn't unlocked
