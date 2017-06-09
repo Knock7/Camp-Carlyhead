@@ -53,7 +53,7 @@
 						* right-click moves all workers<br>
 						* shift-click moves 5 workers<br><br>
 						If you get stuck, build more buildings,<br>
-						mine more resources, or g-chat me.<br><br>
+						mine more resources, or chat me.<br><br>
 						There is a pop-up at the end letting you<br>
 						know that you have seen all current content.<br><br>
 						Please let me know of any changes you<br>
@@ -66,29 +66,44 @@
 <resources id="stuff" style="background:linear-gradient(rgba(200,200,200,0.5),rgba(250,250,250,0.8))">
 	<h2 style="text-align:center;"> Resources </h2>
 
-	<p id="foodStuff"> Food: <span id="food"> 50 </span> / <span id="foodMax" class="right">100</span></p>  
-	<p id="woodStuff" > Wood: <span id="wood"> 100 </span> / <span id="woodMax" class="right">100</span></p> 
+	<div id="foodStuff">
+		<div class="resourceName"> Food: </div>
+		<div class="resource" id="food"> 50 </div> / 
+		<div class="resourceMax" id="foodMax" >100</div>
+		<div class="ratePos" id="foodRate">1</div> /sec
+	</div>  
+	<div id="woodStuff">
+		<div class="resourceName"> Wood: </div>
+		<div class="resource" id="wood"> 100 </div> / 
+		<div class="resourceMax" id="woodMax" >100</div>
+		<div class="ratePos" id="woodRate">1</div> /sec
+	</div> 
 
 </resources>
 
-
-<buttons>
-	<span id="butt1" class="butt none">JOBS</span>
-	<span id="butt2" class="butt none">BUILDINGS</span>
+<div id="tabsBox">
+<div id="tabs1">
+	<span id="butt1" class="buttSelected">JOBS</span>
+	<span id="butt6" class="butt">MAP</span>
+</div>
+<div id="tabs2">
+	<span id="butt2" class="buttSelected">BUILDINGS</span>
 	<span id="butt3" class="butt none">RESEARCH</span>
 	<span id="butt4" class="butt none">TOWN HALL</span>
 	<span id="butt5" class="butt none">Fifth Panel</span>
-</buttons>
+</div>
+<div id="fadeEffect">&nbsp;</div>
+</div>
+
 
 
 <!--///////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan1">
-	<h2>Jobs</h2>
 
 	<div id="col1" class="col">
 	<div id="camp" class="JobBox">
 		<div class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></div>
-		<div style="height:100%; background-size:cover; padding-top:30px; background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(images/camp.jpg);">
+		<div class="imgBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(images/camp.jpg);">
 
 			<div class="userAdd" style="cursor:default; background-color:rgba(255, 255, 255, .75)">
 				<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="freeworkersMax">1</span>&nbsp;</b>
@@ -99,7 +114,7 @@
 					new buildings meet here at camp</p>
 				</div>
 			</div>
-		<p style="font-size:4pt;"> </p>
+		
 		</div>
 	</div>
 	</div>
@@ -119,44 +134,22 @@
 				<div class="userRemove0"> 
 					<b> X </b>
 				</div>
-				<p style="font-size:4pt;"> </p>
 			</div> 
 		</div>
 
 	</div>
 	</div>
 
-	<!--	RIP the fallen jobBoxes 
-	<div id="blank" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
-		<p style="font-size:4pt;"> </p>
-		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
-		<p style="font-size:25pt;"> </p>
+</tabs>
 
-		<div class="userAdd0"></div>
-		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
-		<div class="userRemove0"></div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-
-	<div id="blank2" class="JobBox0" style="background-color: rgba(250,250,250,0); border-width: 0; display:inline-block; visibility:hidden;">
-		<p style="font-size:4pt;"> </p>
-		<span class="bkgrn" style="background: rgba(255, 255, 255, 0); border-width: 0;"><b>&nbsp;&nbsp;</b></span>
-		<p style="font-size:25pt;"> </p>
-
-		<div class="userAdd0"></div>
-		<span class="workers" style="background-color: rgba(250,250,250,0); border-width: 0;"><b>&nbsp;</b></span>
-		<div class="userRemove0"></div>
-		<p style="font-size:4pt;"> </p>
-	</div>
-	-->
-
+<tabs id="pan6" class="none">
+	<canvas id="mapCanvas" height="500" width="500" style="margin:auto; border:2px solid black"></canvas>
+	<p>map goes here</p>
 </tabs>
 
 
 <!--//////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan2">
-	<h2>Buildings</h2>
-
 
 	<div id="shackBuild" class="buildingButton" style="margin:3px 2px 3px 7px;"> 
 		<div class="tooltiptext">
@@ -199,7 +192,6 @@
 <!--/////////////////////////////////research tab//////////////////////////////////////////////////////////////////////////-->
 <tabs class="none" id="pan3">
 
-	<h2>Research</h2>
 
 	<div class="researchButton" id="FarmEquip">
 		<div id="FarmEquipresBar" class="resBar">
@@ -216,11 +208,16 @@
 		<div id="StoneAxeresBar" class="resBar">
 			<p class="resText">Stone Axes</p>
 		</div>
-		<dvi class="tooltiptext">
+		<div class="tooltiptext">
 			<br>Takes 1500 research<br>
 			Uses 1 lumber and 3 stone per research<br><br>
 			Resets woodcutter and lumberworker output to 2.5/sec<br><br>
 		</div>
+	</div>
+
+	<div id="doneResBox">
+		Finished Research<br>
+		<div id="doneRes"> </div>
 	</div>
 
 
@@ -229,7 +226,6 @@
 
 <!--/////////////////////////////////council tab//////////////////////////////////////////////////////////////////////////-->
 <tabs class="none" id="pan4">
-	<h2>Town Hall</h2>
 
 
 	<div id="buildCounc" class="council"> 
@@ -250,6 +246,8 @@
 	</div>
 
 	<div class="none councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div>
+
+	
 </tabs>
 
 
@@ -260,6 +258,6 @@
 	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</P>
 </tabs>
 
-
+<p id="prestige">prestige</p>
 </body>
 </html>

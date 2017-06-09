@@ -35,33 +35,40 @@ footer {
 	visibility: visible;
 }
 
-.butt {
-	width:500px;
+.butt, .buttSelected, .buttAttn {
+	display:inline-block;
 	color:black;
 	border:3px solid grey;
-	padding:10px;
+	padding:8px;
+	width:130px;
 	background-color:white;
 	visibility:block;
+	margin:0;
+	margin-top:9px;
+	border-top-left-radius:     30px 10px;
+	border-top-right-radius:    30px 10px;
 }
-.butt:hover {
-	color:white;
-	background-color:grey;
-	cursor:pointer;
+.butt {
+	border-bottom-color:grey;
+}
+.buttSelected{
+	border-bottom-width:4px;
+	border-bottom-color:white;
 }
 .buttAttn {
-	width:500px;
-	color:black;
-	border:3px solid rgb(114,8,8);
-	padding:10px;
-	background-color:rgb(140,105,105);
-	visibility:block;
-}
-.buttAttn:hover {
+	border-color: rgb(114,8,8);
+	border-color:grey;
+	border-bottom-color:grey;
+	background: linear-gradient(to bottom, rgb(191,82,82) 0%,rgb(247,187,187) 100%,rgb(249,249,249) 100%);}
+.butt:hover, .buttAttn:hover {
 	color:white;
-	background-color:grey;
+	background:grey;
+	border-color:grey;
 	cursor:pointer;
 }
+
 resources {
+	display:block;
 	float:left;
 	width: 20%;
 	margin: 0;
@@ -71,22 +78,49 @@ resources {
 	border-right:3px solid black;
 	border-left:3px solid black;
 }
-buttons {
-	display:inline-block;
-	height:100%;
+#fadeEffect{
+	position:absolute;
+	bottom:-33px;
+	border-top:3px solid white;
+	width:100%;
+	height:30px;
+	background:linear-gradient(to bottom, rgba(255,255,255,1),rgba(0,0,0,0));
+	float:right;
+	
+}
+#tabsBox {
+	position:relative;
+	height:50px;
 	width:80%;
-	margin:auto;
+	margin:0;
 	text-align:center;
-	padding:17px;
+	padding:0px;
+	float:right;
+	border-bottom:3px solid grey;
+}
+#tabs1, #tabs2{
+	padding:0 ;
+	height:80px;
+	border:0px solid white;
+	width:49.7%;
+	margin:auto;
+	display:inline-block;
+	vertical-align: top;
 }
 tabs {
+	position:relative;
+	border-right:3px solid grey;
 	vertical-align:top;
 	display:inline-block;
 	height:100%;
-	width:39.5%;
+	min-height:600px;
+	width:40%;
 	min-width:305px;
 	text-align:center;
 	float:left;/*this works for some reason - otherwise the tabs are on top of eachother*/
+	margin-top:0;
+	padding-top:30px;
+	z-index:2;
 }
 .researchButton{
 	font-size:1.2em;
@@ -215,6 +249,7 @@ div.userAdd:hover{
 .imgBox{
 	background-size:cover;
 	padding-top:30px;
+	padding-bottom:5px;
 	height:100%;
 }
 span.workers {
@@ -339,7 +374,7 @@ body.normal{
     font-size:1.5em;
 }
 .deadBuilding{
-	color:white;
+	color:darkred;
 	display:inline-block;
 	width:200px;
 	margin:3px 6px;
@@ -348,15 +383,18 @@ body.normal{
 	padding:0;
 	position:relative;
 }
-.buildingButton{
+.buildingButton, .buildingOff{
 	color:white;
 	display:inline-block;
 	width:200px;
 	margin:3px 6px;
 	border:3px solid black;
-	background:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/woodback.jpg);
+	background:linear-gradient(rgba(10,10,10,0.2),rgba(10,10,10,0.4)),url(images/woodback.jpg);
 	padding:0;
 	position:relative;
+}
+.buildingOff {
+	background:linear-gradient(rgba(89, 89, 89,0.7),rgba(89, 89, 89,0.9)),url(images/woodback.jpg);
 }
 .buildingButton:hover {
 	cursor:pointer;
@@ -412,7 +450,7 @@ body.normal{
     visibility: visible;
     opacity: 1;
 }
-.buildingButton:hover .tooltiptext {
+.buildingButton:hover .tooltiptext, .buildingOff:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
@@ -498,10 +536,12 @@ body.normal{
 	margin:0;
 	text-align:left;
 	padding:25px;
+	z-index:3;	
 }
 #tips:hover #tipText{
 	display:block;
 	cursor:cell;
+	
 }
 .statementLog:hover{
 	background-color:lightgray;
@@ -517,7 +557,7 @@ body.normal{
     border-radius: 2px;
     padding: 20px;
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     top: -2px;
     right: -2px;
 	white-space: nowrap;
@@ -572,4 +612,72 @@ body.normal{
 #closeExport:hover, #closeImport:hover{
 	cursor:pointer;
 	background-color:lightgray;
+}
+.tinyRes{
+	position: relative;
+	display:inline-block;
+	height:40px;
+	width:40px;
+	border:5px ridge black;
+	background-color:rgba(0,0,0,.1);
+	margin:5px;
+}
+.tinyRes:hover{
+	background-color:gray;
+}
+.tinyRes:hover .tooltiptext{
+	visibility: visible;
+    opacity: 1;
+	width:240px;
+	left:-100px;
+	white-space: pre-line;
+	padding:2px;
+	 
+}
+.resourceName{
+	text-align:left;
+	width:80px;
+	display:inline-block;
+	height:30px;
+
+}
+.resource{
+	text-align:right;
+	width:40px;
+	display:inline-block;
+
+}
+.resourceMax{
+	text-align: left;
+	width:40px;
+	display: inline-block;
+
+}
+.ratePos, .rateZero, .rateNeg{
+	text-align:right;
+	width:60px;
+	display:inline-block;
+}
+.ratePos{
+	color:green;
+}
+.rateZero{
+	color:black;
+}
+.rateNeg{
+	color:red;
+}
+#doneResBox{
+	border-top:1px solid grey;
+	font-size:1.1em;
+	display:block;
+	margin-top:40px;
+	padding-top:10px;
+	padding-bottom:20px;
+}
+#doneRes {
+	display:block;
+	width:100%;
+	height:100%;
+	padding:15px;
 }
