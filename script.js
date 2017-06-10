@@ -112,7 +112,7 @@ function incrRes(){ //increments resources from workers at their jobs (make anot
 
 	for(var q in Jobs){
 		if(Jobs[q]["unlocked"] && x!=="freeworker" && q!=="researcher"){//research gets special treatment in its own function
-			Jobs[q]["makeTag"] = false;
+			Jobs[q]["makeTag"] = false;//tag gets set to true if the job is used to make resources this loop
 			numJobs++;
 		}
 	}
@@ -122,7 +122,7 @@ function incrRes(){ //increments resources from workers at their jobs (make anot
 		numJobs = 0;
 
 		for(var x in Jobs){
-			if (Jobs[x]["unlocked"] && x!=="freeworker" && x!=="researcher" && !Jobs[x]["makeTag"]){
+			if (Jobs[x]["unlocked"] && x!=="freeworker" && x!=="researcher" && !Jobs[x]["makeTag"]){//don't run for freeworkers or researchers, and jobs that have already gone
 				var make1 = true;
 				var make2 = false;
 				for(var u in Jobs[x]["make"]){		
@@ -137,7 +137,6 @@ function incrRes(){ //increments resources from workers at their jobs (make anot
 					}
 				}
 				//also the building progress is un-effected by elapsed time right now.
-				//add in a thrid chack to see whether I need to re-call incrRes() with a different GlobVar.previousTime
 				//now after reloading a previous game-state the resources won't be split properly
 				if(make1&&make2) {//need to make it only use the wood to cap lumber, and then make wood from the rest if it's over the cap.
 					for(var incrKey in Jobs[x]["make"]){
@@ -160,7 +159,17 @@ function incrRes(){ //increments resources from workers at their jobs (make anot
 				Stuff[i]["stored"] = max;
 			}
 		}
-	}		
+	}
+	var numJobsMaking = 0;	
+	for(var q in Jobs){
+		if(Jobs[q]["unlocked"] && x!=="freeworker" && q!=="researcher"){
+			if(Jobs[q]["makeTag"] = true){
+				numJobsMaking++;//to return the number of jobs that made things this round (used in finishLoading to break while loop)
+				console.log("making "+numJobsMaking);
+			}
+		}
+	}
+	return(numJobsMaking);	
 }
 
 function addJobBox(boxName){
@@ -233,8 +242,6 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 	}
 	document.getElementById(newBox).querySelector(".imgBox").appendChild(indiv);
 }
-
-
 
 
 var Buildings = {  //if addWorker property key is "freeworker", it will add free workers     can remove the buildOnce property because just make buy button invis for "true" buildings?
@@ -377,7 +384,7 @@ var GlobVar = {
 	
 }
 	var nextCol=1;			//keeps track of the column in which to add the next job box - should not be adjusted by GlobVar save.
-//
+
 
 //elements to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
@@ -1593,19 +1600,37 @@ function loadGame(){
 		console.log("localStorage not available or no save in localStorage");
 	}
 }
-function finishLoad(){//oh this is going to be fun ***Need to recalculate the costs and worker outputs***
+function finishLoad(){
 	
 	console.log("trying to load...");
-	//load up the resources (may be a better way to do this - want to make sure that the resources get maxed out correctly)
-	var delta = (Date.now() - GlobVar.previousTime)/100;//convert to 100 parts with units milliseconds
-	var time = Date.now() - delta;
+	//load up the resources (must be a better way to do this - want to make sure that the resources get maxed out correctly) add a resources like this, if all are maxed, break loop
 
-	for(var i=0;i<100;i++){
-		console.log(i+" previousTime: "+GlobVar.previousTime);
-		incrRes();
-		console.log("stone: "+Stuff.stone.stored);
-	}
+
+	var now = Date.now();
+	var loadtime = GlobVar.previousTime;
+
+	var delta = (now - loadtime)/1000;  //seconds since load; #of times to cycle at 1 second per call
+	GlobVar.previousTime = now - 1000;  //1 second difference //this gets checked in incrRes() so need to set it here and it will be a constant until it gets updated in the run() loop
 	
+
+	console.log("does loadingPopUp exist: "+typeof document.getElementById("loadingPopUp"));
+	document.getElementById("loadingPopUp").style.display = "block";
+	
+
+	console.log("now: "+now+" loadtime: "+loadtime+" difference in minutes: "+(now-loadtime)/60);
+
+	for(i=0;i<delta;i++){
+		var numJobsMaking = incrRes();
+		console.log(i+", jobs working: "+numJobsMaking);
+		console.log("GlobVar.previousTime: "+GlobVar.previousTime);
+		console.log("stone: "+Stuff.stone.stored);
+		if(numJobsMaking===0){
+			console.log("break!");
+			break;
+		}
+	}
+	//document.getElementById("loadingPopUp").style.display = "none";
+	alert("when does this run?");
 
 	//update to the stored values of all resources, maxes, buildings, costs; and delete anything that isn't unlocked
 	for (var i in Stuff){

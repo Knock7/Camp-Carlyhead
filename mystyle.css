@@ -681,3 +681,13 @@ body.normal{
 	height:100%;
 	padding:15px;
 }
+#loadingPopUp{
+	position:fixed;
+	z-index:3;
+	top:200px;
+	left:300px;
+	display:none;
+	font-size:2em;
+	color:white;
+	background-color:black;
+}
