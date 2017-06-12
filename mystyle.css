@@ -71,6 +71,7 @@ resources {
 	display:block;
 	float:left;
 	width: 20%;
+	min-width: 283px;
 	margin: 0;
 	padding:1em;
 	text-align: left;
@@ -92,6 +93,7 @@ resources {
 	position:relative;
 	height:50px;
 	width:80%;
+	min-width:60%;
 	margin:0;
 	text-align:center;
 	padding:0px;
@@ -320,17 +322,19 @@ div.userRemove:hover{
 .statementOn{
 	height:30px;
 	transition-timing-function: linear;
-	transition:color 1.5s;
+	transition:color 2s;
 	color:white;
 }
 .orange{
 	height:30px;
+	transition-timing-function: linear;
+	/*transition:color 1s;*/
 	color:orange;
 }
 .statementOff{
 	height:30px;
-	transition-timing-function: linear;
-	transition:color 5s;
+	transition-timing-function: ease-in;
+	transition:color 11s;
 	color:black;
 }
 body{ 
@@ -636,7 +640,7 @@ body.normal{
 }
 .resourceName{
 	text-align:left;
-	width:80px;
+	width:75px;
 	display:inline-block;
 	height:30px;
 
@@ -655,7 +659,7 @@ body.normal{
 }
 .ratePos, .rateZero, .rateNeg{
 	text-align:right;
-	width:60px;
+	width:40px;
 	display:inline-block;
 }
 .ratePos{
@@ -690,4 +694,25 @@ body.normal{
 	font-size:2em;
 	color:white;
 	background-color:black;
+}
+.textAlert{
+	font-family: sans-serif;
+	-webkit-text-stroke: 1.5px rgb(15, 43, 28); color: rgb(213, 41, 216);
+	background-color:rgba(255, 225, 76, 0);
+	font-weight: bold;
+	font-size:1.5em;
+	z-index:3;
+	position:absolute;
+}
+.textAlertFade{
+	font-family: sans-serif;
+	-webkit-text-stroke: 1.5px black; color: rgb(213, 41, 216);
+	background-color:rgba(255, 225, 76, 0);
+	font-weight: bold;
+	font-size:1.5em;
+	z-index:3;
+	position:absolute;
+	opacity: 0;
+	transform: translateY(-20px);
+	transition: opacity .5s ease-out 1.5s, transform 1s linear 1s;
 }
