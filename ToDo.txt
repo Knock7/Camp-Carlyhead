@@ -11,6 +11,8 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 
 5) make finishLoad() show researched tech, correct name of settlement, and probably other things
 
+6) make some text for then you run out of food 
+
 7) tech to reduce all cost ratios
 
 11) fix workshop tooltip text to add brickmakers
