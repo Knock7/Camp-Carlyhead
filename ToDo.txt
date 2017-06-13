@@ -11,11 +11,11 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 
 5) make finishLoad() show researched tech, correct name of settlement, and probably other things
 
-6) make some text for then you run out of food 
+6) make some text for when you run out of food 
 
 7) tech to reduce all cost ratios
 
-11) fix workshop tooltip text to add brickmakers
+8) tooltips for save, load, import, export
 
 12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
 
