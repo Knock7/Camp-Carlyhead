@@ -1,21 +1,13 @@
 1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space? or people are busy building buildings.
 
-2) finished research - add icon/number that you can hover over for a tooltip? display finished research on load
+2) finished research - add icon/number that you can hover over for a tooltip? 
 
 3) add some new goal like a total population (the coucil has decided to improve planning, reduce cost ratios of all buildings
 then you can add an explorers guild next to the town hall - rename Town Hall tab?
 - discover a coal mine
 - discover iron mine (adding mines changes the ratio of cu/fe/coal output by the miners so that a given miner, say, produces less cu_ore but now produces some fe_ore
 
-4) change statements so that they don't get reset too early after appearing. could make the alerts for not enough resources show up somewhere else or have low priority
-
-5) make finishLoad() show researched tech, correct name of settlement, and probably other things
-
-6) make some text for when you run out of food 
-
 7) tech to reduce all cost ratios
-
-8) tooltips for save, load, import, export
 
 12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
 
@@ -65,5 +57,8 @@ Thoughts from Brian:
 Gold, trading
 
 Thoughts from Josh L:
+let buildings get destroyed 
+random disasters
+
 
 Thoughts from Kelsey:
