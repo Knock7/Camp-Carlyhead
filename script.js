@@ -786,19 +786,30 @@ function SwapActiveRes(x){
 
 var Research = {
 	FarmEquip:	{name:"Farm Equipment",		resCost:{wood:2,lumber:1}, 		totalRes:1000, 	completion:0, unlocked:true,  done:false, reward:"Improves farmers' food output by 50%", 						statement:"The farmers want to design a wooden plow and other<br>equipment which should improve crop output significantly."},
-	StoneAxe:	{name:"Stone Axes",			resCost:{lumber:1,stone:2}, 	totalRes:1500, 	completion:0, unlocked:true,  done:false, reward:"Resets woodcutter and lumberworker output to 2.5/sec", 		statement:"You notice that the axes that most of your comrads have<br>brought with them, and the few saws and other metal tools,<br>have been dulling and deteriorating to the point of uselessness.<br>It seems that the best course of action is to develope<br>stone axes for felling trees and shaping them into boards."},
+	StoneAxe:	{name:"Stone Axes",			resCost:{lumber:1,stone:2}, 	totalRes:1500, 	completion:0, unlocked:true,  done:false, reward:"Resets woodcutter and lumberworker output to 2.5/sec", 		statement:"You notice that the axes that most of your comrads have<br>brought with them, and the few saws and other metal tools,<br>have been dulling and deteriorating to the point of uselessness.<br>It seems that the best course of action is to develope new<br>stone axes for felling trees and shaping them into boards."},
 	StoneChisel:{name:"Stone Chisels",		resCost:{lumber:.5,rock:.5,stone:1},totalRes:1000,completion:0,unlocked:false,done:false, reward:"Increases output of both masons and rockcutters by 30%", 		statement:"The most proficient mason, though he was new to cutting rock when he began,<br>thinks he can improve stone chisel design to increase output of both rock and stone."},
 	FindOre:	{name:"Ore Finding",		resCost:{food:1,lumber:1},		totalRes:500, 	completion:0, unlocked:false, done:false, reward:"Some workers learn how to look for potential mining sites", 	statement:"You decide that is time to start exploring the surroundings area.<br>The scouts may as well be on the lookout for mining sites."},
-	Metalwork:	{name:"Metalworking",		resCost:{metal:1},				totalRes:3500, 	completion:0, unlocked:false, done:false, reward:"Can produce copper spears for the armory.", 					statement:"Now that you have access to copper, some folks decide to try smithing.<br>They will start by making crude metal weapons to protect the settlment from wild animals."},
-	Roads:		{name:"Roadbuilding",		resCost:{wood:1,stone:3},		totalRes:5000,	completion:0, unlocked:false, done:false, reward:"Increases production of hillside, forest, and riverbank workers by 10%.",statement:"By building dedicated roads leading from the town to the various resource production locations, workers can reduce travel time and improve output efficiency."},//add roads to the map
-	Barns1:		{name:"Improve Barns",		resCost:{wood:1,lumber:1,rock:1},totalRes:2000,	completion:0, unlocked:false, done:false, reward:"Increase barn storage by 20%. Barns will now require lumber.",statement:"Update plans for barn construction while improving all current barns. This will allow for more raw material storage."},
 	Smelting:	{name:"Smelting",			resCost:{brick:1,lumber:1,stone:1,wood:1},totalRes:2700,completion:0, unlocked:false, done:false, reward:"Figure out a way to smelt ore into usable metal.", 	statement:"With the right materials, the mining expert can<br>lead the design of kilns for smelting ores."},
 	Brickmaking:{name:"Brickmaking",		resCost:{wood:1,clay:1},		totalRes:1000,	completion:0, unlocked:false, done:false, reward:"Work out how to turn clay into bricks over wood fires.", 		statement:"Clay from the riverbank could be formed into bricks. Exactly how will take some tinkering."},
-	Planning:	{name:"City Planning",		resCost:{food:2,wood:1,stone:2},totalRes:2000,  completion:0, unlocked:false, done:false, reward:"Reduces cost ratio of all buildings by 10%.",					statement:"Several of the council members think that the settlement can reduce<br>the cost of new buildigns by creating a master plan<br>for the city. They start drawing up plans on what little paper you<br>have be donated by some of the wanderes, and will mark<br>out zones for new construction with stone markers."}//can add something to the map, like scrolling or zoning designations, idk
+
+	//ideas for furute upgrades (implement above first)
+	Metalwork:	{name:"Metalworking",		resCost:{copper:1,wood:1},		totalRes:3500, 	completion:0, unlocked:false, done:false, reward:"Can produce copper spears for the armory.", 					statement:"Now that you have access to copper, some folks decide to try smithing.<br>They will start by making crude metal weapons to protect the settlment from wild animals."},
+	Roads:		{name:"Roadbuilding",		resCost:{wood:1,stone:3},		totalRes:5000,	completion:0, unlocked:false, done:false, reward:"Increases production of hillside, forest, and riverbank workers by 10%.",statement:"By building dedicated roads leading from the town to the various resource production locations, workers can reduce travel time and improve output efficiency."},//add roads to the map
+	Barns1:		{name:"Improve Barns",		resCost:{wood:1,lumber:1,stone:1},totalRes:2000,completion:0, unlocked:false, done:false, reward:"Increase barn storage by 20%. Barns will now require lumber.",statement:"Update plans for barn construction while improving all current barns. This will allow for more raw material storage."},
+	Planning:	{name:"City Planning",		resCost:{food:2,wood:1,stone:2},totalRes:2000,  completion:0, unlocked:false, done:false, reward:"Reduces cost ratio of all buildings by 10%.",					statement:"Several of the council members think that the settlement can reduce<br>the cost of new buildigns by creating a master plan<br>for the city. They start drawing up plans on what little paper you<br>have be donated by some of the wanderes, and will mark<br>out zones for new construction with stone markers."},//can add something to the map, like scrolling or zoning designations, idk
+	BasicBuild: {name:"Basic Buildings",    resCost:{lumber:2,stone:1,brick:2},totalRes:3000,completion:0,unlocked:false, done:false, reward:"Allows construction of several new buildings", 				statement:"Townsfolk have been asking for new buildings that no one<br>is quite sure how to construct. A team of capernters will<br>work out designs that do not need advanced tools to build."},
+
+	Metalwork2: {name:"Metalworking 2"},//create things out of iron like nails and saws - add a resource for construction material (nails, tools, shingles)
+	ImprRoads:  {name:"Improved roads"},//coblestone roads replace crude dirt roads
+	Construction:{name:"Construction"},//lets you make buildings with nails and saws
+	Cement:		{name:"Cement"},//more buildings
+	Glass:		{name:"Glassmaking"},//windows and stuff?
+
+
 };
 function addResearchButton(research){
 	Research[research]["unlocked"] = true;
-	logStatement(Research[research]["statement"],true);
+	logStatement(Research[research]["statement"],false);
 	var div = document.createElement("div");
 	div.className = "researchButton"
 	div.id = research;
@@ -1012,6 +1023,7 @@ function doBonus(resUp){
 			div.innerHTML = "<div class='tooltiptext' id='exploreTip'><p>Requires (<span id ='exploreWorkers'>1</span>) workers for the exploration party<br>The trip will need <span id='exploreCosts'>30 food</span></p></div><div id='exploreBar' class='buildBar'><p class='buildText' style='padding-top:15px'>Send a party to explore and<br> map the surrounding area</p></div>";
 			div.addEventListener("click",exploreGo);
 			document.getElementById("pan4").appendChild(div);
+			addResearchButton("Planning");
 
 			alertPanel("pan4");
 			break;
@@ -1094,8 +1106,9 @@ function isEmpty(object) {
 	return false;
 }
 function updateTransition(){
-
 	document.body.className = "normal";
+	document.getElementById("hunterJob").querySelector(".userAdd0").style.transition = "color 7s 1s";
+	document.getElementById("hunterJob").querySelector(".userAdd0").style.color = "black";
 }
 //add a statement to the backlog for showing
 function logStatement(string, addToLog){
@@ -1527,7 +1540,8 @@ function run(){
 			Stuff.food.stored = Stuff.food.maxstored*Stuff.food.storebonus;
 		} else {
 			document.body.className = "alert2"; //gets set back to class="normal" by a transition listener to make the flash effect
-
+			document.getElementById("hunterJob").querySelector(".userAdd0").style.transition = "color 0s";
+			document.getElementById("hunterJob").querySelector(".userAdd0").style.color = "red";
 			//need to come up with a different way to do this?
 			logStatement("In a food-shortage panic all available workers take to hunting",false);
 		
@@ -1790,7 +1804,11 @@ function finishLoad(){
 	//if there are more than X people show buttons up to butt3
 	//if there is a councilhall then show butt4
 	//go through tokens in {if else} to see what else needs to be displayed
+	if(Jobs.freeworker.maxworkers>4){
+		document.getElementById("title").innerHTML = "Camp " + GlobVar.name;
+	}
 	if(Jobs.freeworker.maxworkers>19){
+		document.getElementById("title").innerHTML = "Hamlet of " + GlobVar.name;
 		document.getElementById("butt1").style.display = "inline-block";
 		document.getElementById("butt2").style.display = "inline-block";
 		document.getElementById("butt4").style.display = "inline-block";

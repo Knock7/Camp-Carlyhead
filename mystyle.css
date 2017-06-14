@@ -34,7 +34,6 @@ footer {
 .show {
 	visibility: visible;
 }
-
 .butt, .buttSelected, .buttAttn {
 	display:inline-block;
 	color:black;
@@ -59,14 +58,14 @@ footer {
 	border-color: rgb(114,8,8);
 	border-color:grey;
 	border-bottom-color:grey;
-	background: linear-gradient(to bottom, rgb(191,82,82) 0%,rgb(247,187,187) 100%,rgb(249,249,249) 100%);}
+	background: linear-gradient(to bottom, rgb(191,82,82) 0%,rgb(247,187,187) 100%,rgb(249,249,249) 100%);
+}
 .butt:hover, .buttAttn:hover {
 	color:white;
 	background:grey;
 	border-color:grey;
 	cursor:pointer;
 }
-
 resources {
 	display:block;
 	float:left;
@@ -402,7 +401,10 @@ body.normal{
 }
 .buildingButton:hover {
 	cursor:pointer;
-	border-color:grey;
+	border-color:darkgrey;
+}
+.buildingButton:hover .buildText{
+	color:lightgrey;
 }
 .buildBar {
 	height:35px;
