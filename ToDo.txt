@@ -7,6 +7,17 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 - discover a coal mine
 - discover iron mine (adding mines changes the ratio of cu/fe/coal output by the miners so that a given miner, say, produces less cu_ore but now produces some fe_ore
 
+4) city planning should add smaller, winding dirt streets through the previously built areas, and nice grid smaller streets for new buildings that aren't shacks, woodsheds, lumberyards, quarry, etc.
+
+5) make it so that adding research does not make messages, but it should log - change addResearchButton and the early reserches to not use logStatement().
+
+6) consider renaming workshops (building) or workshops (job box). otherwise need to limit kilns to number of workshops and that is silly. Can make the 
+[building]Workshop -> mason shop or stone-yard (still applies to brickmakers)
+job box is till workshops
+will add building smithy
+kilns will be in their own building (smelt?)
+
+
 7) tech to reduce all cost ratios
 
 12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
