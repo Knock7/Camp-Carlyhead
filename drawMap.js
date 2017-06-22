@@ -3,6 +3,7 @@ const bigMapMax=5000;//px size of the bigCanvas
 
 var blackCanvas, blackMap;
 
+//make all these variables properties of the MapVars
 var curYPos, curXPos;
 var curDown=false;
 var mapX=2850;
@@ -19,7 +20,18 @@ var smallMapMax = 500;
 var MapVars = {
 	shackSpots: [3075,2000, 3105,2005, 3138,2003, 3170,2010, 3197,1995, 3080,2030, 3115,2035, 3145,2028, 3180,2040, 3232,1990, 3219,2018],
 	shedSpots: [3085,1975, 3125,1979, 3170,1960, 3100,1950, 3145,1940],
-	quarrySpots: [],
+	expandQSpots: [],
+	farmSpots: [],
+	barnSpots: [],
+	lumberyardSpots:[],
+	workshopSpots:[],
+	hutSpots:[],
+	labSpots:[],
+	mineSpots:[],
+	warehouseSpots:[],
+	kilnSpots:[],
+	siloSpots:[],
+	cabinSpots:[],
 	andSoOn: [],
 }
 
@@ -57,8 +69,8 @@ function setup(){
 		bigMap.fillRect(150,600,200,800);
 		console.log("big map loaded");
 
-		//testing places to put shacks and sheds etc
-		for(var i=0;i<shackSpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
+		/*testing places to put shacks and sheds etc
+		for(var i=0;i<MapVars.shackSpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
 			console.log("draw shack");
 			drawBuilding("shack",shackSpots[i],shackSpots[i+1]);
 		}
@@ -68,7 +80,7 @@ function setup(){
 		for(var i=0;i<quarrySpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
 			drawBuilding("quarry",quarrySpots[i],quarrySpots[i+1]);
 		}
-		//end testing building spots
+		//end testing building spots*/
 
 
 
@@ -122,7 +134,6 @@ function setup(){
 	});
 }
 
-
 function dragDraw(x,y){
 	smallMap.drawImage(blackCanvas, x, y, 2*zoomLvl, 2*zoomLvl, 0, 0, smallMapMax, smallMapMax);
 }
@@ -162,7 +173,7 @@ function mapZoom(e){
 	
 	return false;
 }
-
+//initially set the blackout parts of the map as everything outside the starting 500x500 area
 for(var i=0; i<bigMapMax/50; i++){
 	blackout[i] = [];
 	for(var j=0; j<bigMapMax/50; j++){
@@ -226,12 +237,12 @@ function loadUp(){
     document.getElementById("button6").addEventListener("click",drawShed);
 }
 function drawBuilding(name){
-	if((Buildings[name][count]-1)*2>MapVars[name].length){
+	if((Buildings[name]["count"]-1)*2>MapVars[name+"Spots"].length){
 		console.log("need to add more coordinates to the "+name+"Spots array");
 		return 0;
 	}
-	var x = MapVars[name][2*(Buildings[name][count]-1)];
-	var y = MapVars[name][1+2*(Buildings[name][count]-1)];
+	var x = MapVars[name+"Spots"][2*(Buildings[name]["count"]-1)];
+	var y = MapVars[name+"Spots"][1+2*(Buildings[name]["count"]-1)];
 	switch (name) {
 	case "shack":
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
@@ -267,6 +278,6 @@ function drawBuilding(name){
 
 function testDraw(name){
 	for(var i=0;i<MapVars[name+"Spots"].length;i+=2){
-		drawBuilding(name,MapVars[name+"Spots"][i],MapVars[name+"Spots"][i+1]);
+		drawBuilding(name);
 	}
 }
