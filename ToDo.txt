@@ -20,6 +20,8 @@ kilns will be in their own building (smelt?)
 
 7) tech to reduce all cost ratios
 
+8) make the image sizes smaller for faster loading.
+
 12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
 
 13) implement coal and iron mines
