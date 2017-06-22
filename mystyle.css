@@ -403,9 +403,6 @@ body.normal{
 	cursor:pointer;
 	border-color:darkgrey;
 }
-.buildingButton:hover .buildText{
-	color:lightgrey;
-}
 .buildBar {
 	height:35px;
 	background-color:rgba(98, 161, 113, .9);

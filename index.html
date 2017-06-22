@@ -8,7 +8,9 @@
 
 	<link rel="stylesheet" type="text/css" href="mystyle.css">
 
+	<script src="drawMap.js"></script>
 	<script src="script.js"></script>
+	<!--<script src="drawMap.js"/>-->
 
 </head>
 
@@ -148,10 +150,12 @@
 </tabs>
 
 <tabs id="pan6" class="none">
-	<canvas id="mapCanvas" height="500" width="500" style="margin:auto; border:2px solid black"></canvas>
+	<canvas id="canvas" height="500" width="500" style="margin:auto; border:2px solid black">Your browser does not support Canvas</canvas>
 	<p>map goes here</p>
-</tabs>
 
+	<canvas id="bigCanvas" height="5000" width="5000" style="display:none"></canvas>
+	<canvas id="blackedCanvas" height="5000" width="5000" style="display:none"></canvas>
+</tabs>
 
 <!--//////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan2">
