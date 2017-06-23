@@ -17,22 +17,25 @@ var maxYscroll = 2400;
 var maxZoomLvl = 300;//limit the max zoom
 var smallMapMax = 500;
 
-var MapVars = {
-	shackSpots: [3075,2000, 3105,2005, 3138,2003, 3170,2010, 3197,1995, 3080,2030, 3115,2035, 3145,2028, 3180,2040, 3232,1990, 3219,2018],
-	shedSpots: [3085,1975, 3125,1979, 3170,1960, 3100,1950, 3145,1940],
-	expandQSpots: [],
-	farmSpots: [],
-	barnSpots: [],
+var MapVars = {//		1			2			3			4		5			6			7		8			9			10			11
+	shackSpots: 	[3075,2000, 3105,2005, 3138,2003, 3170,2010, 3197,1995, 3080,2030, 3115,2035, 3145,2028, 3180,2040, 3232,1990, 3219,2018],
+	shedSpots: 		[3085,1975, 3125,1979, 3170,1960, 3100,1950, 3145,1940],
+	expandQSpots: 	[3378,1925, 3380,1926, 3377,1927, 3379,1928, 3376,1929, 3378,1930],
+	farmSpots: 		[],
+	barnSpots: 		[],
 	lumberyardSpots:[],
-	workshopSpots:[],
-	hutSpots:[],
-	labSpots:[],
-	mineSpots:[],
-	warehouseSpots:[],
-	kilnSpots:[],
-	siloSpots:[],
-	cabinSpots:[],
+	workshopSpots:	[],
+	hutSpots:		[],
+	labSpots:		[],
+	mineSpots:		[3420,1935, 3410,2162, 3411,2164, 3413,2165],
+	warehouseSpots:	[],
+	kilnSpots:		[],
+	siloSpots:		[],
+	cabinSpots:		[],
+	councilhallSpots:[], 	
 	andSoOn: [],
+
+	exploreSpots:	[3400,1950, 3400,2000, 3400,1900, 3400,2050, 3400,2100, 3400,2150, 3400,2200],
 }
 
 
@@ -52,7 +55,7 @@ function setup(){
 
 	//draw the big map
   	base_image = new Image();
-  	base_image.src = 'images/bigMapDraft.png';
+  	base_image.src = 'images/bigMapDraft.bmp';
   	base_image.onload = function(){//draw the bigMap canvas after the image has loaded so that the shapes don't get covered up
     	bigMap.drawImage(base_image, 0, 0,bigMapMax,bigMapMax);
 
@@ -201,21 +204,25 @@ function mapBlack(){
 }
 
 function uncover(){
-	var x = parseInt(document.getElementById("input1").value,10);
-	var y = parseInt(document.getElementById("input2").value,10); 
+	if((GlobVar.exploreCount-2)*2>=MapVars.exploreSpots.length){
+		console.log("need to add more coordinates to the exploreSpots array");
+		return 0;
+	}
+	var x = MapVars.exploreSpots[2*(GlobVar.exploreCount-2)];
+	var y = MapVars.exploreSpots[2*(GlobVar.exploreCount-2)+1];
 	blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
 	//may need to make the scroll area larger- if 
 	if(x<minXscroll){
 		minXscroll = Math.max(x-50,0);
 	}
-	if(x+zoomLvl*2>maxXscroll){
-		maxXscroll = Math.min(x+zoomLvl*2+50,bigMapMax);
+	if(x+50>=maxXscroll){
+		maxXscroll = Math.min(x+100,bigMapMax);
 	}
 	if(y<minYscroll){
 		minYscroll = Math.max(y-50,0);
 	}
-	if(y+zoomLvl*2>maxYscroll){
-		maxYscroll = Math.min(y+zoomLvl*2+50,bigMapMax);
+	if(y+50>=maxYscroll){
+		maxYscroll = Math.min(y+100,bigMapMax);
 	}
 	mapBlack();
 }
@@ -244,31 +251,80 @@ function drawBuilding(name){
 	var x = MapVars[name+"Spots"][2*(Buildings[name]["count"]-1)];
 	var y = MapVars[name+"Spots"][1+2*(Buildings[name]["count"]-1)];
 	switch (name) {
+	case "councilhall":
+		bigMap.fillStyle = "yellow";
+		bigMap.fillRect(x,y,12,7);
 	case "shack":
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
-        bigMap.fillRect(x, y, 10, 10);
+        bigMap.fillRect(x, y, 5, 5);
         bigMap.beginPath();
         bigMap.moveTo(x,y);
-        bigMap.lineTo(x+5,y-3);
-        bigMap.lineTo(x+10,y);
+        bigMap.lineTo(x+2.5,y-1.5);
+        bigMap.lineTo(x+5,y);
         bigMap.fill();
 		break;
 	case "shed":
 		bigMap.fillStyle = 'rgb(102, 84, 47)';
-        bigMap.fillRect(x, y, 16, 7);
+        bigMap.fillRect(x, y, 8, 3.5);
         bigMap.beginPath();
         bigMap.moveTo(x,y);
-        bigMap.lineTo(x+7,y-2);
-        bigMap.lineTo(x+16,y);
+        bigMap.lineTo(x+3,y-1);
+        bigMap.lineTo(x+8,y);
         bigMap.fill();
 		break;
-	case "quarry":
+	case "expandQ":
 		bigMap.fillStyle = 'rgb(86, 85, 82)';
         bigMap.beginPath();
-        bigMap.arc(x,y,5,0,Math.PI*2,false);
+        bigMap.arc(x,y,2,0,Math.PI*2,false);
         bigMap.fill();
         bigMap.closePath();
 		break;
+	case "farm":
+		bigMap.fillStyle = "yellow";
+		bigMap.fillRect(x,y,20,20);
+		break;
+	case "barn":
+		bigMap.fillStyle = "brown";
+		bigMap.fillRect(x,y,7,6);
+		break;
+	case "lumberyard":
+		bigMap.fillStyle = "lightbrown";
+		bigMap.fillRect(x,y,8,2);
+		break;
+	case "workshop":
+		bigMap.fillStyle = "grey";
+		bigMap.fillRect(x,y,6,3);
+		break;
+	case "hut":
+		bigMap.fillStyle = "grey";
+		bigMap.fillRect(x,y,5,5);
+		break;
+	case "lab":
+		bigMap.fillStyle = "lightbrown";
+		bigMap.fillRect(x,y,2,6);
+		break;
+	case "mine":
+		bigMap.fillStyle = "brown";
+		bigMap.fillRect(x,y,5,5);
+		bigMap.fillStyle = "black";
+		bigMap.fillRect(x+1,y+1,3,4);
+		break;
+	case "warehouse":
+		bigMap.fillStyle = "lightbrown";
+		bigMap.fillRect(x,y,7,5);
+		break;	
+	case "kiln":
+		bigMap.fillStyle = "red";
+		bigMap.fillRect(x,y,3,2);
+		break;
+	case "silo":
+		bigMap.fillStyle = "brown";
+		bigMap.fillRect(x,y,3,8);
+		break;
+	case "cabin":
+		bigMap.fillStyle = "brown";
+		bigMap.fillRect(x,y,10,5);
+		break;				
 	default:
 		console.log("no valid building input");
 		break;
@@ -278,6 +334,7 @@ function drawBuilding(name){
 
 function testDraw(name){
 	for(var i=0;i<MapVars[name+"Spots"].length;i+=2){
+		console.log("drew building");
 		drawBuilding(name);
 	}
 }

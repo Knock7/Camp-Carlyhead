@@ -369,7 +369,7 @@ var GlobVar = {
 	JobBoxes : ["camp", "fields",],//keeps track of all the job boxes that have been created (or made visible)
 	factor : 0.5, 		//to alter the speed of resrouces collection (and food consumption). Higher numer collects more resources per tick.
 	statementLog : "",	//to store the log of the game **can make a function to update and call doc.logOut that take the new string as a parameter
-	exploreCount : 1,	//number of free workers to go on an exploring trip
+	exploreCount : 1,	//number times you go exploring (starts with base area revealed)
 	exploreNum : 1,		//resources each worker will need on the trip
 	exploreNumNext : 2, //next party will need
 	Token : [],
@@ -1082,10 +1082,10 @@ function doBonus(resUp){
 				addsStr += Buildings["barn"]["addstorage"][i]+ " " + i+ " storage";
 				addsStr +="<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 			}
-			addsStr = addsText.slice(0,-70);
+			addsStr = addsStr.slice(0,-70);
 			document.getElementById("barnAdds").innerHTML = addsStr;
 
-			costStr = "";
+			var costStr = "";
 			for(var i in Buildings.barn.cost){
 				costStr += Buildings["barn"]["cost"][i] + " " + i + "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 			}
@@ -1279,6 +1279,8 @@ function exploreEnd(){
 	Jobs.freeworker.workers += Math.floor(Math.log(GlobVar.exploreCount)*2)+1;
 	document.getElementById("freeworkers").innerHTML = Jobs.freeworker.workers;
 	GlobVar.exploreCount++;
+	uncover();
+
 	if(GlobVar.exploreCount===4){
 		logStatement("The exploring party discovered a potential mining site. You can build a shaft to extract ore",true);
 		unlock("mine");
@@ -1419,13 +1421,18 @@ function run(){
 	}
 	//change name
 	if(Buildings.shack.count===5&& GlobVar.Token[0]){
-		GlobVar.Token[0]=false;
-		logStatement("The wilderness is beginning to feel less lonely.",true);
-		GlobVar.name = prompt("What would you like to name your settlement?");
-		if(GlobVar.name===null||GlobVar.name===""||GlobVar.name===" "){
-			GlobVar.name = "再见";
+		if(GlobVar.cheating){
+			GlobVar.name="Cheating";
 		} else {
-			GlobVar.name = GlobVar.name[0].toUpperCase() + GlobVar.name.slice(1);
+
+			GlobVar.Token[0]=false;
+			logStatement("The wilderness is beginning to feel less lonely.",true);
+			GlobVar.name = prompt("What would you like to name your settlement?");
+			if(GlobVar.name===null||GlobVar.name===""||GlobVar.name===" "){
+				GlobVar.name = "再见";
+			} else {
+				GlobVar.name = GlobVar.name[0].toUpperCase() + GlobVar.name.slice(1);
+			}
 		}
 		document.getElementById("title").innerHTML = "Camp " + GlobVar.name;
 	}
