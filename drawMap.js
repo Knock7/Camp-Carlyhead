@@ -8,19 +8,19 @@ var curYPos, curXPos;
 var curDown=false;
 var mapX=2850;
 var mapY=1800;
-var zoomLvl = 200;//200 is the default 1:1 mapping
+var zoomLvl = 500;//300 is the 1:1 mapping
 var blackout = []
 var minXscroll = 2850;
 var minYscroll = 1800;
-var maxXscroll = 3450;//limit the scrolling to just outside the black areas
-var maxYscroll = 2400;
-var maxZoomLvl = 300;//limit the max zoom
-var smallMapMax = 500;
+var maxXscroll = 3850;//limit the scrolling to just outside the black areas
+var maxYscroll = 2800;
+var maxZoomLvl = 500;//limit the max zoom (gets reset by uncover())
+var smallMapMax = 600;
 
 var MapVars = {//		1			2			3			4		5			6			7		8			9			10			11
-	shackSpots: 	[3075,2000, 3105,2005, 3138,2003, 3170,2010, 3197,1995, 3080,2030, 3115,2035, 3145,2028, 3180,2040, 3232,1990, 3219,2018],
-	shedSpots: 		[3085,1975, 3125,1979, 3170,1960, 3100,1950, 3145,1940],
-	expandQSpots: 	[3378,1925, 3380,1926, 3377,1927, 3379,1928, 3376,1929, 3378,1930],
+	shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030, 3239,2058],
+	shedSpots: 		[3085,2015, 3135,1999, 3180,1990, 3110,1980, 3155,1970],
+	expandQSpots: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930],
 	farmSpots: 		[],
 	barnSpots: 		[],
 	lumberyardSpots:[],
@@ -55,7 +55,7 @@ function setup(){
 
 	//draw the big map
   	base_image = new Image();
-  	base_image.src = 'images/bigMapDraft.bmp';
+  	base_image.src = 'images/bigMapDraft2.png';
   	base_image.onload = function(){//draw the bigMap canvas after the image has loaded so that the shapes don't get covered up
     	bigMap.drawImage(base_image, 0, 0,bigMapMax,bigMapMax);
 
@@ -72,22 +72,15 @@ function setup(){
 		bigMap.fillRect(150,600,200,800);
 		console.log("big map loaded");
 
-		/*testing places to put shacks and sheds etc
-		for(var i=0;i<MapVars.shackSpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
-			console.log("draw shack");
-			drawBuilding("shack",shackSpots[i],shackSpots[i+1]);
+		//draw all the buildings that currently exist, including the first shack
+		for(var b in Buildings){
+			if(Buildings[b]["unlocked"]){
+				for(var i=1;i<=Buildings[b]["count"];i++){
+					drawBuilding(b,i);
+				}
+			}
 		}
-		for(var i=0;i<shedSpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
-			drawBuilding("shed",shedSpots[i],shedSpots[i+1]);
-		}
-		for(var i=0;i<quarrySpots.length;i+=2){//shackspots is[x1,y1,x2,y2 and so on]
-			drawBuilding("quarry",quarrySpots[i],quarrySpots[i+1]);
-		}
-		//end testing building spots*/
 
-
-
-		drawBuilding("shack");//the first shack
 		mapBlack();//draw the accessable blackMap after drawing the source bigMap
 	}
 
@@ -149,7 +142,7 @@ function mapZoom(e){
 	maxZoomLvl = Math.min((maxXscroll-minXscroll)/2,(maxYscroll-minYscroll)/2);
 
 	var changeInZoom = e.deltaY;
-	if(zoomLvl+changeInZoom>maxZoomLvl||zoomLvl+changeInZoom<100){
+	if(zoomLvl+changeInZoom>maxZoomLvl||zoomLvl+changeInZoom<300){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
 		console.log("trying to zoom out or in too far");
 		return false;
 	}
@@ -176,12 +169,12 @@ function mapZoom(e){
 	
 	return false;
 }
-//initially set the blackout parts of the map as everything outside the starting 500x500 area
+//initially set the blackout parts of the map as everything outside the starting 900x900 area
 for(var i=0; i<bigMapMax/50; i++){
 	blackout[i] = [];
 	for(var j=0; j<bigMapMax/50; j++){
 		blackout[i][j] = false;
-		if(i<=57||j<=36||i>=68||j>=47){
+		if(i<=57||j<=36||i>=76||j>=55){
 			blackout[i][j] = true;
 		}
 	}
@@ -191,7 +184,7 @@ for(var i=0; i<bigMapMax/50; i++){
 function mapBlack(){
 	//paints the areas you have not explored before showing on the small canvas
 	blackMap.drawImage(bigCanvas,0,0,bigMapMax,bigMapMax);
-
+	//blacks out 50x50 sections of the map according to blackout array
 	for(var i=0;i<bigMapMax/50;i++){
 		for(var j=0;j<bigMapMax/50;j++){
 			if(blackout[i][j]){
@@ -243,87 +236,87 @@ function loadUp(){
     document.getElementById("button5").addEventListener("click",drawShed);
     document.getElementById("button6").addEventListener("click",drawShed);
 }
-function drawBuilding(name){
-	if((Buildings[name]["count"]-1)*2>MapVars[name+"Spots"].length){
+function drawBuilding(name,number){
+	if((number-1)*2>MapVars[name+"Spots"].length){
 		console.log("need to add more coordinates to the "+name+"Spots array");
 		return 0;
 	}
-	var x = MapVars[name+"Spots"][2*(Buildings[name]["count"]-1)];
-	var y = MapVars[name+"Spots"][1+2*(Buildings[name]["count"]-1)];
+	var x = MapVars[name+"Spots"][2*(number-1)];
+	var y = MapVars[name+"Spots"][1+2*(number-1)];
 	switch (name) {
 	case "councilhall":
 		bigMap.fillStyle = "yellow";
-		bigMap.fillRect(x,y,12,7);
+		bigMap.fillRect(x,y,36,18);
 	case "shack":
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
-        bigMap.fillRect(x, y, 5, 5);
+        bigMap.fillRect(x, y, 16, 16);
         bigMap.beginPath();
         bigMap.moveTo(x,y);
-        bigMap.lineTo(x+2.5,y-1.5);
-        bigMap.lineTo(x+5,y);
+        bigMap.lineTo(x+8,y-5);
+        bigMap.lineTo(x+16,y);
         bigMap.fill();
 		break;
 	case "shed":
 		bigMap.fillStyle = 'rgb(102, 84, 47)';
-        bigMap.fillRect(x, y, 8, 3.5);
+        bigMap.fillRect(x, y, 21, 10);
         bigMap.beginPath();
         bigMap.moveTo(x,y);
-        bigMap.lineTo(x+3,y-1);
-        bigMap.lineTo(x+8,y);
+        bigMap.lineTo(x+8,y-4);
+        bigMap.lineTo(x+21,y);
         bigMap.fill();
 		break;
 	case "expandQ":
 		bigMap.fillStyle = 'rgb(86, 85, 82)';
         bigMap.beginPath();
-        bigMap.arc(x,y,2,0,Math.PI*2,false);
+        bigMap.arc(x,y,8,0,Math.PI*2,false);
         bigMap.fill();
         bigMap.closePath();
 		break;
 	case "farm":
 		bigMap.fillStyle = "yellow";
-		bigMap.fillRect(x,y,20,20);
+		bigMap.fillRect(x,y,60,60);
 		break;
 	case "barn":
 		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,7,6);
+		bigMap.fillRect(x,y,12,9);
 		break;
 	case "lumberyard":
 		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,8,2);
+		bigMap.fillRect(x,y,35,6);
 		break;
 	case "workshop":
 		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,6,3);
+		bigMap.fillRect(x,y,18,9);
 		break;
 	case "hut":
 		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,5,5);
+		bigMap.fillRect(x,y,15,15);
 		break;
 	case "lab":
 		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,2,6);
+		bigMap.fillRect(x,y,6,18);
 		break;
 	case "mine":
 		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,5,5);
+		bigMap.fillRect(x,y,15,15);
 		bigMap.fillStyle = "black";
-		bigMap.fillRect(x+1,y+1,3,4);
+		bigMap.fillRect(x+3,y+3,9,12);
 		break;
 	case "warehouse":
 		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,7,5);
+		bigMap.fillRect(x,y,22,15);
 		break;	
 	case "kiln":
 		bigMap.fillStyle = "red";
-		bigMap.fillRect(x,y,3,2);
+		bigMap.fillRect(x,y,9,4);
 		break;
 	case "silo":
 		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,3,8);
+		bigMap.fillRect(x,y,9,24);
 		break;
 	case "cabin":
 		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,10,5);
+		bigMap.fillRect(x,y,30,15);
 		break;				
 	default:
 		console.log("no valid building input");
@@ -333,8 +326,16 @@ function drawBuilding(name){
 }
 
 function testDraw(name){
-	for(var i=0;i<MapVars[name+"Spots"].length;i+=2){
+	for(var i=1;i<=(MapVars[name+"Spots"].length)/2;i++){
 		console.log("drew building");
-		drawBuilding(name);
+		drawBuilding(name,i);
+	}
+}
+
+function linesOnBigMap(){
+	for(var i=1;i<50;i++){
+		bigMap.strokeStyle = "black";
+		bigMap.strokeRect(i*50,i*50,5000-i*100,5000-i*100);
+
 	}
 }

@@ -243,7 +243,7 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 
 var Buildings = {  //if addWorker property key is "freeworker", it will add free workers     can remove the buildOnce property because just make buy button invis for "true" buildings?
 					//can move the unlockRes and unlockJob functionality to the unlock_conditional section of the run() function
-	shack:	{name: "Shack", 		count:1, buildWorkers:1, buildTime:25, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0, 	addsText:["space for 1 new settler"],		},
+	shack:	{name: "Shack", 		count:1, buildWorkers:1, buildTime:35, unlocked:true, 	buildingwork:{},									addworker:{freeworker:1}, 	cost:{wood:25}, 							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0, 	addsText:["space for 1 new settler"],		},
 	shed:	{name: "Woodshed",		count:0, buildWorkers:2, buildTime:25, unlocked:false, 	buildingwork:{},		addstorage:{wood:50}, 		addworker:{woodcutter:1}, 	cost:{wood:30},								unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 woodcutter", "50 wood storage"],	statement:"It looks like you could use a place to chop and store more wood,<br>so you decide to start building sheds just inside the forest."},
 	expandQ:{name: "Expand Quarry",	count:0, buildWorkers:3, buildTime:25, unlocked:false,	buildingwork:{},		addstorage:{rock:50},		addworker:{rockcutter:1}, 	cost:{wood:30, rock:50},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 rockcutter", "50 rock storage"],	statement:"Clearing access to the quarry will allow for more rock collection and storage."},
 	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	tempCount:0,	addsText:["space for 2 farmers"],						statement:"One of the travelers brought with them fast-growing seeds, and to free up workers<br>from hunting duties you decided to try farming. Some walls and trellices seem to do the trick."},
@@ -336,7 +336,7 @@ function addBuildingButton(buildingName){
 				}
 				if(makeMax){
 					if(i==="mine"&&GlobVar.Token[10]){
-						//do nothing, this brevents the first mine from showing buildable
+						//do nothing, this prevents the first mine from showing buildable
 					} else {
 						document.getElementById(i+"progress").style.color = "white";
 					}
@@ -391,6 +391,7 @@ var GlobVar = {
 //elements to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 	console.log("localStorage 'Reset' value: "+localStorage.getItem("Reset"));
+	setup();
 	//reset can have three values: 'full' runs the intro text and initial t=0 gamestate (full reset), 'saveLoad' runs the current save in local storage, 'prestige' resets everything but the prestige variables and shows new intro text
 	if(localStorage.getItem("Reset")!==null&&localStorage.getItem("Reset")==="saveLoad") {//don't show intro text
 		console.log(typeof document.getElementById("closeMe")+" , and value: "+document.getElementById("closeMe"));
@@ -478,7 +479,7 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 	document.getElementById("prestige").addEventListener("click",prestigeGame);
 	//document.getElementById("tips").addEventListener("click",tips=function(){});
 
-	setup();
+	
 }
 
 function populate(){
@@ -724,7 +725,7 @@ function finishBuilding(buildkey,index){
 		GlobVar.buildBuild.splice(index,1);
 		GlobVar.buildConstruct.splice(index,1);
 	}
-	drawBuilding(buildkey);
+	drawBuilding(buildkey,Buildings[buildkey]["count"]);
 }
 /////////////////////////////////////////////////////////////////////////////unlocking buildings and the resources those buildings start with////////////////////////////////////////////////////////////////////////////////// 
 function unlock(unlockkey){
@@ -1088,15 +1089,17 @@ function doBonus(resUp){
 			var costStr = "";
 			for(var i in Buildings.barn.cost){
 				costStr += Buildings["barn"]["cost"][i] + " " + i + "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				
 			}
 			//update tooltip for barn
 			costStr = costStr.slice(0,-70);
 			document.getElementById("barnCosts").innerHTML = costStr;
+			updateToolTip("building","barn");
 	        break;
 
 		case "Planning":
 			for(var i in Buildings){
-				Buildings[i]["costratio"]*=.9; 
+				Buildings[i]["costratio"]=1+(Buildings[i]["costratio"]-1)*.9; 
 				updateToolTip("building",i);
 			}
 			addResearchButton("BasicBuild");
@@ -1205,8 +1208,6 @@ function updateToolTip(kind,name){
 		document.getElementById(name +'sMake').innerHTML =  makeStr + consumeStr;
 	} else if (kind==="building"){
 
-
-
 		var addsText = ""
 		for (var i=0;i<Buildings[name]["addsText"].length;i++){
 			addsText+=Buildings[name]["addsText"][i];
@@ -1214,7 +1215,10 @@ function updateToolTip(kind,name){
 		}
 		addsText = addsText.slice(0,-70);
 		//makes sure any changes in number of builders, costs, add get fixed
-		document.getElementById(name+"Build").querySelector(".tooltiptext").innerHTML = "<p>Requires ("+ Buildings[name]["buildWorkers"] +") workers to build<br>Cost:&nbsp;<span id='"+ name +"Costs'> </span><br><br>Adds: <span id='"+ name +"Adds'>"+ addsText +"</span></p>";
+		var costStr = "";
+
+
+		document.getElementById(name+"Build").querySelector(".tooltiptext").innerHTML = "<p>Requires ("+ Buildings[name]["buildWorkers"] +") workers to build<br>Cost:&nbsp;<span id='"+ name +"Costs'>"+costStr+"</span><br><br>Adds: <span id='"+ name +"Adds'>"+ addsText +"</span></p>";
 
 	} else {
 		alert("trying to update a tooltip but no kind specified");
@@ -1448,6 +1452,7 @@ function run(){
 		Stuff.rock.unlocked=true;
 		/////
 		logStatement("While wandering into the hills looking for the nightly firewood, one of the workers finds a<br>small rocky clearing that can be turned into a quarry. The rock may be useful for new structures.",true);
+		drawBuilding("expandQ",1);
 		GlobVar.Token[4] = false;
 	}
 	//unlocks shed (Woodshed)
@@ -1941,7 +1946,9 @@ function finishLoad(){
 
 	GlobVar.pendingStatements = [];//clear all the message here (but they are still logged)
 	GlobVar.counter1 = 0;
-	
+
+	//populate the map in setup() function
+
 } 
 function resetGame(){
 	localStorage.setItem("Reset","full");
