@@ -15,30 +15,32 @@ var minYscroll = 1800;
 var maxXscroll = 3850;//limit the scrolling to just outside the black areas
 var maxYscroll = 2800;
 var maxZoomLvl = 500;//limit the max zoom (gets reset by uncover())
+var minZoomLvl = 200;
 var smallMapMax = 600;
 
-var MapVars = {//		1			2			3			4		5			6			7		8			9			10			11
-	shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030, 3239,2058],
-	shedSpots: 		[3085,2015, 3135,1999, 3180,1990, 3110,1980, 3155,1970],
-	expandQSpots: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930],
-	farmSpots: 		[],
-	barnSpots: 		[],
-	lumberyardSpots:[],
-	workshopSpots:	[],
-	hutSpots:		[],
-	labSpots:		[],
-	mineSpots:		[3420,1935, 3410,2162, 3411,2164, 3413,2165],
-	warehouseSpots:	[],
-	kilnSpots:		[],
-	siloSpots:		[],
-	cabinSpots:		[],
-	councilhallSpots:[], 	
-	andSoOn: [],
+//put all the other global variables in here and change this set of properties to be MapVars.Spots.shack etc.
+var MapVars = {//			1			2			3			4		5			6			7		8			9			10
+	Spots:{			
+		shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
+						3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
+		shedSpots: 		[3135,1999, 3085,2003, 3180,1990, 3110,1980, 3155,1970, 3200,1935, 3210,1968, 3102,1948, 3140,1930],
+		expandQSpots: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930, 3677,1927, 3676,1928],
+		farmSpots: 		[3050,2150, 3125,2150, 3030,2225, 3105,2225],
+		barnSpots: 		[3330,2030, 3333,2065, 3359,2033, 3363,2068],
+		lumberyardSpots:[3228,2000, 3250,1975, 3278,1998, 3336,1997],
+		workshopSpots:	[3400,2005, 3405,2030, 3445,2023, 3451,2048],
+		hutSpots:		[3215,2170, 3240,2168, 3215,2200, 3240,2198, 3215,2230, 3240,2228, 3265,2166, 3265,2196, 3265,2226],
+		labSpots:		[3367,2170, 3376,2170, 3385,2170, 3394,2170],
+		mineSpots:		[3420,1935, 3410,2162, 3411,2164, 3413,2165],
+		warehouseSpots:	[],
+		kilnSpots:		[],
+		siloSpots:		[],
+		cabinSpots:		[],
+		councilhallSpots:[3330,2170], 	
+	},
 
-	exploreSpots:	[3400,1950, 3400,2000, 3400,1900, 3400,2050, 3400,2100, 3400,2150, 3400,2200],
+	exploreSpots:	[3800,2100, 3800,2150, 3800,2050, 3800,2000, 3800,2200, 3800,2250, 3800,2300],
 }
-
-
 
 function setup(){
 	smallCanvas = document.getElementById('canvas');
@@ -129,7 +131,6 @@ function setup(){
 		}
 	});
 }
-
 function dragDraw(x,y){
 	smallMap.drawImage(blackCanvas, x, y, 2*zoomLvl, 2*zoomLvl, 0, 0, smallMapMax, smallMapMax);
 }
@@ -142,7 +143,7 @@ function mapZoom(e){
 	maxZoomLvl = Math.min((maxXscroll-minXscroll)/2,(maxYscroll-minYscroll)/2);
 
 	var changeInZoom = e.deltaY;
-	if(zoomLvl+changeInZoom>maxZoomLvl||zoomLvl+changeInZoom<300){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
+	if(zoomLvl+changeInZoom>maxZoomLvl||zoomLvl+changeInZoom<minZoomLvl){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
 		console.log("trying to zoom out or in too far");
 		return false;
 	}
@@ -237,16 +238,26 @@ function loadUp(){
     document.getElementById("button6").addEventListener("click",drawShed);
 }
 function drawBuilding(name,number){
-	if((number-1)*2>MapVars[name+"Spots"].length){
+	if((number-1)*2>=MapVars["Spots"][name+"Spots"].length){
 		console.log("need to add more coordinates to the "+name+"Spots array");
 		return 0;
 	}
-	var x = MapVars[name+"Spots"][2*(number-1)];
-	var y = MapVars[name+"Spots"][1+2*(number-1)];
+	var x = MapVars["Spots"][name+"Spots"][2*(number-1)];
+	var y = MapVars["Spots"][name+"Spots"][1+2*(number-1)];
 	switch (name) {
 	case "councilhall":
-		bigMap.fillStyle = "yellow";
-		bigMap.fillRect(x,y,36,18);
+		bigMap.fillStyle = "grey";
+		bigMap.fillRect(x,y,37,24);
+		bigMap.beginPath();
+		bigMap.arc(x+18,y,11,0,Math.PI,true);
+		bigMap.fill();
+		bigMap.fillStyle = "rgb(132, 86, 5)";
+		bigMap.fillRect(x+3,y+3,14,18);
+		bigMap.fillRect(x+20,y+3,14,18);
+		bigMap.beginPath();
+		bigMap.arc(x+18,y,8,0,Math.PI,true);
+		bigMap.fill();
+		break;
 	case "shack":
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
         bigMap.fillRect(x, y, 16, 16);
@@ -270,7 +281,6 @@ function drawBuilding(name,number){
         bigMap.beginPath();
         bigMap.arc(x,y,8,0,Math.PI*2,false);
         bigMap.fill();
-        bigMap.closePath();
 		break;
 	case "farm":
 		bigMap.fillStyle = "yellow";
@@ -278,26 +288,43 @@ function drawBuilding(name,number){
 		break;
 	case "barn":
 		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,12,9);
+		bigMap.fillRect(x,y,20,15);
+        bigMap.beginPath();
+        bigMap.moveTo(x,y);
+        bigMap.lineTo(x+3,y-9);
+		bigMap.lineTo(x+10,y-14);
+        bigMap.lineTo(x+17,y-9);
+		bigMap.lineTo(x+20,y);
+        bigMap.fill();		
 		break;
 	case "lumberyard":
-		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,35,6);
+		bigMap.fillStyle = "rgb(175, 149, 29)";
+		bigMap.fillRect(x,y,35,12);
 		break;
 	case "workshop":
 		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,18,9);
+		bigMap.fillRect(x,y,32,15);
 		break;
 	case "hut":
+		bigMap.fillStyle = 'rgb(79, 54, 2)';
+		bigMap.fillRect(x,y,18,15);
 		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,15,15);
+		bigMap.fillRect(x+1,y+1,16,14);
+		bigMap.fillStyle = 'rgb(79, 54, 2)';
+		bigMap.moveTo(x,y);
+        bigMap.lineTo(x+3,y-8);
+        bigMap.lineTo(x+15,y-8);
+		bigMap.lineTo(x+18,y);
+        bigMap.fill();			
 		break;
 	case "lab":
-		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,6,18);
+		bigMap.fillStyle = "grey";
+		bigMap.fillRect(x,y,12,24);
+		bigMap.fillStyle = "rgb(132, 86, 5)";
+		bigMap.fillRect(x,y+3,9,18);
 		break;
 	case "mine":
-		bigMap.fillStyle = "brown";
+		bigMap.fillStyle = 'rgb(79, 54, 2)';
 		bigMap.fillRect(x,y,15,15);
 		bigMap.fillStyle = "black";
 		bigMap.fillRect(x+3,y+3,9,12);
@@ -324,18 +351,65 @@ function drawBuilding(name,number){
 	}
 	mapBlack();
 }
+function drawQuarry(){
+	bigMap.fillStyle = 'rgb(86, 85, 82)';
+	bigMap.beginPath();
+	bigMap.arc(3674,1924,8,0,Math.PI*2,false);
+	bigMap.fill();
+	bigMap.closePath();
+}
+function drawRoads1(){
+	bigMap.strokeStyle = 'rgb(183, 125, 23)';
+	bigMap.lineWidth = 3;
+	bigMap.beginPath();
+	bigMap.moveTo(2975,2300);
+	bigMap.lineTo(3048,2133);
+	bigMap.lineTo(3300,2125);
+	bigMap.lineTo(3325,2000);
+	bigMap.lineTo(3325,1950);
+	bigMap.lineTo(3200,1955);
+	bigMap.lineTo(3140,1950);
+	bigMap.stroke();	
+	mapBlack();	
+}
 
 function testDraw(name){
-	for(var i=1;i<=(MapVars[name+"Spots"].length)/2;i++){
-		console.log("drew building");
-		drawBuilding(name,i);
+	if(name==="all"){
+
+		for(var s in MapVars.Spots){
+			for(var i=1;i<=(MapVars["Spots"][s].length)/2;i++){
+				console.log("drew building");
+				drawBuilding(s.slice(0,-5),i);
+			}
+		}
+
+	} else {
+		for(var i=1;i<=(MapVars["Spots"][name+"Spots"].length)/2;i++){
+			console.log("drew building");
+			drawBuilding(name,i);
+		}
 	}
 }
 
 function linesOnBigMap(){
-	for(var i=1;i<50;i++){
-		bigMap.strokeStyle = "black";
-		bigMap.strokeRect(i*50,i*50,5000-i*100,5000-i*100);
 
+	for(var i=1;i<bigMapMax/50;i++){
+		console.log("i:"+i);
+		if(i%5===0){
+			bigMap.strokeStyle = "red";
+		} else {
+			bigMap.strokeStyle = "black";
+		}
+		bigMap.beginPath();
+		bigMap.moveTo(i*50,0);
+		bigMap.lineTo(i*50,bigMapMax);
+		bigMap.stroke();
+
+		bigMap.moveTo(0,i*50);
+		bigMap.lineTo(bigMapMax,i*50);
+		bigMap.stroke();
 	}
+	bigMap.strokeStyle = "blue";
+	bigMap.strokeText("3000,2000",2975,2000)
+	mapBlack();
 }
