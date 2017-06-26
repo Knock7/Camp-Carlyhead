@@ -121,9 +121,40 @@ function setup(){
 			dragDraw(x,y);
 		}
 	});
+	window.addEventListener('touchmove', function(e){ 
+		if(curDown){
+			e.preventDefault();
+			var x = mapX + (curXPos - e.changedTouches[0].screenX)*zoomLvl*2/smallMapMax;
+			var y = mapY + (curYPos - e.changedTouches[0].screenY)*zoomLvl*2/smallMapMax;
+
+			//keep from scrolling outside the currently allowed area
+			if(x<minXscroll){
+				curXPos += (minXscroll - x)/(zoomLvl*2/smallMapMax);
+				x=minXscroll;	
+			}
+			if(y<minYscroll){
+				curYPos += (minYscroll - y)/(zoomLvl*2/smallMapMax);
+				y=minYscroll;			
+			}
+			if(x+2*zoomLvl>maxXscroll){
+				curXPos += (maxXscroll - (x + 2*zoomLvl))/(zoomLvl*2/smallMapMax);
+				x= maxXscroll - 2*zoomLvl;		
+			}
+			if(y+2*zoomLvl>maxYscroll){
+				curYPos += (maxYscroll - y - 2*zoomLvl)/(zoomLvl*2/smallMapMax);
+				y= maxYscroll - 2*zoomLvl;		
+			}
+			dragDraw(x,y);
+		}
+	}, { passive: false });
 	smallCanvas.addEventListener('mousedown', function(e){ 
-		curYPos = e.pageY; 
 		curXPos = e.pageX; 
+		curYPos = e.pageY; 
+		curDown = true; 
+	});
+	smallCanvas.addEventListener('touchstart', function(e){ 
+		curXPos = e.changedTouches[0].screenX; 
+		curYPos = e.changedTouches[0].screenY;
 		curDown = true; 
 	});
 	window.addEventListener('mouseup', function(e){ 
@@ -131,6 +162,17 @@ function setup(){
 			curDown = false; 
 			mapX += (curXPos - e.pageX)*zoomLvl*2/smallMapMax;
 			mapY += (curYPos - e.pageY)*zoomLvl*2/smallMapMax;
+			if(mapX<0){mapX=0}
+			if(mapY<0){mapY=0}
+			if(mapX+2*zoomLvl>bigMapMax){mapX=bigMapMax - 2*zoomLvl}
+			if(mapY+2*zoomLvl>bigMapMax){mapY=bigMapMax - 2*zoomLvl}
+		}
+	});
+	window.addEventListener('touchend', function(e){ //e.pageX doesn't work for touchscreen? need to take some time to write event handlers for touch on the map
+		if(curDown){
+			curDown = false; 
+			mapX += (curXPos - e.changedTouches[0].screenX)*zoomLvl*2/smallMapMax;
+			mapY += (curYPos - e.changedTouches[0].screenY)*zoomLvl*2/smallMapMax;
 			if(mapX<0){mapX=0}
 			if(mapY<0){mapY=0}
 			if(mapX+2*zoomLvl>bigMapMax){mapX=bigMapMax - 2*zoomLvl}
@@ -195,8 +237,8 @@ blackout[58][54]=true; blackout[58][53]=true; blackout[59][54]=true;
 blackout[75][54]=true; blackout[74][54]=true; blackout[75][53]=true;
 
 
-
-function mapBlack(){
+//need to fix - instead of chaging the bigMap, then painting it black on blackMap and copying to smallMap, change both big and black when drawing building, and only repaint big to black after exploring new areas and uncover()ing.
+function mapBlack(){//don't call this unless you have to! (slows down computer)
 	//paints the areas you have not explored before showing on the small canvas
 	blackMap.drawImage(bigCanvas,0,0,bigMapMax,bigMapMax);
 	//blacks out 50x50 sections of the map according to blackout array
@@ -210,7 +252,6 @@ function mapBlack(){
 	}
 	dragDraw(mapX,mapY);
 }
-
 function uncover(){
 	if((GlobVar.exploreCount-2)*2>=MapVars.exploreSpots.length){
 		console.log("need to add more coordinates to the exploreSpots array");
@@ -237,23 +278,6 @@ function uncover(){
 		}
 	}
 	mapBlack();
-}
-
-/*
-now all 
-*/
-
-///////////////////////////draw shapes!///////////////
-
-//window.addEventListener("load",loadUp);
-
-function loadUp(){
-    document.getElementById("button1").addEventListener("click",drawShack);
-    document.getElementById("button2").addEventListener("click",drawShed);
-    document.getElementById("button3").addEventListener("click",drawQuarry);
-    document.getElementById("button4").addEventListener("click",drawShed);
-    document.getElementById("button5").addEventListener("click",drawShed);
-    document.getElementById("button6").addEventListener("click",drawShed);
 }
 function drawBuilding(name,number){
 	if((number-1)*2>=MapVars["Spots"][name+"Spots"].length){
@@ -330,10 +354,10 @@ function drawBuilding(name,number){
 		bigMap.fillRect(x+1,y+1,16,14);
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
 		bigMap.beginPath();
-		bigMap.moveTo(x,y);
-        bigMap.lineTo(x+3,y-8);
-        bigMap.lineTo(x+15,y-8);
-		bigMap.lineTo(x+18,y);
+			bigMap.moveTo(x,y);
+        	bigMap.lineTo(x+3,y-8);
+        	bigMap.lineTo(x+15,y-8);
+			bigMap.lineTo(x+18,y);
         bigMap.fill();			
 		break;
 	case "lab":
@@ -368,8 +392,9 @@ function drawBuilding(name,number){
 		console.log("no valid building input");
 		break;
 	}
-	mapBlack();
+	dragDraw(mapX,mapY);//what if when you uncover new area, it draws that section from bigMap over the section on blackedMap? seems faster. do that and just draw buildings to blackMap which will be the main map - bigMap is just to draw new terrain.
 }
+//draws the first quarry spot
 function drawQuarry(){
 	bigMap.fillStyle = 'rgb(86, 85, 82)';
 	bigMap.beginPath();
@@ -377,6 +402,7 @@ function drawQuarry(){
 	bigMap.fill();
 	bigMap.closePath();
 }
+//draws the first set of dirt roads
 function drawRoads1(){
 	bigMap.strokeStyle = 'rgb(183, 125, 23)';
 	bigMap.lineWidth = 3;

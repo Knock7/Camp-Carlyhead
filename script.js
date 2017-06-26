@@ -226,7 +226,13 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 
 	var indiv = document.createElement("div");
 	indiv.id = jobName.toLowerCase() + "Job";
-	indiv.innerHTML = "<div class='userAdd'><b>&nbsp;"+ jobName.charAt(0).toUpperCase() + jobName.slice(1) +"s: <span id='"+ jobName +"s'>0</span> / <span id='"+ jobName +"sMax'>"+ Jobs[jobName]["maxworkers"] +"</span>&nbsp;</b><div class='tooltiptext'><p>Each "+ jobName +" makes: <br><span id='"+ jobName +"sMake' >"+ makeStr + consumeStr +"</span></p></div></div><div class='userRemove'><b> X </b></div>";
+	var changeName;
+	if(jobName==="child"){//can change how the job names appear in jobboxes
+		changeName="children";
+	} else {
+		changeName=jobName+"s";
+	}
+	indiv.innerHTML = "<div class='userAdd'><b>&nbsp;"+ changeName.charAt(0).toUpperCase() + changeName.slice(1) +": <span id='"+ jobName +"s'>0</span> / <span id='"+ jobName +"sMax'>"+ Jobs[jobName]["maxworkers"] +"</span>&nbsp;</b><div class='tooltiptext'><p>Each "+ jobName +" makes: <br><span id='"+ jobName +"sMake' >"+ makeStr + consumeStr +"</span></p></div></div><div class='userRemove'><b> X </b></div>";
 	indiv.querySelector(".userAdd").addEventListener("click",moveworkerEvent);
 	indiv.querySelector(".userAdd").oncontextmenu = function() {
 		moveworker(jobName,-1);
@@ -244,7 +250,7 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 		document.getElementById("childJob").querySelector(".userAdd").removeEventListener("click",moveworkerEvent);
 		document.getElementById("childJob").querySelector(".userAdd").style="cursor:default; background-color:rgba(255, 255, 255, .75)";
 		console.log(document.getElementById("childJob").querySelector(".userAdd").style);
-		document.getElementById("childJob").querySelector(".tooltiptext").innerHTML = "<p>Every child consumes <br>0.8 food / sec<br><br> Children help the woodcutters<br>with simple tasks and<br>each child makes 1 wood / sec";
+		document.getElementById("childJob").querySelector(".tooltiptext").innerHTML = "<p>Every child consumes <br>0.8 food / sec<br><br> Children help the woodcutters<br>with simple tasks and<br>each child makes 0.75 wood / sec";
 	}
 }
 
@@ -546,6 +552,7 @@ function CouncilMessageEvent(e){
 	document.getElementById("council"+ num).style.display = "block";
 }
 
+//put these into GlobVar so that the panels you were on show up - need to add a bit to finishLoad()
 //for switching active panels
 var mark1 = "pan1";
 var mark2 = "pan2";
@@ -1121,10 +1128,7 @@ function doBonus(resUp){
 			break;
 		case "BasicBuild":
 			unlock("silo");
-
 			unlock("cabin");
-			addJobElement("child");
-			
 			unlock("warehouse");//change warehouse to only unlock here and make brick storage in stoneyard, not warehouse
 			break;
 		case "Metalwork2":
@@ -1630,7 +1634,7 @@ function run(){
 	}
 
 	///////consume food/////////////////////////
-	Stuff.food.stored -= (Jobs.freeworker.maxworkers*.6*GlobVar.factor)*((Date.now() - GlobVar.previousTime)/1000)*5;//deltaTime
+	Stuff.food.stored -= ((Jobs.freeworker.maxworkers+Jobs.child.maxworkers*.53)*.6*GlobVar.factor)*((Date.now() - GlobVar.previousTime)/1000)*5;//deltaTime
 	Stuff.food.rate -=   (Jobs.freeworker.maxworkers*.6*GlobVar.factor);
 
 	//////increment resources///////////////////
@@ -1709,9 +1713,6 @@ function run(){
 
 
 //////////////////////////////////////////////////////////end of game loop//////////////////////////////////////////////////////
-
-
-
 
 
 //button to test a function
