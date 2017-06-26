@@ -238,6 +238,14 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 		return false;
 	}
 	document.getElementById(newBox).querySelector(".imgBox").appendChild(indiv);
+
+	if(jobName==="child"){//need to remove the stuff that workers get
+		document.getElementById("childJob").removeChild(document.getElementById("childJob").querySelector(".userRemove"));
+		document.getElementById("childJob").querySelector(".userAdd").removeEventListener("click",moveworkerEvent);
+		document.getElementById("childJob").querySelector(".userAdd").style="cursor:default; background-color:rgba(255, 255, 255, .75)";
+		console.log(document.getElementById("childJob").querySelector(".userAdd").style);
+		document.getElementById("childJob").querySelector(".tooltiptext").innerHTML = "<p>Every child consumes <br>0.8 food / sec<br><br> Children help the woodcutters<br>with simple tasks and<br>each child makes 1 wood / sec";
+	}
 }
 
 //make it so that the new jobs don't show up until after the first building is made
@@ -249,14 +257,14 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	farm:	{name: "Farm",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{farmer:2},		cost:{wood:100, rock:75},					unlockRes:[],			unlockJob:["farmer"],	costratio:2.5, 		buildOnce:false,	tempCount:0,	addsText:["space for 2 farmers"],						statement:"One of the travelers brought with them fast-growing seeds, and to free up workers<br>from hunting duties you decided to try farming. Some walls and trellices seem to do the trick."},
 	barn:	{name: "Barn",			count:0, buildWorkers:3, buildTime:40, unlocked:false,	buildingwork:{},		addstorage:{wood:100,rock:100,food:100}, 				cost:{wood:300,rock:100},					unlockRes:[],			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["100 food storage", "100 wood storage", "100 rock storage"],	statement:"You will need even more storage to stockpile resources for larger buildings. You can start by constructing simple barns."},
 	lumberyard:{name: "Lumber Yard",count:0, buildWorkers:3, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{lumber:300}, 	addworker:{lumberworker:3},	cost:{wood:300, rock:50},					unlockRes:["lumber"],	unlockJob:["lumberworker"],costratio:2.5,	buildOnce:false,	tempCount:0,	addsText:["space for 3 lumber workers", "300 lumber storage"],	statement:"One of the newcomers was a carpenter in her old life. She is thankful for the simple shelter you have provided, but obviously wants to lead the<br>construction of better buildings. Though you only have fairly simple tools, many showing signs of wear, she insists on setting up a lumberyard."},
-	workshop:{name:"Stone Yard",	count:0, buildWorkers:3, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 masons", "200 stone storage"],	statement:"With access to rough-cut boards, several folk decide to contruct a workshop. For now the space will<br>be used to shape rock from the quarry into stone slabs for improved buildings, and perhaps later for stone tools."},
-	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 new settler"],					statement:"With boards from the lumberyard and cut stones from the workshop, the carpenter plans to start building proper huts.<br>You plan to continue buildings shacks - you are trying to grow the town after all and still need to turn the occasional wanderer away for lack of space."},
-	lab: 	{name: "Laboratory",	count:0, buildWorkers:4, buildTime:100,unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],					statement:"The Town Hall has been constructed. The first meeting will be held immediately."},
+	workshop:{name:"Stone Yard",	count:0, buildWorkers:3, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 masons", "200 stone storage"],	statement:"With access to rough-cut boards, several folk decide to contruct an area to shape and store materials. For now the space will<br>be used to cut rock from the quarry into stone slabs for improved buildings, and perhaps later for stone tools."},
+	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 new settler"],					statement:"With boards from the lumberyard and cut stones from the stoneyard, the carpenter plans to start building proper huts.<br>You plan to continue buildings shacks - you are trying to grow the town after all and still need to turn the occasional wanderer away for lack of space."},
+	lab: 	{name: "Laboratory",	count:0, buildWorkers:3, buildTime:80, unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],					statement:"The Town Hall has been constructed. The first meeting will be held immediately."},
 	mine:	{name: "Mineshaft",		count:0, buildWorkers:5, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{},				cost:{lumber:200},							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 2 miners"],						statement:"Adding a mineshaft will allow collection of ores."},
 	warehouse:{name:"Warehouse",	count:0, buildWorkers:5, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{wood:50,rock:50,lumber:50,stone:50,cu_ore:50,brick:50,fe_ore:50,coal:50}, addworker:{},cost:{rock:100,lumber:500,stone:300},unlockRes:[],		unlockJob:[],			costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["50 wood storage","50 rock storage","50 lumber storage","50 stone storage","50 ore storage","50 brick storage"], statement:"More versitile than barns, your warehouses are designed to store many kinds of materials."},
 	kiln:	{name: "Kiln",			count:0, buildWorkers:3, buildTime:30, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{kilnworker:1},	cost:{brick:200,stone:50},					unlockRes:["copper"],	unlockJob:["kilnworker"],costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["space for one kilnworker"], statement:"Kilns will let us smelt ore and perhaps do other things later."},
 	silo:	{name: "Silo",			count:0, buildWorkers:3, buildTime:35, unlocked:false,  buildingwork:{},		addstorage:{food:150},		addworker:{},				cost:{wood:100, lumber:100},				unlockRes:{},			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["150 food storage"],							statement:"The settlement can buffer fluctuations in food remand and<br>stockpile more food for exploring parties by constructing silos"},
-	cabin:	{name: "Cabin",			count:0, buildWorkers:5, buildTime:55, unlocked:false,  buildingwork:{},		addstorage:{},				addworker:{freeworker:2,child:2},cost:{lumber:350,stone:150},			unlockRes:{},			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 2 new settlers", "space for 2 children"],statement:"With all the work to do, the settlement needs more residents. Cabins will<br>also allow families to join the town, or lovers to have space for their own children"},
+	cabin:	{name: "Cabin",			count:0, buildWorkers:5, buildTime:55, unlocked:false,  buildingwork:{},		addstorage:{},				addworker:{freeworker:2,child:2},cost:{lumber:350,stone:150},			unlockRes:{},			unlockJob:["child"],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 2 new settlers", "space for 2 children"],statement:"With all the work to do, the settlement needs more residents. Cabins will<br>also allow families to join the town, or lovers to have space for their own children"},
 	forge:	{name: "Forge",			count:0, buildWorkers:6, buildTime:100,unlocked:false,	buildingwork:{},		addstorage:{copper:10},		addworker:{smith:1},		cost:{wood:50,lumber:250,stone:350,brick:200},unlockRes:["spear"],  unlockJob:["smith"],	costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["space for 1 metalsmith"],					statement:"A forge will allow one metalsmith to begin turning smelted metals into useful tools and weapons",		},
 	
 
@@ -699,12 +707,14 @@ function finishBuilding(buildkey,index){
 			}
 		}
 		//add worker space (and free workers)
-		for(var key4 in Buildings[buildkey]["addworker"]){
-			if(key4 == "freeworker"){
-				Jobs.freeworker.workers+=Buildings[buildkey]["addworker"]["freeworker"];
-				Jobs.freeworker.maxworkers+=Buildings[buildkey]["addworker"]["freeworker"];
-				document.getElementById("freeworkers").innerHTML = Jobs["freeworker"]["workers"];
-				document.getElementById("freeworkersMax").innerHTML = Jobs.freeworker.maxworkers;
+		for(let key4 in Buildings[buildkey]["addworker"]){
+			if(key4 === "freeworker" || key4 === "child"){
+				console.log("adding to "+key4+ ", currently "+Jobs[key4]["workers"]);
+				Jobs[key4]["workers"]+=Buildings[buildkey]["addworker"][key4];
+				Jobs[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
+				document.getElementById(key4+"s").innerHTML = Jobs[key4]["workers"];
+				document.getElementById(key4+"sMax").innerHTML = Jobs[key4]["maxworkers"];
+				console.log("now "+key4+ "has "+Jobs[key4]["workers"]);
 			} else {
 			Jobs[key4]["maxworkers"]+=Buildings[buildkey]["addworker"][key4];
 			document.getElementById(key4 + "sMax").innerHTML = Jobs[key4]["maxworkers"];
@@ -786,7 +796,7 @@ function SwapActiveRes(x){
 		GlobVar.ActiveRes = x;
 		console.log("set research to "+x);
 		document.getElementById(GlobVar.ActiveRes).className = "researchButtonSelected";
-		//document.getElementById("research").innerHTML = Research[x]["completion"];
+		document.getElementById("research").innerHTML = Research[x]["completion"];
 		document.getElementById("researchMax").innerHTML = Research[GlobVar.ActiveRes]["totalRes"];
 		Stuff.research.maxstored = Research[GlobVar.ActiveRes]["totalRes"];
 	
@@ -821,8 +831,9 @@ var Research = {
 	Cement:		{name:"Cement"},//more buildings
 	Glass:		{name:"Glassmaking"},//windows and stuff?
 	Overseer:   {name:"Affordable Housing", reward:"Reduces cost ratio of all housing buildings but they<br>will require one additional construction worker<br>and take 20% more time to build", statement:"The council is still not sure why the cost of buildings keeps increasing. They decide the each new housing project will need an overseer to keep track of resource usage."},
-	Contractors:{name:"Contractors", reward:"Reduces building time by 30% but requires an additional<br>worker per building (additional 2 workers for buildings<br>that currently require 5 or more workers)", statement:"Some proficient builders have been identified over the last few<br>months, and the council taps them to lead new construction projects."}
-
+	Contractors:{name:"Contractors", reward:"Reduces building time by 30% but requires an additional<br>worker per building (additional 2 workers for buildings<br>that currently require 5 or more workers)", statement:"Some proficient builders have been identified over the last few<br>months, and the council taps them to lead new construction projects."},
+	Rafts:		{name:"Raftbuilding", reward:"Can make rafts to explore along the river", statement:"The river is wide and too difficult to cross unaided. In order explore accross the river, you decide to construct a few rafts to carry explorers and supplies."},
+	Bridge:		{name:"Bridgebuilding", reward:"Construct a bridge to allow exploring accross the river without needing rafts", statement:"The rafts can only carry so much weight, and the explorers have gone as far as they can using rafts. To allow further exploration accross the river and access to resources, you begin a massive construction project to put in a bridge."},
 };
 function addResearchButton(research){
 	Research[research]["unlocked"] = true;
@@ -890,6 +901,7 @@ function researchIncr(resUp){
 				resDiv.parentNode.removeChild(resDiv);
 				document.getElementById("doneRes").appendChild(resDiv);
 
+				GlobVar.pendingStatements.push("Research complete:<br>"+Research[resUp]["reward"]);
 				doBonus(resUp);
 				GlobVar.ActiveRes = " ";
 			}
@@ -1109,7 +1121,10 @@ function doBonus(resUp){
 			break;
 		case "BasicBuild":
 			unlock("silo");
+
 			unlock("cabin");
+			addJobElement("child");
+			
 			unlock("warehouse");//change warehouse to only unlock here and make brick storage in stoneyard, not warehouse
 			break;
 		case "Metalwork2":
@@ -1257,7 +1272,7 @@ function exploreGo(ev){
 		for(var i in GlobVar.exploreStuff){
 			if(Math.round(GlobVar.exploreStuff[i]*GlobVar.exploreNum) > Stuff[i]["stored"]){
 				go = false;
-				noGoStr += i+", ";
+				noGoStr += Stuff[i]["name"]+", ";
 			}
 		}
 		noGoStr = noGoStr.slice(0,-2);
@@ -1800,9 +1815,7 @@ function finishLoad(){
 	
 	//console.log("does loadingPopUp exist: "+typeof document.getElementById("loadingPopUp"));
 	document.getElementById("loadingPopUp").style.display = "block";//this doesn't show up until after the while loop so it is useless. how do I make it appear first?
-
 	console.log("now: "+now+" loadtime: "+loadtime+" difference in second: "+(now-loadtime)/1000);
-
 
 	for(var i=0;i<delta;i++){
 		var numJobsMaking = incrRes();

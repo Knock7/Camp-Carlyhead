@@ -39,7 +39,14 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 		councilhallSpots:[3330,2170], 	
 	},
 
-	exploreSpots:	[3800,2100, 3800,2150, 3800,2050, 3800,2000, 3800,2200, 3800,2250, 3800,2300],
+	exploreSpots:	[//each index has a group of coordinates of 50x50 blocks to reveal after that # exploration
+		[3800,2100, 3800,2150, 3800,2050, 3800,2000, 3800,2200, 3800,2250, 3800,2300],
+		[],
+		[],
+		[],
+		[],
+		[],
+	]
 }
 
 function setup(){
@@ -173,13 +180,20 @@ function mapZoom(e){
 //initially set the blackout parts of the map as everything outside the starting 900x900 area
 for(var i=0; i<bigMapMax/50; i++){
 	blackout[i] = [];
-	for(var j=0; j<bigMapMax/50; j++){
-		blackout[i][j] = false;
+	for(var j=0; j<bigMapMax/50; j++){		
 		if(i<=57||j<=36||i>=76||j>=55){
 			blackout[i][j] = true;
+		} else {
+			blackout[i][j] = false;
 		}
 	}
 }
+//and the corners to make it more circular
+blackout[58][37]=true; blackout[59][37]=true; blackout[58][38]=true;
+blackout[75][37]=true; blackout[74][37]=true; blackout[75][38]=true;
+blackout[58][54]=true; blackout[58][53]=true; blackout[59][54]=true;
+blackout[75][54]=true; blackout[74][54]=true; blackout[75][53]=true;
+
 
 
 function mapBlack(){
@@ -202,21 +216,25 @@ function uncover(){
 		console.log("need to add more coordinates to the exploreSpots array");
 		return 0;
 	}
-	var x = MapVars.exploreSpots[2*(GlobVar.exploreCount-2)];
-	var y = MapVars.exploreSpots[2*(GlobVar.exploreCount-2)+1];
-	blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
-	//may need to make the scroll area larger- if 
-	if(x<minXscroll){
-		minXscroll = Math.max(x-50,0);
-	}
-	if(x+50>=maxXscroll){
-		maxXscroll = Math.min(x+100,bigMapMax);
-	}
-	if(y<minYscroll){
-		minYscroll = Math.max(y-50,0);
-	}
-	if(y+50>=maxYscroll){
-		maxYscroll = Math.min(y+100,bigMapMax);
+	var x,y;
+	for(var i=0;i<MapVars.exploreSpots[GlobVar.exploreCount-2].length;i+=2){
+		x = MapVars.exploreSpots[GlobVar.exploreCount-2][i];
+		y = MapVars.exploreSpots[GlobVar.exploreCount-2][i+1];
+		blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
+
+		//may need to make the scroll area larger if the border is no longer black
+		if(x<minXscroll){
+			minXscroll = Math.max(x-50,0);
+		}
+		if(x+50>=maxXscroll){
+			maxXscroll = Math.min(x+100,bigMapMax);
+		}
+		if(y<minYscroll){
+			minYscroll = Math.max(y-50,0);
+		}
+		if(y+50>=maxYscroll){
+			maxYscroll = Math.min(y+100,bigMapMax);
+		}
 	}
 	mapBlack();
 }
@@ -311,6 +329,7 @@ function drawBuilding(name,number){
 		bigMap.fillStyle = "grey";
 		bigMap.fillRect(x+1,y+1,16,14);
 		bigMap.fillStyle = 'rgb(79, 54, 2)';
+		bigMap.beginPath();
 		bigMap.moveTo(x,y);
         bigMap.lineTo(x+3,y-8);
         bigMap.lineTo(x+15,y-8);
