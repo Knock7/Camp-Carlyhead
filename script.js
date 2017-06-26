@@ -768,8 +768,6 @@ function unlock(unlockkey){
 		//add the new jobs that the building unlocks
 		for(var i=0;i<Buildings[unlockkey]["unlockJob"].length;i++){
 			var newJob = Buildings[unlockkey]["unlockJob"][i];
-			var newBox = Jobs[newJob]["box"];
-
 
 			addJobElement(newJob);
 
@@ -1319,12 +1317,15 @@ function exploreEnd(){
 	if(GlobVar.exploreCount===4){
 		logStatement("The exploring party discovered a potential mining site. You can build a shaft to extract ore",true);
 		unlock("mine");
+		drawMineSite(1);//am going to need to limit the number of mines somehow so that new mines show up in the right spot on the map. if you have not build mines and a new site opens up, where to place the mine (and when do give access to new ore?)
+		//limit to three shafts at this loction, don't let new ore until all of these three have been built. remove click ability after the third, allows clicks again after discovering new mine sites
 		addJobElement("miner");
 	} else if(GlobVar.exploreCount===7) {
 		GlobVar.Token[10]=false;
 		document.getElementById("mineBuild").className = "buildingButton";
 		document.getElementById("mineBuild").addEventListener("click",addBuildingEvent);
 		logStatement("The exploring party discovered another potential mining site. You can build a shaft to extract ore",true);
+		drawMineSite(2);
 		Buildings.mine.addworker.miner = 1;
 	} else if(GlobVar.exploreCount===10){
 		logStatement("The exploring party found a site by the river to extract clay.",true);

@@ -22,7 +22,7 @@ var smallMapMax = 600;
 var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 	Spots:{			
 		shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
-						3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
+						 3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
 		shedSpots: 		[3135,1999, 3085,2003, 3180,1990, 3110,1980, 3155,1970, 3200,1935, 3210,1968, 3102,1948, 3140,1930],
 		expandQSpots: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930, 3677,1927, 3676,1928],
 		farmSpots: 		[3050,2150, 3125,2150, 3030,2225, 3105,2225],
@@ -31,7 +31,7 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 		workshopSpots:	[3400,2005, 3405,2030, 3445,2023, 3451,2048],
 		hutSpots:		[3215,2170, 3240,2168, 3215,2200, 3240,2198, 3215,2230, 3240,2228, 3265,2166, 3265,2196, 3265,2226],
 		labSpots:		[3367,2170, 3376,2170, 3385,2170, 3394,2170],
-		mineSpots:		[3420,1935, 3410,2162, 3411,2164, 3413,2165],
+		mineSpots:		[3857,2085, 3925,1910],
 		warehouseSpots:	[],
 		kilnSpots:		[],
 		siloSpots:		[],
@@ -41,7 +41,14 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 
 	exploreSpots:	[//each index has a group of coordinates of 50x50 blocks to reveal after that # exploration
 		[3800,2100, 3800,2150, 3800,2050, 3800,2000, 3800,2200, 3800,2250, 3800,2300],
+		[3800,2350, 3800,2400, 3800,2450, 3800,2500, 3800,2550, 3850,2400, 3850,2350],
+		[3850,2300, 3850,2250, 3850,2200, 3850,2150, 3850,2100, 3850,2050, 3850,2000],//3 - discover mine 1
+		[3800,1950, 3750,1900, 3700,1850, 3800,1900, 3750,1850, 3700,1800, 3650,1800],
+		[3600,1800, 3550,1800, 3500,1800, 3450,1800, 3400,1800, 3350,1800, 3300,1800],
+		[3850,1950, 3850,1900, 3800,1850, 3850,1850, 3900,1850, 3900,1900, 3900,1950],//6 - discover mine 2
 		[],
+		[],
+		[],//9 - discover clay
 		[],
 		[],
 		[],
@@ -81,6 +88,8 @@ function setup(){
 		bigMap.fillRect(150,600,200,800);
 		console.log("big map loaded");
 
+		mapBlack();//draw the accessable blackMap after drawing the source bigMap
+
 		//draw all the buildings that currently exist, including the first shack
 		for(var b in Buildings){
 			if(Buildings[b]["unlocked"]){
@@ -90,7 +99,7 @@ function setup(){
 			}
 		}
 
-		mapBlack();//draw the accessable blackMap after drawing the source bigMap
+		
 	}
 
 	
@@ -241,11 +250,11 @@ blackout[75][54]=true; blackout[74][54]=true; blackout[75][53]=true;
 function mapBlack(){//don't call this unless you have to! (slows down computer)
 	//paints the areas you have not explored before showing on the small canvas
 	blackMap.drawImage(bigCanvas,0,0,bigMapMax,bigMapMax);
+	blackMap.fillStyle = 'black';
 	//blacks out 50x50 sections of the map according to blackout array
 	for(var i=0;i<bigMapMax/50;i++){
 		for(var j=0;j<bigMapMax/50;j++){
 			if(blackout[i][j]){
-				blackMap.fillStyle = 'black';
 				blackMap.fillRect(i*50,j*50,50,50);
 			}
 		}
@@ -253,7 +262,7 @@ function mapBlack(){//don't call this unless you have to! (slows down computer)
 	dragDraw(mapX,mapY);
 }
 function uncover(){
-	if((GlobVar.exploreCount-2)*2>=MapVars.exploreSpots.length){
+	if((GlobVar.exploreCount-1)>=MapVars.exploreSpots.length){
 		console.log("need to add more coordinates to the exploreSpots array");
 		return 0;
 	}
@@ -262,24 +271,26 @@ function uncover(){
 		x = MapVars.exploreSpots[GlobVar.exploreCount-2][i];
 		y = MapVars.exploreSpots[GlobVar.exploreCount-2][i+1];
 		blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
+		blackMap.drawImage(bigCanvas,x,y,50,50,x,y,50,50);
 
 		//may need to make the scroll area larger if the border is no longer black
-		if(x<minXscroll){
+		if(x<=minXscroll){
 			minXscroll = Math.max(x-50,0);
 		}
 		if(x+50>=maxXscroll){
 			maxXscroll = Math.min(x+100,bigMapMax);
 		}
-		if(y<minYscroll){
+		if(y<=minYscroll){
 			minYscroll = Math.max(y-50,0);
 		}
 		if(y+50>=maxYscroll){
 			maxYscroll = Math.min(y+100,bigMapMax);
 		}
 	}
-	mapBlack();
+	dragDraw(mapX,mapY)
 }
 function drawBuilding(name,number){
+
 	if((number-1)*2>=MapVars["Spots"][name+"Spots"].length){
 		console.log("need to add more coordinates to the "+name+"Spots array");
 		return 0;
@@ -288,105 +299,105 @@ function drawBuilding(name,number){
 	var y = MapVars["Spots"][name+"Spots"][1+2*(number-1)];
 	switch (name) {
 	case "councilhall":
-		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,37,24);
-		bigMap.beginPath();
-		bigMap.arc(x+18,y,11,0,Math.PI,true);
-		bigMap.fill();
-		bigMap.fillStyle = "rgb(132, 86, 5)";
-		bigMap.fillRect(x+3,y+3,14,18);
-		bigMap.fillRect(x+20,y+3,14,18);
-		bigMap.beginPath();
-		bigMap.arc(x+18,y,8,0,Math.PI,true);
-		bigMap.fill();
+		blackMap.fillStyle = "grey";
+		blackMap.fillRect(x,y,37,24);
+		blackMap.beginPath();
+		blackMap.arc(x+18,y,11,0,Math.PI,true);
+		blackMap.fill();
+		blackMap.fillStyle = "rgb(132, 86, 5)";
+		blackMap.fillRect(x+3,y+3,14,18);
+		blackMap.fillRect(x+20,y+3,14,18);
+		blackMap.beginPath();
+		blackMap.arc(x+18,y,8,0,Math.PI,true);
+		blackMap.fill();
 		break;
 	case "shack":
-		bigMap.fillStyle = 'rgb(79, 54, 2)';
-        bigMap.fillRect(x, y, 16, 16);
-        bigMap.beginPath();
-        bigMap.moveTo(x,y);
-        bigMap.lineTo(x+8,y-5);
-        bigMap.lineTo(x+16,y);
-        bigMap.fill();
+		blackMap.fillStyle = 'rgb(79, 54, 2)';
+        blackMap.fillRect(x, y, 16, 16);
+        blackMap.beginPath();
+        blackMap.moveTo(x,y);
+        blackMap.lineTo(x+8,y-5);
+        blackMap.lineTo(x+16,y);
+        blackMap.fill();
 		break;
 	case "shed":
-		bigMap.fillStyle = 'rgb(102, 84, 47)';
-        bigMap.fillRect(x, y, 21, 10);
-        bigMap.beginPath();
-        bigMap.moveTo(x,y);
-        bigMap.lineTo(x+8,y-4);
-        bigMap.lineTo(x+21,y);
-        bigMap.fill();
+		blackMap.fillStyle = 'rgb(102, 84, 47)';
+        blackMap.fillRect(x, y, 21, 10);
+        blackMap.beginPath();
+        blackMap.moveTo(x,y);
+        blackMap.lineTo(x+8,y-4);
+        blackMap.lineTo(x+21,y);
+        blackMap.fill();
 		break;
 	case "expandQ":
-		bigMap.fillStyle = 'rgb(86, 85, 82)';
-        bigMap.beginPath();
-        bigMap.arc(x,y,8,0,Math.PI*2,false);
-        bigMap.fill();
+		blackMap.fillStyle = 'rgb(86, 85, 82)';
+        blackMap.beginPath();
+        blackMap.arc(x,y,8,0,Math.PI*2,false);
+        blackMap.fill();
 		break;
 	case "farm":
-		bigMap.fillStyle = "yellow";
-		bigMap.fillRect(x,y,60,60);
+		blackMap.fillStyle = "yellow";
+		blackMap.fillRect(x,y,60,60);
 		break;
 	case "barn":
-		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,20,15);
-        bigMap.beginPath();
-        bigMap.moveTo(x,y);
-        bigMap.lineTo(x+3,y-9);
-		bigMap.lineTo(x+10,y-14);
-        bigMap.lineTo(x+17,y-9);
-		bigMap.lineTo(x+20,y);
-        bigMap.fill();		
+		blackMap.fillStyle = "brown";
+		blackMap.fillRect(x,y,20,15);
+        blackMap.beginPath();
+        blackMap.moveTo(x,y);
+        blackMap.lineTo(x+3,y-9);
+		blackMap.lineTo(x+10,y-14);
+        blackMap.lineTo(x+17,y-9);
+		blackMap.lineTo(x+20,y);
+        blackMap.fill();		
 		break;
 	case "lumberyard":
-		bigMap.fillStyle = "rgb(175, 149, 29)";
-		bigMap.fillRect(x,y,35,12);
+		blackMap.fillStyle = "rgb(175, 149, 29)";
+		blackMap.fillRect(x,y,35,12);
 		break;
 	case "workshop":
-		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,32,15);
+		blackMap.fillStyle = "grey";
+		blackMap.fillRect(x,y,32,15);
 		break;
 	case "hut":
-		bigMap.fillStyle = 'rgb(79, 54, 2)';
-		bigMap.fillRect(x,y,18,15);
-		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x+1,y+1,16,14);
-		bigMap.fillStyle = 'rgb(79, 54, 2)';
-		bigMap.beginPath();
-			bigMap.moveTo(x,y);
-        	bigMap.lineTo(x+3,y-8);
-        	bigMap.lineTo(x+15,y-8);
-			bigMap.lineTo(x+18,y);
-        bigMap.fill();			
+		blackMap.fillStyle = 'rgb(79, 54, 2)';
+		blackMap.fillRect(x,y,18,15);
+		blackMap.fillStyle = "grey";
+		blackMap.fillRect(x+1,y+1,16,14);
+		blackMap.fillStyle = 'rgb(79, 54, 2)';
+		blackMap.beginPath();
+			blackMap.moveTo(x,y);
+        	blackMap.lineTo(x+3,y-8);
+        	blackMap.lineTo(x+15,y-8);
+			blackMap.lineTo(x+18,y);
+        blackMap.fill();			
 		break;
 	case "lab":
-		bigMap.fillStyle = "grey";
-		bigMap.fillRect(x,y,12,24);
-		bigMap.fillStyle = "rgb(132, 86, 5)";
-		bigMap.fillRect(x,y+3,9,18);
+		blackMap.fillStyle = "grey";
+		blackMap.fillRect(x,y,12,24);
+		blackMap.fillStyle = "rgb(132, 86, 5)";
+		blackMap.fillRect(x,y+3,9,18);
 		break;
 	case "mine":
-		bigMap.fillStyle = 'rgb(79, 54, 2)';
-		bigMap.fillRect(x,y,15,15);
-		bigMap.fillStyle = "black";
-		bigMap.fillRect(x+3,y+3,9,12);
+		blackMap.fillStyle = 'rgb(79, 54, 2)';
+		blackMap.fillRect(x,y,15,15);
+		blackMap.fillStyle = "black";
+		blackMap.fillRect(x+3,y+3,9,12);
 		break;
 	case "warehouse":
-		bigMap.fillStyle = "lightbrown";
-		bigMap.fillRect(x,y,22,15);
+		blackMap.fillStyle = "lightbrown";
+		blackMap.fillRect(x,y,22,15);
 		break;	
 	case "kiln":
-		bigMap.fillStyle = "red";
-		bigMap.fillRect(x,y,9,4);
+		blackMap.fillStyle = "red";
+		blackMap.fillRect(x,y,9,4);
 		break;
 	case "silo":
-		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,9,24);
+		blackMap.fillStyle = "brown";
+		blackMap.fillRect(x,y,9,24);
 		break;
 	case "cabin":
-		bigMap.fillStyle = "brown";
-		bigMap.fillRect(x,y,30,15);
+		blackMap.fillStyle = "brown";
+		blackMap.fillRect(x,y,30,15);
 		break;				
 	default:
 		console.log("no valid building input");
@@ -396,26 +407,40 @@ function drawBuilding(name,number){
 }
 //draws the first quarry spot
 function drawQuarry(){
-	bigMap.fillStyle = 'rgb(86, 85, 82)';
-	bigMap.beginPath();
-	bigMap.arc(3674,1924,8,0,Math.PI*2,false);
-	bigMap.fill();
-	bigMap.closePath();
+	blackMap.fillStyle = 'rgb(86, 85, 82)';
+	blackMap.beginPath();
+	blackMap.arc(3674,1924,8,0,Math.PI*2,false);
+	blackMap.fill();
+	blackMap.closePath();
 }
 //draws the first set of dirt roads
 function drawRoads1(){
-	bigMap.strokeStyle = 'rgb(183, 125, 23)';
-	bigMap.lineWidth = 3;
-	bigMap.beginPath();
-	bigMap.moveTo(2975,2300);
-	bigMap.lineTo(3048,2133);
-	bigMap.lineTo(3300,2125);
-	bigMap.lineTo(3325,2000);
-	bigMap.lineTo(3325,1950);
-	bigMap.lineTo(3200,1955);
-	bigMap.lineTo(3140,1950);
-	bigMap.stroke();	
-	mapBlack();	
+	blackMap.strokeStyle = 'rgb(183, 125, 23)';
+	blackMap.lineWidth = 3;
+	blackMap.beginPath();
+	blackMap.moveTo(2975,2300);
+	blackMap.lineTo(3048,2133);
+	blackMap.lineTo(3300,2125);
+	blackMap.lineTo(3325,2000);
+	blackMap.lineTo(3325,1950);
+	blackMap.lineTo(3200,1955);
+	blackMap.lineTo(3140,1950);
+	blackMap.stroke();	
+	dragDraw(mapX,mapY);	
+}
+//draws the sites to try mining
+function drawMineSite(num){
+	var x = MapVars.Spots.mineSpots[(num-1)*2];
+	var y = MapVars.Spots.mineSpots[(num-1)*2+1];
+	blackMap.strokeStyle = "red";
+	blackMap.lineWidth = 2;
+	blackMap.beginPath();
+		blackMap.moveTo(x+1,y+1);
+		blackMap.lineTo(x+13,y+13);
+		blackMap.moveTo(x+13,y+1);
+		blackMap.lineTo(x+1,y+13);
+	blackMap.stroke();
+	dragDraw(mapX,mapY)
 }
 
 function testDraw(name){
@@ -441,20 +466,20 @@ function linesOnBigMap(){
 	for(var i=1;i<bigMapMax/50;i++){
 		console.log("i:"+i);
 		if(i%5===0){
-			bigMap.strokeStyle = "red";
+			blackMap.strokeStyle = "red";
 		} else {
-			bigMap.strokeStyle = "black";
+			blackMap.strokeStyle = "black";
 		}
-		bigMap.beginPath();
-		bigMap.moveTo(i*50,0);
-		bigMap.lineTo(i*50,bigMapMax);
-		bigMap.stroke();
+		blackMap.beginPath();
+		blackMap.moveTo(i*50,0);
+		blackMap.lineTo(i*50,bigMapMax);
+		blackMap.stroke();
 
-		bigMap.moveTo(0,i*50);
-		bigMap.lineTo(bigMapMax,i*50);
-		bigMap.stroke();
+		blackMap.moveTo(0,i*50);
+		blackMap.lineTo(bigMapMax,i*50);
+		blackMap.stroke();
 	}
-	bigMap.strokeStyle = "blue";
-	bigMap.strokeText("3000,2000",2975,2000)
-	mapBlack();
+	blackMap.strokeStyle = "blue";
+	blackMap.strokeText("3000,2000",2975,2000)
+	dragDraw(mapX,mapY);
 }
