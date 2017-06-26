@@ -46,9 +46,9 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 		[3800,1950, 3750,1900, 3700,1850, 3800,1900, 3750,1850, 3700,1800, 3650,1800],
 		[3600,1800, 3550,1800, 3500,1800, 3450,1800, 3400,1800, 3350,1800, 3300,1800],
 		[3850,1950, 3850,1900, 3800,1850, 3850,1850, 3900,1850, 3900,1900, 3900,1950],//6 - discover mine 2
-		[],
-		[],
-		[],//9 - discover clay
+		[3900,2000, 3900,2050, 3900,2100, 3900,2150, 3950,2000, 3950,2050, 3950,2100],
+		[3050,1800, 3100,1800, 3150,1800, 3200,1800, 3250,1800, 3300,1750, 3350,1750],
+		[2850,2200, 2850,2250, 2850,2300, 2850,2350, 2850,2400, 2850,2450, 2850,2500],//9 - discover clay
 		[],
 		[],
 		[],
@@ -262,6 +262,7 @@ function mapBlack(){//don't call this unless you have to! (slows down computer)
 	dragDraw(mapX,mapY);
 }
 function uncover(){
+	console.log("uncover "+ (GlobVar.exploreCount-1));
 	if((GlobVar.exploreCount-1)>=MapVars.exploreSpots.length){
 		console.log("need to add more coordinates to the exploreSpots array");
 		return 0;
