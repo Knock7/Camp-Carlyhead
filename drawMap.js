@@ -1,24 +1,3 @@
-var bigCanvas, bigMap;
-const bigMapMax=5000;//px size of the bigCanvas
-
-var blackCanvas, blackMap;
-
-//make all these variables properties of the MapVars
-var curYPos, curXPos;
-var curDown=false;
-var mapX=2850;
-var mapY=1800;
-var zoomLvl = 500;//300 is the 1:1 mapping
-var blackout = []
-var minXscroll = 2850;
-var minYscroll = 1800;
-var maxXscroll = 3850;//limit the scrolling to just outside the black areas
-var maxYscroll = 2800;
-var maxZoomLvl = 500;//limit the max zoom (gets reset by uncover())
-var minZoomLvl = 200;
-var smallMapMax = 600;
-
-//put all the other global variables in here and change this set of properties to be MapVars.Spots.shack etc.
 var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 	Spots:{			
 		shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
@@ -49,43 +28,77 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 		[3900,2000, 3900,2050, 3900,2100, 3900,2150, 3950,2000, 3950,2050, 3950,2100],
 		[3050,1800, 3100,1800, 3150,1800, 3200,1800, 3250,1800, 3300,1750, 3350,1750],
 		[2850,2200, 2850,2250, 2850,2300, 2850,2350, 2850,2400, 2850,2450, 2850,2500],//9 - discover clay
+		[2850,2550, 2800,2500, 2800,2450, 2800,2400, 2800,2350, 2800,2550, 2850,2600],
+		[2900,2650, 2950,2700, 3000,2750, 3050,2750, 3100,2750, 3150,2750, 3200,2750],
+		[3150,1750, 3200,1750, 3250,1750, 3200,1700, 3250,1700, 3300,1700, 3350,1700],//12 - explored all areas (move this b/c not explored all araes)
+		[3400,1700, 3400,1750, 3450,1700, 3450,1750, 3500,1700, 3500,1750, 3550,1750],
+		[],//14 - need spears next trip
 		[],
 		[],
 		[],
-		[],
-	]
+	],
+	curYPos:0, 
+	curXPos:0,
+	curDown:false,
+	mapX:2850,
+	mapY:1800,
+	zoomLvl: 500,//300 is the 1:1 mapping
+	blackout: [],
+	minXscroll: 2850,
+	minYscroll: 1800,
+	maxXscroll: 3850,//limit the scrolling to just outside the black areas
+	maxYscroll: 2800,
+	maxZoomLvl: 500,//limit the max zoom (gets reset by uncover())
+	minZoomLvl: 200,
+	smallMapMax: 600,
+	bigMapMax:5000,//px size of the bigCanvas (constant)
+
+	bigCanvas, 
+	bigMap,
+	blackCanvas, 
+	blackMap,
+	smallCanvas,
+	smallMap,
+}
+
+function loadMap(){
+	/*the stuff that saved games should do like load the maps from MapVars instead of mapBlack();
+	test to see if canvases can be stored in local storage and if not then maybe run setup() inside of here instead? need to call drawRoads() etc. - make sure the uncover() gets run before those
+	move the blackmap[] initialization somewhere that it won't get called with loadMap
+	*/
 }
 
 function setup(){
-	smallCanvas = document.getElementById('canvas');
-	smallMap = smallCanvas.getContext('2d');
+	//put the following into loadMap() which gets called here
+	MapVars.smallCanvas = document.getElementById('canvas');
+	MapVars.smallMap = MapVars.smallCanvas.getContext('2d');
 
-	bigCanvas = document.getElementById('bigCanvas');
-	bigMap = bigCanvas.getContext('2d');
+	MapVars.bigCanvas = document.getElementById('bigCanvas');
+	MapVars.bigMap = MapVars.bigCanvas.getContext('2d');
 
-	blackCanvas = document.getElementById('blackedCanvas');
-	blackMap = blackCanvas.getContext('2d');
+	MapVars.blackCanvas = document.getElementById('blackedCanvas');
+	MapVars.blackMap = MapVars.blackCanvas.getContext('2d');
 
-	bigMap.fillStyle = 'green';
-	bigMap.fillRect(0,0,800,800);
+	MapVars.bigMap.fillStyle = 'green';
+	MapVars.bigMap.fillRect(0,0,800,800);
 
 	//draw the big map
   	base_image = new Image();
   	base_image.src = 'images/bigMapDraft2.png';
   	base_image.onload = function(){//draw the bigMap canvas after the image has loaded so that the shapes don't get covered up
-    	bigMap.drawImage(base_image, 0, 0,bigMapMax,bigMapMax);
+    	MapVars.bigMap.drawImage(base_image, 0, 0,MapVars.bigMapMax,MapVars.bigMapMax);
 
-		bigMap.fillStyle = 'black';
-		bigMap.beginPath();
-		bigMap.arc(500, 500, 75, 0, Math.PI * 2, false);
-		bigMap.fill();
+		MapVars.bigMap.fillStyle = 'black';
+		MapVars.bigMap.beginPath();
+		MapVars.bigMap.arc(500, 500, 75, 0, Math.PI * 2, false);
+		MapVars.bigMap.fill();
 
-		bigMap.fillStyle = 'orange';
-		bigMap.fillRect(25, 25, 100, 100);
+		MapVars.bigMap.fillStyle = 'orange';
+		MapVars.bigMap.fillRect(25, 25, 100, 100);
 
-		bigMap.fillStyle = 'brown';
-		bigMap.fillRect(750,750,800,800);
-		bigMap.fillRect(150,600,200,800);
+		MapVars.bigMap.fillStyle = 'brown';
+		MapVars.bigMap.fillRect(750,750,800,800);
+		MapVars.bigMap.fillRect(150,600,200,800);
 		console.log("big map loaded");
 
 		mapBlack();//draw the accessable blackMap after drawing the source bigMap
@@ -103,163 +116,163 @@ function setup(){
 	}
 
 	
-	smallCanvas.addEventListener("wheel",mapZoom,false);
+	MapVars.smallCanvas.addEventListener("wheel",mapZoom,false);
 	window.addEventListener('mousemove', function(e){ 
-		if(curDown){
-			var x = mapX + (curXPos - e.pageX)*zoomLvl*2/smallMapMax;
-			var y = mapY + (curYPos - e.pageY)*zoomLvl*2/smallMapMax;
+		if(MapVars.curDown){
+			var x = MapVars.mapX + (MapVars.curXPos - e.pageX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			var y = MapVars.mapY + (MapVars.curYPos - e.pageY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
 
 			//keep from scrolling outside the currently allowed area
-			if(x<minXscroll){
-				curXPos += (minXscroll - x)/(zoomLvl*2/smallMapMax);
-				x=minXscroll;	
+			if(x<MapVars.minXscroll){
+				MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				x=MapVars.minXscroll;	
 			}
-			if(y<minYscroll){
-				curYPos += (minYscroll - y)/(zoomLvl*2/smallMapMax);
-				y=minYscroll;			
+			if(y<MapVars.minYscroll){
+				MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				y=MapVars.minYscroll;			
 			}
-			if(x+2*zoomLvl>maxXscroll){
-				curXPos += (maxXscroll - (x + 2*zoomLvl))/(zoomLvl*2/smallMapMax);
-				x= maxXscroll - 2*zoomLvl;		
+			if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
+				MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
 			}
-			if(y+2*zoomLvl>maxYscroll){
-				curYPos += (maxYscroll - y - 2*zoomLvl)/(zoomLvl*2/smallMapMax);
-				y= maxYscroll - 2*zoomLvl;		
+			if(y+2*MapVars.zoomLvl>MapVars.maxYscroll){
+				MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				y= MapVars.maxYscroll - 2*MapVars.zoomLvl;		
 			}
 
 			dragDraw(x,y);
 		}
 	});
 	window.addEventListener('touchmove', function(e){ 
-		if(curDown){
+		if(MapVars.curDown){
 			e.preventDefault();
-			var x = mapX + (curXPos - e.changedTouches[0].screenX)*zoomLvl*2/smallMapMax;
-			var y = mapY + (curYPos - e.changedTouches[0].screenY)*zoomLvl*2/smallMapMax;
+			var x = MapVars.mapX + (MapVars.curXPos - e.changedTouches[0].screenX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			var y = MapVars.mapY + (MapVars.curYPos - e.changedTouches[0].screenY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
 
 			//keep from scrolling outside the currently allowed area
-			if(x<minXscroll){
-				curXPos += (minXscroll - x)/(zoomLvl*2/smallMapMax);
-				x=minXscroll;	
+			if(x<MapVars.minXscroll){
+				MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				x=MapVars.minXscroll;	
 			}
-			if(y<minYscroll){
-				curYPos += (minYscroll - y)/(zoomLvl*2/smallMapMax);
-				y=minYscroll;			
+			if(y<MapVars.minYscroll){
+				MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				y=MapVars.minYscroll;			
 			}
-			if(x+2*zoomLvl>maxXscroll){
-				curXPos += (maxXscroll - (x + 2*zoomLvl))/(zoomLvl*2/smallMapMax);
-				x= maxXscroll - 2*zoomLvl;		
+			if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
+				MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
 			}
-			if(y+2*zoomLvl>maxYscroll){
-				curYPos += (maxYscroll - y - 2*zoomLvl)/(zoomLvl*2/smallMapMax);
-				y= maxYscroll - 2*zoomLvl;		
+			if(y+2*MapVars.zoomLvl>MapVars.maxYscroll){
+				MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+				y= MapVars.maxYscroll - 2*MapVars.zoomLvl;		
 			}
 			dragDraw(x,y);
 		}
 	}, { passive: false });
-	smallCanvas.addEventListener('mousedown', function(e){ 
-		curXPos = e.pageX; 
-		curYPos = e.pageY; 
-		curDown = true; 
+	MapVars.smallCanvas.addEventListener('mousedown', function(e){ 
+		MapVars.curXPos = e.pageX; 
+		MapVars.curYPos = e.pageY; 
+		MapVars.curDown = true; 
 	});
-	smallCanvas.addEventListener('touchstart', function(e){ 
-		curXPos = e.changedTouches[0].screenX; 
-		curYPos = e.changedTouches[0].screenY;
-		curDown = true; 
+	MapVars.smallCanvas.addEventListener('touchstart', function(e){ 
+		MapVars.curXPos = e.changedTouches[0].screenX; 
+		MapVars.curYPos = e.changedTouches[0].screenY;
+		MapVars.curDown = true; 
 	});
 	window.addEventListener('mouseup', function(e){ 
-		if(curDown){
-			curDown = false; 
-			mapX += (curXPos - e.pageX)*zoomLvl*2/smallMapMax;
-			mapY += (curYPos - e.pageY)*zoomLvl*2/smallMapMax;
-			if(mapX<0){mapX=0}
-			if(mapY<0){mapY=0}
-			if(mapX+2*zoomLvl>bigMapMax){mapX=bigMapMax - 2*zoomLvl}
-			if(mapY+2*zoomLvl>bigMapMax){mapY=bigMapMax - 2*zoomLvl}
+		if(MapVars.curDown){
+			MapVars.curDown = false; 
+			MapVars.mapX += (MapVars.curXPos - e.pageX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			MapVars.mapY += (MapVars.curYPos - e.pageY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			if(MapVars.mapX<0){MapVars.mapX=0}
+			if(MapVars.mapY<0){MapVars.mapY=0}
+			if(MapVars.mapX+2*MapVars.zoomLvl>MapVars.bigMapMax){MapVars.mapX=MapVars.bigMapMax - 2*MapVars.zoomLvl}
+			if(MapVars.mapY+2*MapVars.zoomLvl>MapVars.bigMapMax){MapVars.mapY=MapVars.bigMapMax - 2*MapVars.zoomLvl}
 		}
 	});
 	window.addEventListener('touchend', function(e){ //e.pageX doesn't work for touchscreen? need to take some time to write event handlers for touch on the map
-		if(curDown){
-			curDown = false; 
-			mapX += (curXPos - e.changedTouches[0].screenX)*zoomLvl*2/smallMapMax;
-			mapY += (curYPos - e.changedTouches[0].screenY)*zoomLvl*2/smallMapMax;
-			if(mapX<0){mapX=0}
-			if(mapY<0){mapY=0}
-			if(mapX+2*zoomLvl>bigMapMax){mapX=bigMapMax - 2*zoomLvl}
-			if(mapY+2*zoomLvl>bigMapMax){mapY=bigMapMax - 2*zoomLvl}
+		if(MapVars.curDown){
+			MapVars.curDown = false; 
+			MapVars.mapX += (MapVars.curXPos - e.changedTouches[0].screenX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			MapVars.mapY += (MapVars.curYPos - e.changedTouches[0].screenY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			if(MapVars.mapX<0){MapVars.mapX=0}
+			if(MapVars.mapY<0){MapVars.mapY=0}
+			if(MapVars.mapX+2*MapVars.zoomLvl>MapVars.bigMapMax){MapVars.mapX=MapVars.bigMapMax - 2*MapVars.zoomLvl}
+			if(MapVars.mapY+2*MapVars.zoomLvl>MapVars.bigMapMax){MapVars.mapY=MapVars.bigMapMax - 2*MapVars.zoomLvl}
 		}
 	});
 }
 function dragDraw(x,y){
-	smallMap.drawImage(blackCanvas, x, y, 2*zoomLvl, 2*zoomLvl, 0, 0, smallMapMax, smallMapMax);
+	MapVars.smallMap.drawImage(MapVars.blackCanvas, x, y, 2*MapVars.zoomLvl, 2*MapVars.zoomLvl, 0, 0, MapVars.smallMapMax, MapVars.smallMapMax);
 }
 function mapZoom(e){
 	e.preventDefault();
 	var destinationCanvas = document.getElementById("canvas");
-	var sourceCanvas = blackCanvas;
+	var sourceCanvas = MapVars.blackCanvas;
 	var destinationCtx = destinationCanvas.getContext('2d');
 
-	maxZoomLvl = Math.min((maxXscroll-minXscroll)/2,(maxYscroll-minYscroll)/2);
+	MapVars.maxZoomLvl = Math.min((MapVars.maxXscroll-MapVars.minXscroll)/2,(MapVars.maxYscroll-MapVars.minYscroll)/2);
 
 	var changeInZoom = e.deltaY;
-	if(zoomLvl+changeInZoom>maxZoomLvl||zoomLvl+changeInZoom<minZoomLvl){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
+	if(MapVars.zoomLvl+changeInZoom>MapVars.maxZoomLvl||MapVars.zoomLvl+changeInZoom<MapVars.minZoomLvl){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
 		console.log("trying to zoom out or in too far");
 		return false;
 	}
 
-	zoomLvl += changeInZoom;
-	mapX = mapX-changeInZoom;
-	mapY = mapY-changeInZoom;
+	MapVars.zoomLvl += changeInZoom;
+	MapVars.mapX = MapVars.mapX-changeInZoom;
+	MapVars.mapY = MapVars.mapY-changeInZoom;
 
-	if(mapX<minXscroll){
-		mapX = minXscroll;
-	} else if (mapX+zoomLvl*2>maxXscroll){
-		mapX = maxXscroll - zoomLvl*2;
+	if(MapVars.mapX<MapVars.minXscroll){
+		MapVars.mapX = MapVars.minXscroll;
+	} else if (MapVars.mapX+MapVars.zoomLvl*2>MapVars.maxXscroll){
+		MapVars.mapX = MapVars.maxXscroll - MapVars.zoomLvl*2;
 	}
 
-	if(mapY<minYscroll){
-		mapY = minYscroll;
-	} else if (mapY+zoomLvl*2>maxYscroll){
-		mapY = maxYscroll - zoomLvl*2;
+	if(MapVars.mapY<MapVars.minYscroll){
+		MapVars.mapY = MapVars.minYscroll;
+	} else if (MapVars.mapY+MapVars.zoomLvl*2>MapVars.maxYscroll){
+		MapVars.mapY = MapVars.maxYscroll - MapVars.zoomLvl*2;
 	}
 
 
-	destinationCtx.drawImage(sourceCanvas, mapX, mapY, 2*zoomLvl, 2*zoomLvl, 0, 0, smallMapMax, smallMapMax);
+	destinationCtx.drawImage(sourceCanvas, MapVars.mapX, MapVars.mapY, 2*MapVars.zoomLvl, 2*MapVars.zoomLvl, 0, 0, MapVars.smallMapMax, MapVars.smallMapMax);
 	
 	
 	return false;
 }
 //initially set the blackout parts of the map as everything outside the starting 900x900 area
-for(var i=0; i<bigMapMax/50; i++){
-	blackout[i] = [];
-	for(var j=0; j<bigMapMax/50; j++){		
+for(var i=0; i<MapVars.bigMapMax/50; i++){
+	MapVars.blackout[i] = [];
+	for(var j=0; j<MapVars.bigMapMax/50; j++){		
 		if(i<=57||j<=36||i>=76||j>=55){
-			blackout[i][j] = true;
+			MapVars.blackout[i][j] = true;
 		} else {
-			blackout[i][j] = false;
+			MapVars.blackout[i][j] = false;
 		}
 	}
 }
 //and the corners to make it more circular
-blackout[58][37]=true; blackout[59][37]=true; blackout[58][38]=true;
-blackout[75][37]=true; blackout[74][37]=true; blackout[75][38]=true;
-blackout[58][54]=true; blackout[58][53]=true; blackout[59][54]=true;
-blackout[75][54]=true; blackout[74][54]=true; blackout[75][53]=true;
+MapVars.blackout[58][37]=true; MapVars.blackout[59][37]=true; MapVars.blackout[58][38]=true;
+MapVars.blackout[75][37]=true; MapVars.blackout[74][37]=true; MapVars.blackout[75][38]=true;
+MapVars.blackout[58][54]=true; MapVars.blackout[58][53]=true; MapVars.blackout[59][54]=true;
+MapVars.blackout[75][54]=true; MapVars.blackout[74][54]=true; MapVars.blackout[75][53]=true;
 
 
 //need to fix - instead of chaging the bigMap, then painting it black on blackMap and copying to smallMap, change both big and black when drawing building, and only repaint big to black after exploring new areas and uncover()ing.
 function mapBlack(){//don't call this unless you have to! (slows down computer)
 	//paints the areas you have not explored before showing on the small canvas
-	blackMap.drawImage(bigCanvas,0,0,bigMapMax,bigMapMax);
-	blackMap.fillStyle = 'black';
+	MapVars.blackMap.drawImage(MapVars.bigCanvas,0,0,MapVars.bigMapMax,MapVars.bigMapMax);
+	MapVars.blackMap.fillStyle = 'black';
 	//blacks out 50x50 sections of the map according to blackout array
-	for(var i=0;i<bigMapMax/50;i++){
-		for(var j=0;j<bigMapMax/50;j++){
-			if(blackout[i][j]){
-				blackMap.fillRect(i*50,j*50,50,50);
+	for(var i=0;i<MapVars.bigMapMax/50;i++){
+		for(var j=0;j<MapVars.bigMapMax/50;j++){
+			if(MapVars.blackout[i][j]){
+				MapVars.blackMap.fillRect(i*50,j*50,50,50);
 			}
 		}
 	}
-	dragDraw(mapX,mapY);
+	dragDraw(MapVars.mapX,MapVars.mapY);
 }
 function uncover(){
 	console.log("uncover "+ (GlobVar.exploreCount-1));
@@ -271,24 +284,24 @@ function uncover(){
 	for(var i=0;i<MapVars.exploreSpots[GlobVar.exploreCount-2].length;i+=2){
 		x = MapVars.exploreSpots[GlobVar.exploreCount-2][i];
 		y = MapVars.exploreSpots[GlobVar.exploreCount-2][i+1];
-		blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
-		blackMap.drawImage(bigCanvas,x,y,50,50,x,y,50,50);
+		MapVars.blackout[Math.round(x/50)][Math.round(y/50)]=false;//50x50 is the smallest reveal chunk size
+		MapVars.blackMap.drawImage(MapVars.bigCanvas,x,y,50,50,x,y,50,50);
 
 		//may need to make the scroll area larger if the border is no longer black
-		if(x<=minXscroll){
-			minXscroll = Math.max(x-50,0);
+		if(x<=MapVars.minXscroll){
+			MapVars.minXscroll = Math.max(x-50,0);
 		}
-		if(x+50>=maxXscroll){
-			maxXscroll = Math.min(x+100,bigMapMax);
+		if(x+50>=MapVars.maxXscroll){
+			MapVars.maxXscroll = Math.min(x+100,MapVars.bigMapMax);
 		}
-		if(y<=minYscroll){
-			minYscroll = Math.max(y-50,0);
+		if(y<=MapVars.minYscroll){
+			MapVars.minYscroll = Math.max(y-50,0);
 		}
-		if(y+50>=maxYscroll){
-			maxYscroll = Math.min(y+100,bigMapMax);
+		if(y+50>=MapVars.maxYscroll){
+			MapVars.maxYscroll = Math.min(y+100,MapVars.bigMapMax);
 		}
 	}
-	dragDraw(mapX,mapY)
+	dragDraw(MapVars.mapX,MapVars.mapY)
 }
 function drawBuilding(name,number){
 
@@ -300,148 +313,148 @@ function drawBuilding(name,number){
 	var y = MapVars["Spots"][name+"Spots"][1+2*(number-1)];
 	switch (name) {
 	case "councilhall":
-		blackMap.fillStyle = "grey";
-		blackMap.fillRect(x,y,37,24);
-		blackMap.beginPath();
-		blackMap.arc(x+18,y,11,0,Math.PI,true);
-		blackMap.fill();
-		blackMap.fillStyle = "rgb(132, 86, 5)";
-		blackMap.fillRect(x+3,y+3,14,18);
-		blackMap.fillRect(x+20,y+3,14,18);
-		blackMap.beginPath();
-		blackMap.arc(x+18,y,8,0,Math.PI,true);
-		blackMap.fill();
+		MapVars.blackMap.fillStyle = "grey";
+		MapVars.blackMap.fillRect(x,y,37,24);
+		MapVars.blackMap.beginPath();
+		MapVars.blackMap.arc(x+18,y,11,0,Math.PI,true);
+		MapVars.blackMap.fill();
+		MapVars.blackMap.fillStyle = "rgb(132, 86, 5)";
+		MapVars.blackMap.fillRect(x+3,y+3,14,18);
+		MapVars.blackMap.fillRect(x+20,y+3,14,18);
+		MapVars.blackMap.beginPath();
+		MapVars.blackMap.arc(x+18,y,8,0,Math.PI,true);
+		MapVars.blackMap.fill();
 		break;
 	case "shack":
-		blackMap.fillStyle = 'rgb(79, 54, 2)';
-        blackMap.fillRect(x, y, 16, 16);
-        blackMap.beginPath();
-        blackMap.moveTo(x,y);
-        blackMap.lineTo(x+8,y-5);
-        blackMap.lineTo(x+16,y);
-        blackMap.fill();
+		MapVars.blackMap.fillStyle = 'rgb(79, 54, 2)';
+    	MapVars.blackMap.fillRect(x, y, 16, 16);
+        MapVars.blackMap.beginPath();
+        MapVars.blackMap.moveTo(x,y);
+        MapVars.blackMap.lineTo(x+8,y-5);
+        MapVars.blackMap.lineTo(x+16,y);
+        MapVars.blackMap.fill();
 		break;
 	case "shed":
-		blackMap.fillStyle = 'rgb(102, 84, 47)';
-        blackMap.fillRect(x, y, 21, 10);
-        blackMap.beginPath();
-        blackMap.moveTo(x,y);
-        blackMap.lineTo(x+8,y-4);
-        blackMap.lineTo(x+21,y);
-        blackMap.fill();
+		MapVars.blackMap.fillStyle = 'rgb(102, 84, 47)';
+        MapVars.blackMap.fillRect(x, y, 21, 10);
+        MapVars.blackMap.beginPath();
+        MapVars.blackMap.moveTo(x,y);
+        MapVars.blackMap.lineTo(x+8,y-4);
+        MapVars.blackMap.lineTo(x+21,y);
+        MapVars.blackMap.fill();
 		break;
 	case "expandQ":
-		blackMap.fillStyle = 'rgb(86, 85, 82)';
-        blackMap.beginPath();
-        blackMap.arc(x,y,8,0,Math.PI*2,false);
-        blackMap.fill();
+		MapVars.blackMap.fillStyle = 'rgb(86, 85, 82)';
+        MapVars.blackMap.beginPath();
+        MapVars.blackMap.arc(x,y,8,0,Math.PI*2,false);
+        MapVars.blackMap.fill();
 		break;
 	case "farm":
-		blackMap.fillStyle = "yellow";
-		blackMap.fillRect(x,y,60,60);
+		MapVars.blackMap.fillStyle = "yellow";
+		MapVars.blackMap.fillRect(x,y,60,60);
 		break;
 	case "barn":
-		blackMap.fillStyle = "brown";
-		blackMap.fillRect(x,y,20,15);
-        blackMap.beginPath();
-        blackMap.moveTo(x,y);
-        blackMap.lineTo(x+3,y-9);
-		blackMap.lineTo(x+10,y-14);
-        blackMap.lineTo(x+17,y-9);
-		blackMap.lineTo(x+20,y);
-        blackMap.fill();		
+		MapVars.blackMap.fillStyle = "brown";
+		MapVars.blackMap.fillRect(x,y,20,15);
+        MapVars.blackMap.beginPath();
+        MapVars.blackMap.moveTo(x,y);
+        MapVars.blackMap.lineTo(x+3,y-9);
+		MapVars.blackMap.lineTo(x+10,y-14);
+        MapVars.blackMap.lineTo(x+17,y-9);
+		MapVars.blackMap.lineTo(x+20,y);
+        MapVars.blackMap.fill();		
 		break;
 	case "lumberyard":
-		blackMap.fillStyle = "rgb(175, 149, 29)";
-		blackMap.fillRect(x,y,35,12);
+		MapVars.blackMap.fillStyle = "rgb(175, 149, 29)";
+		MapVars.blackMap.fillRect(x,y,35,12);
 		break;
 	case "workshop":
-		blackMap.fillStyle = "grey";
-		blackMap.fillRect(x,y,32,15);
+		MapVars.blackMap.fillStyle = "grey";
+		MapVars.blackMap.fillRect(x,y,32,15);
 		break;
 	case "hut":
-		blackMap.fillStyle = 'rgb(79, 54, 2)';
-		blackMap.fillRect(x,y,18,15);
-		blackMap.fillStyle = "grey";
-		blackMap.fillRect(x+1,y+1,16,14);
-		blackMap.fillStyle = 'rgb(79, 54, 2)';
-		blackMap.beginPath();
+		MapVars.blackMap.fillStyle = 'rgb(79, 54, 2)';
+		MapVars.blackMap.fillRect(x,y,18,15);
+		MapVars.blackMap.fillStyle = "grey";
+		MapVars.blackMap.fillRect(x+1,y+1,16,14);
+		MapVars.blackMap.fillStyle = 'rgb(79, 54, 2)';
+		MapVars.blackMap.beginPath();
 			blackMap.moveTo(x,y);
         	blackMap.lineTo(x+3,y-8);
         	blackMap.lineTo(x+15,y-8);
 			blackMap.lineTo(x+18,y);
-        blackMap.fill();			
+        MapVars.blackMap.fill();			
 		break;
 	case "lab":
-		blackMap.fillStyle = "grey";
-		blackMap.fillRect(x,y,12,24);
-		blackMap.fillStyle = "rgb(132, 86, 5)";
-		blackMap.fillRect(x,y+3,9,18);
+		MapVars.blackMap.fillStyle = "grey";
+		MapVars.blackMap.fillRect(x,y,12,24);
+		MapVars.blackMap.fillStyle = "rgb(132, 86, 5)";
+		MapVars.blackMap.fillRect(x,y+3,9,18);
 		break;
 	case "mine":
-		blackMap.fillStyle = 'rgb(79, 54, 2)';
-		blackMap.fillRect(x,y,15,15);
-		blackMap.fillStyle = "black";
-		blackMap.fillRect(x+3,y+3,9,12);
+		MapVars.blackMap.fillStyle = 'rgb(79, 54, 2)';
+		MapVars.blackMap.fillRect(x,y,15,15);
+		MapVars.blackMap.fillStyle = "black";
+		MapVars.blackMap.fillRect(x+3,y+3,9,12);
 		break;
 	case "warehouse":
-		blackMap.fillStyle = "lightbrown";
-		blackMap.fillRect(x,y,22,15);
+		MapVars.blackMap.fillStyle = "lightbrown";
+		MapVars.blackMap.fillRect(x,y,22,15);
 		break;	
 	case "kiln":
-		blackMap.fillStyle = "red";
-		blackMap.fillRect(x,y,9,4);
+		MapVars.blackMap.fillStyle = "red";
+		MapVars.blackMap.fillRect(x,y,9,4);
 		break;
 	case "silo":
-		blackMap.fillStyle = "brown";
-		blackMap.fillRect(x,y,9,24);
+		MapVars.blackMap.fillStyle = "brown";
+		MapVars.blackMap.fillRect(x,y,9,24);
 		break;
 	case "cabin":
-		blackMap.fillStyle = "brown";
-		blackMap.fillRect(x,y,30,15);
+		MapVars.blackMap.fillStyle = "brown";
+		MapVars.blackMap.fillRect(x,y,30,15);
 		break;				
 	default:
 		console.log("no valid building input");
 		break;
 	}
-	dragDraw(mapX,mapY);//what if when you uncover new area, it draws that section from bigMap over the section on blackedMap? seems faster. do that and just draw buildings to blackMap which will be the main map - bigMap is just to draw new terrain.
+	dragDraw(MapVars.mapX,MapVars.mapY);//what if when you uncover new area, it draws that section from bigMap over the section on blackedMap? seems faster. do that and just draw buildings to blackMap which will be the main map - bigMap is just to draw new terrain.
 }
 //draws the first quarry spot
 function drawQuarry(){
-	blackMap.fillStyle = 'rgb(86, 85, 82)';
-	blackMap.beginPath();
-	blackMap.arc(3674,1924,8,0,Math.PI*2,false);
-	blackMap.fill();
-	blackMap.closePath();
+	MapVars.blackMap.fillStyle = 'rgb(86, 85, 82)';
+	MapVars.blackMap.beginPath();
+	MapVars.blackMap.arc(3674,1924,8,0,Math.PI*2,false);
+	MapVars.blackMap.fill();
+	MapVars.blackMap.closePath();
 }
 //draws the first set of dirt roads
 function drawRoads1(){
-	blackMap.strokeStyle = 'rgb(183, 125, 23)';
-	blackMap.lineWidth = 3;
-	blackMap.beginPath();
-	blackMap.moveTo(2975,2300);
-	blackMap.lineTo(3048,2133);
-	blackMap.lineTo(3300,2125);
-	blackMap.lineTo(3325,2000);
-	blackMap.lineTo(3325,1950);
-	blackMap.lineTo(3200,1955);
-	blackMap.lineTo(3140,1950);
-	blackMap.stroke();	
-	dragDraw(mapX,mapY);	
+	MapVars.blackMap.strokeStyle = 'rgb(183, 125, 23)';
+	MapVars.blackMap.lineWidth = 3;
+	MapVars.blackMap.beginPath();
+	MapVars.blackMap.moveTo(2975,2300);
+	MapVars.blackMap.lineTo(3048,2133);
+	MapVars.blackMap.lineTo(3300,2125);
+	MapVars.blackMap.lineTo(3325,2000);
+	MapVars.blackMap.lineTo(3325,1950);
+	MapVars.blackMap.lineTo(3200,1955);
+	MapVars.blackMap.lineTo(3140,1950);
+	MapVars.blackMap.stroke();	
+	dragDraw(MapVars.mapX,MapVars.mapY);	
 }
 //draws the sites to try mining
 function drawMineSite(num){
 	var x = MapVars.Spots.mineSpots[(num-1)*2];
 	var y = MapVars.Spots.mineSpots[(num-1)*2+1];
-	blackMap.strokeStyle = "red";
-	blackMap.lineWidth = 2;
-	blackMap.beginPath();
-		blackMap.moveTo(x+1,y+1);
-		blackMap.lineTo(x+13,y+13);
-		blackMap.moveTo(x+13,y+1);
-		blackMap.lineTo(x+1,y+13);
-	blackMap.stroke();
-	dragDraw(mapX,mapY)
+	MapVars.blackMap.strokeStyle = "red";
+	MapVars.blackMap.lineWidth = 2;
+	MapVars.blackMap.beginPath();
+		MapVars.blackMap.moveTo(x+1,y+1);
+		MapVars.blackMap.lineTo(x+13,y+13);
+		MapVars.blackMap.moveTo(x+13,y+1);
+		MapVars.blackMap.lineTo(x+1,y+13);
+	MapVars.blackMap.stroke();
+	dragDraw(MapVars.mapX,MapVars.mapY)
 }
 
 function testDraw(name){
@@ -464,23 +477,23 @@ function testDraw(name){
 
 function linesOnBigMap(){
 
-	for(var i=1;i<bigMapMax/50;i++){
+	for(var i=1;i<MapVars.bigMapMax/50;i++){
 		console.log("i:"+i);
 		if(i%5===0){
-			blackMap.strokeStyle = "red";
+			MapVars.blackMap.strokeStyle = "red";
 		} else {
-			blackMap.strokeStyle = "black";
+			MapVars.blackMap.strokeStyle = "black";
 		}
-		blackMap.beginPath();
-		blackMap.moveTo(i*50,0);
-		blackMap.lineTo(i*50,bigMapMax);
-		blackMap.stroke();
+		MapVars.blackMap.beginPath();
+		MapVars.blackMap.moveTo(i*50,0);
+		MapVars.blackMap.lineTo(i*50,MapVars.bigMapMax);
+		MapVars.blackMap.stroke();
 
-		blackMap.moveTo(0,i*50);
-		blackMap.lineTo(bigMapMax,i*50);
-		blackMap.stroke();
+		MapVars.blackMap.moveTo(0,i*50);
+		MapVars.blackMap.lineTo(MapVars.bigMapMax,i*50);
+		MapVars.blackMap.stroke();
 	}
-	blackMap.strokeStyle = "blue";
-	blackMap.strokeText("3000,2000",2975,2000)
-	dragDraw(mapX,mapY);
+	MapVars.blackMap.strokeStyle = "blue";
+	MapVars.blackMap.strokeText("3000,2000",2975,2000)
+	dragDraw(MapVars.mapX,MapVars.mapY);
 }

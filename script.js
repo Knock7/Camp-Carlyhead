@@ -252,6 +252,7 @@ function addJobElement(jobName){//came move the check whether box exists up to h
 		console.log(document.getElementById("childJob").querySelector(".userAdd").style);
 		document.getElementById("childJob").querySelector(".tooltiptext").innerHTML = "<p>Every child consumes <br>0.8 food / sec<br><br> Children help the woodcutters<br>with simple tasks and<br>each child makes 0.75 wood / sec";
 	}
+	alertPanel("pan1");
 }
 
 //make it so that the new jobs don't show up until after the first building is made
@@ -326,6 +327,7 @@ function addBuildingButton(buildingName){
 	newBuild.addEventListener("click",addBuildingEvent);
 
 	document.getElementById("pan2").insertBefore(newBuild, document.getElementById("buildBlank"));
+	alertPanel("pan2");
 };
 
 //changes the building buttons to grey out if there are not enough resources, and text to black if not enough max resources
@@ -401,6 +403,8 @@ var GlobVar = {
 	previousTime:0,		//time on the last tick
 	pendingStatements:[],//a backlog of statements to show
 	textAlerts:[],		//keep track of pop-ups telling not enough resources, etc
+	mark1: "pan1",
+	mark2: "pan2",
 	
 }
 	var nextCol=1;			//keeps track of the column in which to add the next job box - should not be adjusted by GlobVar save.
@@ -409,14 +413,14 @@ var GlobVar = {
 //elements to litsen to
 window.onload = function () {//add event listeners after DOM has laoded or you will get null instead of element
 	console.log("localStorage 'Reset' value: "+localStorage.getItem("Reset"));
-	setup();
+	
 	//reset can have three values: 'full' runs the intro text and initial t=0 gamestate (full reset), 'saveLoad' runs the current save in local storage, 'prestige' resets everything but the prestige variables and shows new intro text
 	if(localStorage.getItem("Reset")!==null&&localStorage.getItem("Reset")==="saveLoad") {//don't show intro text
-		console.log(typeof document.getElementById("closeMe")+" , and value: "+document.getElementById("closeMe"));
 		document.body.removeChild(document.getElementById("closeMe"));
 		console.log("intro removed");
 		loadGame();
 	} else {
+		setup();
 		document.querySelector(".closebtn").addEventListener("click", function(){document.querySelector(".closebtn").parentElement.style.display="none";populate();});
 		document.getElementById("intro").style = "transition:color 4s; color:white;";
 		document.querySelector(".closebtn").style = "color:green; transition-property: color; transition-duration: 4s; transition-delay: 4s;"
@@ -425,12 +429,14 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 			console.log("intro changed");
 			GlobVar.knowledge = parseInt(localStorage.getItem("Knowledge"));
 			GlobVar.resolve = parseInt(localStorage.getItem("Resolve"));
-			if (GlobVar.resolve>0){
+			if (GlobVar.resolve>0){//second level of prestige (maybe someday the game will get here)
 				document.getElementById("intro").innerHTML = "You know what has befallen the Great City and set out to rebuild a resistance town with heightened Resolve";
 			}
 		}
 		localStorage.setItem("Reset","saveLoad");
 	}
+
+	//and now add the event listners:
 
 	document.body.addEventListener("transitionend", updateTransition);//ends the white flash when food runs out
 
@@ -552,10 +558,6 @@ function CouncilMessageEvent(e){
 	document.getElementById("council"+ num).style.display = "block";
 }
 
-//put these into GlobVar so that the panels you were on show up - need to add a bit to finishLoad()
-//for switching active panels
-var mark1 = "pan1";
-var mark2 = "pan2";
 
 function Panel(select){
 	var tempNum = select.slice(-1);//tab number
@@ -563,25 +565,26 @@ function Panel(select){
 		document.getElementById("butt"+tempNum).className = "buttSelected";
 	}
 	if(select==="pan1"||select==="pan6"){
-		if(select === mark1){//do nothing
+		if(select === GlobVar.mark1){//do nothing
 		} else {
-			document.getElementById(mark1).style.display = "none";
-			document.getElementById("butt"+mark1.slice(-1)).className = "butt"
-			mark1 = select;
-			document.getElementById(mark1).style.display = "inline-block";
-			document.getElementById("butt"+mark1.slice(-1)).className = "buttSelected"
+			document.getElementById(GlobVar.mark1).style.display = "none";
+			document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "butt"
+			GlobVar.mark1 = select;
+			document.getElementById(GlobVar.mark1).style.display = "inline-block";
+			document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "buttSelected"
 		}
 	} else {
-		if(select===mark2){//do nothing
+		if(select===GlobVar.mark2){//do nothing
 		} else {
-			document.getElementById(mark2).style.display = "none";
-			document.getElementById("butt"+mark2.slice(-1)).className = "butt"
-			mark2 = select;
-			document.getElementById(mark2).style.display = "inline-block";
-			document.getElementById("butt"+mark2.slice(-1)).className = "buttSelected"
+			document.getElementById(GlobVar.mark2).style.display = "none";
+			document.getElementById("butt"+GlobVar.mark2.slice(-1)).className = "butt"
+			GlobVar.mark2 = select;
+			document.getElementById(GlobVar.mark2).style.display = "inline-block";
+			document.getElementById("butt"+GlobVar.mark2.slice(-1)).className = "buttSelected"
 		}
 	}
 }
+
 
 //////////////////////////////////////////////////////////////////////////add and remove workers///////////////////////////////////////////////////////////////////////////////////
 function moveworker(workkey,num){
@@ -860,6 +863,7 @@ function addResearchButton(research){
 	uses = uses.slice(0,-5);
 	div.innerHTML = "<div id ='"+ research + "resBar' class='resBar'> <p class='resText'>"+Research[research]["name"]+"</p></div><div class='tooltiptext'><br>"+Research[research]["statement"]+"<br><br>Takes "+Research[research]["totalRes"]+" research<br>Uses "+uses+" per research<br><br>"+Research[research]["reward"]+"<br><br></div>";
 	document.getElementById("pan3").insertBefore(div,document.getElementById("doneResBox"));
+	alertPanel("pan3");
 }
 
 
@@ -1146,7 +1150,7 @@ function doBonus(resUp){
 ////////////////////////////////////////////////////////////////////////////miscilanious functions working on////////////////////////////////////////////////////////////////////////////////////
 //makes the panel select button turn red if it is not active
 function alertPanel(pan){
-	if(mark1!==pan&&mark2!==pan){
+	if(GlobVar.mark1!==pan&&GlobVar.mark2!==pan){
 		document.getElementById("butt"+pan.slice(-1)).className = "buttAttn";
 	}
 }
@@ -1355,7 +1359,7 @@ function exploreEnd(){
 	}
 	
 	 else {
-		logStatement("Your explorers map some areas but find nothing of use",false);
+		GlobVar.pendingStatements.push("Your explorers map some areas but find nothing of use");
 	}
 	//add in an ungrade or building with a small penalty to auto-explore if you have enough stuff?
 	GlobVar.exploring = false;
@@ -1807,7 +1811,9 @@ function finishLoad(){
 	
 	console.log("trying to load...");
 	//load up the resources (must be a better way to do this - want to make sure that the resources get maxed out correctly) add a resources like this, if all are maxed, break loop
-
+	//restore the open panels
+	Panel(GlobVar.mark1);
+	Panel(GlobVar.mark2);
 
 	var now = Date.now();
 	var loadtime = GlobVar.previousTime;
