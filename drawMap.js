@@ -1,21 +1,23 @@
 var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 	Spots:{			
-		shackSpots: 	[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
-						 3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
-		shedSpots: 		[3135,1999, 3085,2003, 3180,1990, 3110,1980, 3155,1970, 3200,1935, 3210,1968, 3102,1948, 3140,1930],
-		expandQSpots: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930, 3677,1927, 3676,1928],
-		farmSpots: 		[3050,2150, 3125,2150, 3030,2225, 3105,2225],
-		barnSpots: 		[3330,2030, 3333,2065, 3359,2033, 3363,2068],
-		lumberyardSpots:[3228,2000, 3250,1975, 3278,1998, 3336,1997],
-		workshopSpots:	[3400,2005, 3405,2030, 3445,2023, 3451,2048],
-		hutSpots:		[3215,2170, 3240,2168, 3215,2200, 3240,2198, 3215,2230, 3240,2228, 3265,2166, 3265,2196, 3265,2226],
-		labSpots:		[3367,2170, 3376,2170, 3385,2170, 3394,2170],
-		mineSpots:		[3857,2085, 3925,1910],
-		warehouseSpots:	[],
-		kilnSpots:		[],
-		siloSpots:		[],
-		cabinSpots:		[],
-		councilhallSpots:[3330,2170], 	
+		shack: 		[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
+					 3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
+		shed: 		[3135,1999, 3085,2003, 3180,1990, 3110,1980, 3155,1970, 3200,1935, 3210,1968, 3102,1948, 3140,1930],
+		expandQ: 	[3678,1925, 3682,1926, 3676,1927, 3684,1928, 3676,1929, 3678,1930, 3677,1927, 3676,1928],
+		farm: 		[3050,2150, 3125,2150, 3030,2225, 3105,2225],
+		barn: 		[3330,2030, 3333,2065, 3359,2033, 3363,2068],
+		lumberyard:	[3228,2000, 3250,1975, 3278,1998, 3336,1997],
+		workshop:	[3400,2005, 3405,2030, 3445,2023, 3451,2048],
+		hut:		[3215,2170, 3240,2168, 3215,2200, 3240,2198, 3215,2230, 3240,2228, 3265,2166, 3265,2196, 3265,2226],
+		lab:		[3367,2170, 3376,2170, 3385,2170, 3394,2170],
+		mine:		[3857,2085, 3925,1910],
+		warehouse:	[],
+		kiln:		[],
+		silo:		[],
+		cabin:		[],
+		councilhall:[3330,2170], 	
+		forge:		[],
+		armory:		[],
 	},
 
 	exploreSpots:	[//each index has a group of coordinates of 50x50 blocks to reveal after that # exploration
@@ -71,9 +73,11 @@ function setup(){
 
 	MapVars.bigCanvas = document.getElementById('bigCanvas');
 	MapVars.bigMap = MapVars.bigCanvas.getContext('2d');
+	console.log("bigMap is set: "+typeof MapVars.bigMap+MapVars.bigMap);
 
 	MapVars.blackCanvas = document.getElementById('blackedCanvas');
 	MapVars.blackMap = MapVars.blackCanvas.getContext('2d');
+	console.log("blackMap is set: "+typeof MapVars.blackMap+MapVars.blackMap);
 
 	//initialize blackout array if it is empty;
 	if(MapVars.blackout.length===0){
@@ -294,12 +298,12 @@ function uncover(){
 }
 function drawBuilding(name,number){
 
-	if((number-1)*2>=MapVars["Spots"][name+"Spots"].length){
-		console.log("need to add more coordinates to the "+name+"Spots array");
+	if((number-1)*2>=MapVars["Spots"][name].length){
+		console.log("need to add more coordinates to the "+name+" Spots array");
 		return 0;
 	}
-	var x = MapVars["Spots"][name+"Spots"][2*(number-1)];
-	var y = MapVars["Spots"][name+"Spots"][1+2*(number-1)];
+	var x = MapVars["Spots"][name][2*(number-1)];
+	var y = MapVars["Spots"][name][1+2*(number-1)];
 	switch (name) {
 	case "councilhall":
 		MapVars.blackMap.fillStyle = "grey";
@@ -433,8 +437,8 @@ function drawRoads1(){
 }
 //draws the sites to try mining
 function drawMineSite(num){
-	var x = MapVars.Spots.mineSpots[(num-1)*2];
-	var y = MapVars.Spots.mineSpots[(num-1)*2+1];
+	var x = MapVars.Spots.mine[(num-1)*2];
+	var y = MapVars.Spots.mine[(num-1)*2+1];
 	MapVars.blackMap.strokeStyle = "red";
 	MapVars.blackMap.lineWidth = 2;
 	MapVars.blackMap.beginPath();
@@ -452,12 +456,12 @@ function testDraw(name){
 		for(var s in MapVars.Spots){
 			for(var i=1;i<=(MapVars["Spots"][s].length)/2;i++){
 				console.log("drew building");
-				drawBuilding(s.slice(0,-5),i);
+				drawBuilding(s,i);
 			}
 		}
 
 	} else {
-		for(var i=1;i<=(MapVars["Spots"][name+"Spots"].length)/2;i++){
+		for(var i=1;i<=(MapVars["Spots"][name].length)/2;i++){
 			console.log("drew building");
 			drawBuilding(name,i);
 		}

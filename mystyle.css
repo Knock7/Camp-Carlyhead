@@ -151,7 +151,7 @@ tabs {
 	cursor:pointer;
 }
 #exploreButton {
-	background-image:linear-gradient(rgba(150,150,150,0.3),rgba(250,250,250,.55)),url(images/mapp.png); 
+	background-image:linear-gradient(rgba(150,150,150,0.3),rgba(250,250,250,.55)),url(images/mapp.jpg); 
 	background-size:100% 100%;
 	border:2px solid black;
 	margin:auto;
@@ -168,7 +168,7 @@ tabs {
 
 }
 #exploreButton:hover {
-	background-image:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/mapp.png);
+	background-image:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/mapp.jpg);
 	color:white;
 	cursor:pointer;
 }
