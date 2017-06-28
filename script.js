@@ -419,6 +419,7 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 		document.body.removeChild(document.getElementById("closeMe"));
 		console.log("intro removed");
 		loadGame();
+		setup();
 	} else {
 		setup();
 		document.querySelector(".closebtn").addEventListener("click", function(){document.querySelector(".closebtn").parentElement.style.display="none";populate();});
@@ -567,11 +568,12 @@ function Panel(select){
 	if(select==="pan1"||select==="pan6"){
 		if(select === GlobVar.mark1){//do nothing
 		} else {
-			document.getElementById(GlobVar.mark1).style.display = "none";
-			document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "butt"
-			GlobVar.mark1 = select;
-			document.getElementById(GlobVar.mark1).style.display = "inline-block";
-			document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "buttSelected"
+				document.getElementById(GlobVar.mark1).style.display = "none";
+				document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "butt"
+				GlobVar.mark1 = select;
+				document.getElementById(GlobVar.mark1).style.display = "inline-block";
+				document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "buttSelected"
+			
 		}
 	} else {
 		if(select===GlobVar.mark2){//do nothing
@@ -1756,6 +1758,7 @@ function saveGame(){//add in the Jobs object for storage
 		data.set("Jobs", Jobs);
 		data.set("Research", Research);
 		data.set("GlobVar", GlobVar);
+		data.set("MapVars",MapVars);
 		localStorage.setItem("Reset","saveLoad");
 	}
 	else {
@@ -1765,7 +1768,7 @@ function saveGame(){//add in the Jobs object for storage
 function exportGame(){
 	console.log("exporting");
 	document.getElementById("exportWindow").className = "exportWindowOn";
-	var exportStorage = {X_Stuff:Stuff,X_Buildings:Buildings,X_Jobs:Jobs,X_Research:Research,X_GlobVar:GlobVar};
+	var exportStorage = {X_Stuff:Stuff,X_Buildings:Buildings,X_Jobs:Jobs,X_Research:Research,X_GlobVar:GlobVar,X_MapVars:MapVars};
 	document.getElementById("exportStr").value = JSON.stringify(exportStorage);
 	document.getElementById("exportStr").select();
 }
@@ -1784,6 +1787,7 @@ function importGame(){
 		Jobs = importStorage.X_Jobs;
 		Research = importStorage.X_Research;
 		GlobVar = importStorage.X_GlobVar;
+		MapVars = importStorage.X_MapVars;
 		finishLoad();
 	}
 	catch(e) {
@@ -1795,12 +1799,14 @@ function closeImport(){
 	document.getElementById("importWindow").className = "exportWindowOff";
 }
 function loadGame(){
+	document.getElementById("loadingPopUp").style.display = "block";//this doesn't show up until after the while loop so it is useless. how do I make it appear first?
 	if (storageAvailable("localStorage") && localStorage.getItem("GlobVar") !== null && localStorage.getItem("GlobVar")[0]==="{"){
 		Stuff = data.get("Stuff");
 		Buildings = data.get("Buildings"); 
 		Jobs = data.get("Jobs");// GlobVar.nextCol = 1;//?? need to think about this
 		GlobVar = data.get("GlobVar"); 
 		Research = data.get("Research");
+		MapVars = data.get("MapVars");
 		console.log("got the objects");
 		finishLoad();
 	} else {
@@ -1810,10 +1816,26 @@ function loadGame(){
 function finishLoad(){
 	
 	console.log("trying to load...");
-	//load up the resources (must be a better way to do this - want to make sure that the resources get maxed out correctly) add a resources like this, if all are maxed, break loop
+	
 	//restore the open panels
-	Panel(GlobVar.mark1);
-	Panel(GlobVar.mark2);
+	for(var i=1;i<=99;i++){
+		var tempButt = document.getElementById("butt"+i);
+		if(tempButt===null){break;}
+		if(tempButt.style.display!=="none"){
+			tempButt.className = "butt";
+		}	
+	}
+	for(var i=1;i<=99;i++){
+		var tempPan = document.getElementById("pan"+i);
+		if(tempPan===null){break;}
+		tempPan.style.display = "none";
+	}
+
+	document.getElementById(GlobVar.mark1).style.display = "inline-block";
+	document.getElementById("butt"+GlobVar.mark1.slice(-1)).className = "buttSelected";
+	document.getElementById(GlobVar.mark2).style.display = "inline-block";
+	document.getElementById("butt"+GlobVar.mark2.slice(-1)).className = "buttSelected";
+
 
 	var now = Date.now();
 	var loadtime = GlobVar.previousTime;
@@ -1822,18 +1844,18 @@ function finishLoad(){
 	GlobVar.previousTime = now - 1000;  //1 second difference //this gets checked in incrRes() so need to set it here and it will be a constant until it gets updated in the run() loop
 	
 	//console.log("does loadingPopUp exist: "+typeof document.getElementById("loadingPopUp"));
-	document.getElementById("loadingPopUp").style.display = "block";//this doesn't show up until after the while loop so it is useless. how do I make it appear first?
+	
 	console.log("now: "+now+" loadtime: "+loadtime+" difference in second: "+(now-loadtime)/1000);
 
 	for(var i=0;i<delta;i++){
 		var numJobsMaking = incrRes();
-		document.getElementById("wood").innerHTML = Stuff.wood.stored;
+		document.getElementById("wood").innerHTML = Stuff.wood.stored;//why is this line here?
 		if(numJobsMaking===0){
 			console.log("break!");
 			break;
 		}
 	}
-	document.getElementById("loadingPopUp").style.display = "none";
+	
 
 	//update to the stored values of all resources, maxes, buildings, costs; and delete anything that isn't unlocked
 	for (var i in Stuff){
@@ -1877,9 +1899,13 @@ function finishLoad(){
 	//skip over Camp and freeworkers in the for loop because the box doesn't have the same tooltip formula
 	document.getElementById("freeworkers").innerHTML = Jobs["freeworker"]["workers"];
 	document.getElementById("freeworkersMax").innerHTML = Jobs["freeworker"]["maxworkers"];
+	if(document.getElementById("childs")!==null){
+		document.getElementById("childs").innerHTML = Jobs["child"]["workers"];
+		document.getElementById("childsMax").innerHTML = Jobs["child"]["maxworkers"];
+	}
 
 	for(var i in Jobs){
-		if(Jobs[i]["unlocked"]&&i!=="freeworker"){
+		if(Jobs[i]["unlocked"]&&i!=="freeworker"&&i!=="child"){
 			if(document.getElementById(i+"Job")===null){
 				addJobElement(i);
 			} else {
@@ -1926,17 +1952,20 @@ function finishLoad(){
 	//make the active and finished research elements
 	for (var i in Research){
 		if (Research[i]["unlocked"]){
-			if(i!=="FarmEquip" && i!=="StoneAxe"){					
+			if(document.getElementById(i)===null){		//don't make it if it exists			
 				addResearchButton(i);
 			}
 			if( Research[i]["done"]){
 				var resDiv = document.getElementById(i);
-				resDiv.className = "tinyRes";
-				resDiv.removeChild(document.getElementById(i+"resBar"));
-				resDiv.removeEventListener("click",SwapResearchEvent);
-				resDiv.querySelector(".tooltiptext").innerHTML = Research[i]["reward"];
-				resDiv.parentNode.removeChild(resDiv);
-				document.getElementById("doneRes").appendChild(resDiv);
+				if(resDiv.className!=="tinyRes"){	//don't make small if already small
+					resDiv.className = "tinyRes";
+					console.log("trying to remove resBar of "+i);
+					resDiv.removeChild(document.getElementById(i+"resBar"));
+					resDiv.removeEventListener("click",SwapResearchEvent);
+					resDiv.querySelector(".tooltiptext").innerHTML = Research[i]["reward"];
+					resDiv.parentNode.removeChild(resDiv);
+					document.getElementById("doneRes").appendChild(resDiv);
+				}
 			}
 		} else if(document.getElementById(i)) {//remove research boxes that are there now but haven't been unlocked in the save
 			document.getElementById("pan3").removeChild(document.getElementById(i));
@@ -1962,7 +1991,7 @@ function finishLoad(){
 		document.getElementById("council1").style.visibility = "visible";
 		document.getElementById("buildCounc").style.display = "none";
 	}
-	if(Research.FindOre.done){
+	if(document.getElementById("exploreButton")===null && Research.FindOre.done){
 		var div = document.createElement("div");
 		div.id = "exploreButton";
 		div.className = "exploreButton";
@@ -1982,7 +2011,7 @@ function finishLoad(){
 	GlobVar.pendingStatements = [];//clear all the message here (but they are still logged)
 	GlobVar.counter1 = 0;
 
-	//populate the map in setup() function
+	document.getElementById("loadingPopUp").style.display = "none";
 
 } 
 function resetGame(){

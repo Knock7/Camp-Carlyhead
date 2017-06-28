@@ -53,18 +53,13 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 	smallMapMax: 600,
 	bigMapMax:5000,//px size of the bigCanvas (constant)
 
-	bigCanvas, 
+	/*don't need these because they get added when they get values in setup(). these will be properties saved for loading though, so keep them here for reference?
+	bigCanvas: null, 
 	bigMap,
 	blackCanvas, 
 	blackMap,
 	smallCanvas,
 	smallMap,
-}
-
-function loadMap(){
-	/*the stuff that saved games should do like load the maps from MapVars instead of mapBlack();
-	test to see if canvases can be stored in local storage and if not then maybe run setup() inside of here instead? need to call drawRoads() etc. - make sure the uncover() gets run before those
-	move the blackmap[] initialization somewhere that it won't get called with loadMap
 	*/
 }
 
@@ -72,6 +67,7 @@ function setup(){
 	//put the following into loadMap() which gets called here
 	MapVars.smallCanvas = document.getElementById('canvas');
 	MapVars.smallMap = MapVars.smallCanvas.getContext('2d');
+	console.log("smallMap is set: "+typeof MapVars.smallMap+MapVars.smallMap);
 
 	MapVars.bigCanvas = document.getElementById('bigCanvas');
 	MapVars.bigMap = MapVars.bigCanvas.getContext('2d');
@@ -79,26 +75,16 @@ function setup(){
 	MapVars.blackCanvas = document.getElementById('blackedCanvas');
 	MapVars.blackMap = MapVars.blackCanvas.getContext('2d');
 
-	MapVars.bigMap.fillStyle = 'green';
-	MapVars.bigMap.fillRect(0,0,800,800);
+	//initialize blackout array if it is empty;
+	if(MapVars.blackout.length===0){
+		setBlackout();
+	}
 
 	//draw the big map
   	base_image = new Image();
   	base_image.src = 'images/bigMapDraft2.png';
   	base_image.onload = function(){//draw the bigMap canvas after the image has loaded so that the shapes don't get covered up
     	MapVars.bigMap.drawImage(base_image, 0, 0,MapVars.bigMapMax,MapVars.bigMapMax);
-
-		MapVars.bigMap.fillStyle = 'black';
-		MapVars.bigMap.beginPath();
-		MapVars.bigMap.arc(500, 500, 75, 0, Math.PI * 2, false);
-		MapVars.bigMap.fill();
-
-		MapVars.bigMap.fillStyle = 'orange';
-		MapVars.bigMap.fillRect(25, 25, 100, 100);
-
-		MapVars.bigMap.fillStyle = 'brown';
-		MapVars.bigMap.fillRect(750,750,800,800);
-		MapVars.bigMap.fillRect(150,600,200,800);
 		console.log("big map loaded");
 
 		mapBlack();//draw the accessable blackMap after drawing the source bigMap
@@ -111,8 +97,6 @@ function setup(){
 				}
 			}
 		}
-
-		
 	}
 
 	
@@ -201,7 +185,29 @@ function setup(){
 			if(MapVars.mapY+2*MapVars.zoomLvl>MapVars.bigMapMax){MapVars.mapY=MapVars.bigMapMax - 2*MapVars.zoomLvl}
 		}
 	});
+
+
 }
+
+function setBlackout(){
+	//initially set the blackout parts of the map as everything outside the starting 900x900 area
+	for(var i=0; i<MapVars.bigMapMax/50; i++){
+		MapVars.blackout[i] = [];
+		for(var j=0; j<MapVars.bigMapMax/50; j++){		
+			if(i<=57||j<=36||i>=76||j>=55){
+				MapVars.blackout[i][j] = true;
+			} else {
+				MapVars.blackout[i][j] = false;
+			}
+		}
+	}
+	//and the corners to make it more circular
+	MapVars.blackout[58][37]=true; MapVars.blackout[59][37]=true; MapVars.blackout[58][38]=true;
+	MapVars.blackout[75][37]=true; MapVars.blackout[74][37]=true; MapVars.blackout[75][38]=true;
+	MapVars.blackout[58][54]=true; MapVars.blackout[58][53]=true; MapVars.blackout[59][54]=true;
+	MapVars.blackout[75][54]=true; MapVars.blackout[74][54]=true; MapVars.blackout[75][53]=true;
+}
+
 function dragDraw(x,y){
 	MapVars.smallMap.drawImage(MapVars.blackCanvas, x, y, 2*MapVars.zoomLvl, 2*MapVars.zoomLvl, 0, 0, MapVars.smallMapMax, MapVars.smallMapMax);
 }
@@ -241,23 +247,6 @@ function mapZoom(e){
 	
 	return false;
 }
-//initially set the blackout parts of the map as everything outside the starting 900x900 area
-for(var i=0; i<MapVars.bigMapMax/50; i++){
-	MapVars.blackout[i] = [];
-	for(var j=0; j<MapVars.bigMapMax/50; j++){		
-		if(i<=57||j<=36||i>=76||j>=55){
-			MapVars.blackout[i][j] = true;
-		} else {
-			MapVars.blackout[i][j] = false;
-		}
-	}
-}
-//and the corners to make it more circular
-MapVars.blackout[58][37]=true; MapVars.blackout[59][37]=true; MapVars.blackout[58][38]=true;
-MapVars.blackout[75][37]=true; MapVars.blackout[74][37]=true; MapVars.blackout[75][38]=true;
-MapVars.blackout[58][54]=true; MapVars.blackout[58][53]=true; MapVars.blackout[59][54]=true;
-MapVars.blackout[75][54]=true; MapVars.blackout[74][54]=true; MapVars.blackout[75][53]=true;
-
 
 //need to fix - instead of chaging the bigMap, then painting it black on blackMap and copying to smallMap, change both big and black when drawing building, and only repaint big to black after exploring new areas and uncover()ing.
 function mapBlack(){//don't call this unless you have to! (slows down computer)
@@ -379,10 +368,10 @@ function drawBuilding(name,number){
 		MapVars.blackMap.fillRect(x+1,y+1,16,14);
 		MapVars.blackMap.fillStyle = 'rgb(79, 54, 2)';
 		MapVars.blackMap.beginPath();
-			blackMap.moveTo(x,y);
-        	blackMap.lineTo(x+3,y-8);
-        	blackMap.lineTo(x+15,y-8);
-			blackMap.lineTo(x+18,y);
+			MapVars.blackMap.moveTo(x,y);
+        	MapVars.blackMap.lineTo(x+3,y-8);
+        	MapVars.blackMap.lineTo(x+15,y-8);
+			MapVars.blackMap.lineTo(x+18,y);
         MapVars.blackMap.fill();			
 		break;
 	case "lab":
