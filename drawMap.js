@@ -221,7 +221,7 @@ function mapZoom(e){
 	var sourceCanvas = MapVars.blackCanvas;
 	var destinationCtx = destinationCanvas.getContext('2d');
 
-	MapVars.maxZoomLvl = Math.min((MapVars.maxXscroll-MapVars.minXscroll)/2,(MapVars.maxYscroll-MapVars.minYscroll)/2);
+	MapVars.maxZoomLvl = Math.max((MapVars.maxXscroll-MapVars.minXscroll)/2,(MapVars.maxYscroll-MapVars.minYscroll)/2);
 
 	var changeInZoom = e.deltaY;
 	if(MapVars.zoomLvl+changeInZoom>MapVars.maxZoomLvl||MapVars.zoomLvl+changeInZoom<MapVars.minZoomLvl){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)

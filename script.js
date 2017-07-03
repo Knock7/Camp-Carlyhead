@@ -267,7 +267,7 @@ var Buildings = {  //if addWorker property key is "freeworker", it will add free
 	workshop:{name:"Stone Yard",	count:0, buildWorkers:3, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{stone:200},		addworker:{mason:3},		cost:{lumber:200,rock:200},					unlockRes:["stone"],	unlockJob:["mason"],	costratio:2.5,		buildOnce:false,	tempCount:0,	addsText:["space for 3 masons", "200 stone storage"],	statement:"With access to rough-cut boards, several folk decide to contruct an area to shape and store materials. For now the space will<br>be used to cut rock from the quarry into stone slabs for improved buildings, and perhaps later for stone tools."},
 	hut:	{name: "Hut",			count:0, buildWorkers:3, buildTime:40, unlocked:false, 	buildingwork:{},									addworker:{freeworker:1},	cost:{lumber:200,stone:100},				unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 new settler"],					statement:"With boards from the lumberyard and cut stones from the stoneyard, the carpenter plans to start building proper huts.<br>You plan to continue buildings shacks - you are trying to grow the town after all and still need to turn the occasional wanderer away for lack of space."},
 	lab: 	{name: "Laboratory",	count:0, buildWorkers:3, buildTime:80, unlocked:false, 	buildingwork:{},									addworker:{researcher:1},	cost:{wood:100,lumber:300,stone:200},		unlockRes:["research"],	unlockJob:["researcher"],costratio:1.3,		buildOnce:false,	tempCount:0,	addsText:["space for 1 researcher"],					statement:"The Town Hall has been constructed. The first meeting will be held immediately."},
-	mine:	{name: "Mineshaft",		count:0, buildWorkers:5, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{},				cost:{lumber:200},							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 2 miners"],						statement:"Adding a mineshaft will allow collection of ores."},
+	mine:	{name: "Mineshaft",		count:0, buildWorkers:5, buildTime:60, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{},				cost:{lumber:200},							unlockRes:[],			unlockJob:[],			costratio:1.2,		buildOnce:false,	tempCount:0,	addsText:["space for 1 miner"],						statement:"Adding a mineshaft will allow collection of ores."},
 	warehouse:{name:"Warehouse",	count:0, buildWorkers:5, buildTime:50, unlocked:false,	buildingwork:{},		addstorage:{wood:50,rock:50,lumber:50,stone:50,cu_ore:50,brick:50,fe_ore:50,coal:50}, addworker:{},cost:{rock:100,lumber:500,stone:300,brick:150},unlockRes:[],	unlockJob:[],			costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["50 wood storage","50 rock storage","50 lumber storage","50 stone storage","50 ore storage","50 brick storage"], statement:"More versitile than barns, your warehouses are designed to store many kinds of materials."},
 	kiln:	{name: "Kiln",			count:0, buildWorkers:3, buildTime:30, unlocked:false,	buildingwork:{},		addstorage:{},				addworker:{kilnworker:1},	cost:{brick:200,stone:50},					unlockRes:["copper"],	unlockJob:["kilnworker"],costratio:1.1,		buildOnce:false,	tempCount:0,	addsText:["space for one kilnworker"], statement:"Kilns will let us smelt ore and perhaps do other things later."},
 	silo:	{name: "Silo",			count:0, buildWorkers:3, buildTime:35, unlocked:false,  buildingwork:{},		addstorage:{food:150},		addworker:{},				cost:{wood:100, lumber:100},				unlockRes:{},			unlockJob:[],			costratio:1.5,		buildOnce:false,	tempCount:0,	addsText:["150 food storage"],							statement:"The settlement can buffer fluctuations in food remand and<br>stockpile more food for exploring parties by constructing silos"},
@@ -806,7 +806,7 @@ function SwapActiveRes(x){
 		GlobVar.ActiveRes = x;
 		console.log("set research to "+x);
 		document.getElementById(GlobVar.ActiveRes).className = "researchButtonSelected";
-		document.getElementById("research").innerHTML = Research[x]["completion"];
+		document.getElementById("research").innerHTML = Research[GlobVar.ActiveRes]["completion"];
 		document.getElementById("researchMax").innerHTML = Research[GlobVar.ActiveRes]["totalRes"];
 		Stuff.research.maxstored = Research[GlobVar.ActiveRes]["totalRes"];
 	
@@ -1701,13 +1701,13 @@ function run(){
 			document.getElementById("hunterJob").querySelector(".userAdd0").style.transition = "color 0s";
 			document.getElementById("hunterJob").querySelector(".userAdd0").style.color = "red";
 			//need to come up with a different way to do this?
-			logStatement("In a food-shortage panic all available workers take to hunting",false);
+			GlobVar.pendingStatements.push("In a food-shortage panic all available workers take to hunting");
 		
 			var tempFood = 0; 
 
 			for(var i in Jobs){
 				
-				if(Jobs[i]["unlocked"] && i!=="farmer"){
+				if(Jobs[i]["unlocked"] && i!=="farmer" && i!=="child"){
 
 					tempFood+=Jobs[i]["workers"];
 					Jobs[i]["workers"] = 0;
