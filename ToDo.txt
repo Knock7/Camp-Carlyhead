@@ -34,6 +34,11 @@ kilns will be in their own building (smelt?)
 
 17) have explorers need to venture away from the river and need to carry water in clay pots. when the party leave, the pots get reduced. no need to have water as a resource. all of the food should be used but party returns about 90% of other resources. (%chance to lose a given resource so you can sometimes lose wagons). some of the random chance josh talked about.
 
+18) make an updateBaseCost function that takes a new cost object and compares the previous cost object, and updates everything
+b) updateStorage function that compares new storage to old, and number of buildings, and adjusts the storage based on already-owned buildings (make smiths now store iron)
+c) updateJobProduction()
+d) more
+
 Thoughts from Matt G:
 make loadGame() auto-run on page load, and add auto-save - maybe every 5 minutes
 fix tabs:
