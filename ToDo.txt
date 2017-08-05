@@ -39,6 +39,22 @@ b) updateStorage function that compares new storage to old, and number of buildi
 c) updateJobProduction()
 d) more
 
+Improvements from NH play test:
+a) change text for exploring to be different and make you want to keep exploring
+b) start is confusing (note to move workers back and forth, free workers needed to build)
+c) make text stay longer - have to click to move to next message 
+d) add a castle, add a fense, hospitals, schools
+e) rename mine to copper mine, just have all the mines named separatly, no drop-down - maybe make kilns produce everything they can and move on if the think is full and make more of other things? or every tick switch what is made in kilns? dropdown to select kiln stuff?
+f) if a resource stays at max storage, move the workers to free workers (maybe max toggle or with research "settlement management")
+g) differnt spelled wrong
+h) 
+i)
+j)
+k)
+l)
+m)
+
+
 Thoughts from Matt G:
 make loadGame() auto-run on page load, and add auto-save - maybe every 5 minutes
 fix tabs:
