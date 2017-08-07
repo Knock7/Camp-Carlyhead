@@ -47,12 +47,17 @@ d) add a castle, add a fense, hospitals, schools
 e) rename mine to copper mine, just have all the mines named separatly, no drop-down - maybe make kilns produce everything they can and move on if the think is full and make more of other things? or every tick switch what is made in kilns? dropdown to select kiln stuff?
 f) if a resource stays at max storage, move the workers to free workers (maybe max toggle or with research "settlement management")
 g) differnt spelled wrong
-h) 
-i)
-j)
-k)
-l)
-m)
+h) increase food storage at start?
+i) zombies to mine uranium 
+j) oregon trail diseases
+k) robot factories that make robots (that make robot factories)
+l) change 'researchers' to 'inventors'
+m) list of researched tech instead of hover-over, or list of tech and hover for improvement
+n) change 'need research' to 'need research points' - somehow indicated that it builds over time, not lump sum - also that you need to select a research
+o) add more insentive to explore, do stuff
+p) make rate stop flickering
+q) timer to compare active gameplay time
+r) saving should indicate that it saved (pop-up)
 
 
 Thoughts from Matt G:
