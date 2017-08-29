@@ -1258,6 +1258,20 @@ function updateToolTip(kind,name){
 	}
 };
 
+function addMessage(statement, log){
+	//if log is true, add to statement log
+	//add message to stack - if stack was 0, also display it
+}
+
+function closeMessage(){
+	var n = GlobVar.statementLog.length;//-1 pull the message and display the next index 0 string
+	if(n===0){
+		document.getElementById("messages").innerHTML = " ";
+	} else {
+		document.getElementById("messages").innerHTML = n;
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////exploring the land////////////////////////////////////////////////////////////////////////////////////
 function exploreGo(ev){
 	if(GlobVar.exploring){
@@ -1388,6 +1402,7 @@ function UnCheat(){
 ////////////////////////////////////////////////////////////////game loop////////////////////////////////////////////////////////////////////////////////////////
 function run(){ 
 
+		/*take the removal of statements out of the run function
 	//take care of showing new 'statements'
 	if(GlobVar.pendingStatements.length>0){
 		if(GlobVar.counter1===0){
@@ -1416,7 +1431,7 @@ function run(){
 			document.getElementById("statementLog").style.color = "white";
 		}
 	}
-
+	*/
 	//transition and remove textAlerts
 	for(var i=0; i<GlobVar.textAlerts.length; i+=2){
 		if(Date.now() - GlobVar.textAlerts[i+1]>10){
@@ -1430,7 +1445,7 @@ function run(){
 			div.parentElement.removeChild(div);//should let it get trashed as it is no longer referenced when this loop ends
 		}
 	}
-
+		
 
 //check for events met to unlock new content
 
