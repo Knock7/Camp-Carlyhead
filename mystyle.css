@@ -481,13 +481,13 @@ body.normal{
 	margin:auto;
 	font-family: "Times New Roman", serif;
 }
-#statementNum{
+#messages{
 	position:absolute;
 	top:78px;
 	left:150px;
 	padding:5px;
 	background-color:black;
-	border:2px solid white;
+	border:none;
 }
 .statementLog{
 	position:absolute;

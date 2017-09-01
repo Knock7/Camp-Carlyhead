@@ -502,6 +502,8 @@ window.onload = function () {//add event listeners after DOM has laoded or you w
 	document.getElementById("closeImport").addEventListener("click",closeImport);
 	document.getElementById("reset").addEventListener("click",resetGame);
 	document.getElementById("prestige").addEventListener("click",prestigeGame);
+
+	document.getElementById("statement").addEventListener("click",closeMessage);
 	//document.getElementById("tips").addEventListener("click",tips=function(){});
 
 	
@@ -1258,17 +1260,25 @@ function updateToolTip(kind,name){
 	}
 };
 
-function addMessage(statement, log){
-	//if log is true, add to statement log
-	//add message to stack - if stack was 0, also display it
-}
 
 function closeMessage(){
-	var n = GlobVar.statementLog.length;//-1 pull the message and display the next index 0 string
+	GlobVar.pendingStatements.shift();//remove the first statement
+	var n = GlobVar.pendingStatements.length;
+	document.getElementById("messages").innerHTML = n;//alternativly make the 'Messages:' dissapear too
+
+
+	document.getElementById("statement").innerHTML = GlobVar.pendingStatements[0];
+	document.getElementById("statement").className = "orange";
+	setTimeout(function(){
+		document.getElementById("statement").className = "statementOn";//how to transition to this?
+	},100);
+
+	
 	if(n===0){
-		document.getElementById("messages").innerHTML = " ";
+		document.getElementById("statement").innerHTML = " ";
 	} else {
 		document.getElementById("messages").innerHTML = n;
+
 	}
 }
 
