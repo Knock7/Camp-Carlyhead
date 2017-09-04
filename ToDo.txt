@@ -23,6 +23,7 @@ kilns will be in their own building (smelt?)
 8) make the image sizes smaller for faster loading.
 
 12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
+12b fix the kids making food decrease while rate is positive
 
 13) implement coal and iron mines
 
@@ -38,6 +39,10 @@ kilns will be in their own building (smelt?)
 b) updateStorage function that compares new storage to old, and number of buildings, and adjusts the storage based on already-owned buildings (make smiths now store iron)
 c) updateJobProduction()
 d) more
+
+19) button on resources for grid-lines
+19b) change colors of resources
+19c) some way to group or collapse resources
 
 Improvements from NH play test:
 a) change text for exploring to be different and make you want to keep exploring
