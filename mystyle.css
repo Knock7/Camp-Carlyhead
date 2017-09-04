@@ -318,22 +318,47 @@ div.userRemove:hover{
 	cursor:pointer;
 	border-color:grey;
 }
+.statementOn:hover, .red:hover{
+	cursor: pointer;
+	width:1000px;
+	max-width:85%;
+	margin:auto;
+	height:60px;
+}
 .statementOn{
-	height:30px;
+	height:60px;
+	width:1000px;
+	max-width:85%;
+	margin:auto;
 	transition-timing-function: linear;
 	transition:color 2s;
 	color:white;
 }
 .orange{
-	height:30px;
+	height:60px;
+	width:1000px;
+	max-width:85%;
+	margin:auto;
 	transition-timing-function: linear;
 	/*transition:color 1s;*/
 	color:orange;
 }
+.red{
+	height:60px;
+	width:1000px;
+	max-width:85%;
+	margin:auto;
+	transition-timing-function: linear;
+	/*transition:color 1s;*/
+	color:red;
+}
 .statementOff{
-	height:30px;
+	height:60px;
+	width:1000px;
+	max-width:85%;
+	margin:auto;
 	transition-timing-function: ease-in;
-	transition:color 11s;
+	transition:color 1s;
 	color:black;
 }
 body{ 
