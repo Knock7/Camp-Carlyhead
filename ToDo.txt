@@ -1,5 +1,7 @@
 0) Consider making the # of workers needed for a building increase onver time (need to move materials further) instead of increasing cost ratio? (have the ratios reduce using research to the point where they are not resource-limited)
 
+00) Make a research that allows you to designate a certain worker type to pull builders from instead of having to move in and out. Those workers will stop producing for the durration of the building. Also can make adding workers/removing workers dump to that job. Call research 'worker management'.
+
 1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space? or people are busy building buildings.
 
 2) finished research - add icon/number that you can hover over for a tooltip? 
