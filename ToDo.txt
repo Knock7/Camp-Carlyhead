@@ -2,6 +2,8 @@
 
 00) Make a research that allows you to designate a certain worker type to pull builders from instead of having to move in and out. Those workers will stop producing for the durration of the building. Also can make adding workers/removing workers dump to that job. Call research 'worker management'.
 
+000) Make some research like 'scaled opperations' where you build new equipment that requires at least X (10?) workers to run but produces way more, say rock, than before (like 100x) to stockpile for later and use those workers for something new.
+
 1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space? or people are busy building buildings.
 
 2) finished research - add icon/number that you can hover over for a tooltip? 
