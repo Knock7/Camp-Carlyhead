@@ -112,3 +112,14 @@ random disasters
 
 
 Thoughts from Kelsey:
+
+
+Thoughts from Brian (and Nick) (rest of ToDo  list from local save on NickLaptop)
+- Make top title collapsable with messages showing up at the bottom of the screen when collapsed
+- stuck at stoneyard
+- work on way messages look
+- camp broke into two lines (xx/xx [x])
+- 'new messages' covers up actual messages. some messages are too long
+- add in the people dying from starvation and random diseases (that you can lower probabilty by getting doctors and hospitals) maybe make them sick and work at half speed? which ones work slower though - make it randomly choose a job, then one worker gets sick.
+- finished research text of name of research in a more condensed list format.
+- 
