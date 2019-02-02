@@ -1,4 +1,3 @@
-
 * {
    box-sizing:border-box;
 }
@@ -59,6 +58,15 @@ footer {
 	border-color:grey;
 	border-bottom-color:grey;
 	background: linear-gradient(to bottom, rgb(191,82,82) 0%,rgb(247,187,187) 100%,rgb(249,249,249) 100%);
+	animation:myfirst 4s ease-in-out infinite;
+	/*transition:1s;*/
+}
+@keyframes myfirst {
+  /*{background: linear-gradient(to bottom, rgb(191,82,82) 0%,rgb(247,187,187) 100%,rgb(249,249,249) 100%);}*/
+
+0%,100% {background:rgb(247,187,187)}
+33% {background:  rgb(221, 108, 108)}
+66% {background:rgb(247,187,187)}
 }
 .butt:hover, .buttAttn:hover {
 	color:white;
@@ -74,9 +82,68 @@ resources {
 	margin: 0;
 	padding:1em;
 	text-align: left;
-	height:800px;
+	min-height:750px;
+	height:100%;
 	border-right:3px solid black;
 	border-left:3px solid black;
+}
+.resNumsOn {
+	display:inline;
+}
+.resNumsOff {
+	display:none;
+}
+.resourceBarBoxOn, .resourceBarBoxOff {
+	background-color:black;
+	height:15px;
+	width:92px;
+	padding:1.5px;
+	position:relative;
+	top:2.5px;
+	margin-bottom:-0.6px;
+}
+.resourceBarBoxOn {
+	display:inline-block;
+}
+.resourceBarBoxOff {
+	display:none;
+}
+.resourceBarBar {
+	text-align:right;
+	color:white;
+	display:block;
+	background-color:green;
+	height:100%;
+	width:0px;
+	font-size:0.7em;
+}
+.noResourceBuildBar, .noStorageBuildBar {
+	opacity:1;
+	transition:all 1s;
+	height:100%;
+	width:0px;
+	display:block;
+	position:absolute;
+	left:0px;
+	bottom:0px;
+}
+.noResourceBuildBar{
+	background-color:transparent;
+	border-right: 3px solid red;
+}
+.noStorageBuildBar{
+	background-color: grey;
+}
+.resourceBarMax {
+	color:white;
+	position: absolute;
+	right:3px;
+	font-size: 0.7em;
+	z-index: 1;
+	display: inline-block;
+	bottom:0px;
+	text-align: right;
+	transition:color 1s;
 }
 #fadeEffect{
 	position:absolute;
@@ -86,7 +153,6 @@ resources {
 	height:30px;
 	background:linear-gradient(to bottom, rgba(255,255,255,1),rgba(0,0,0,0));
 	float:right;
-	
 }
 #tabsBox {
 	position:relative;
@@ -114,14 +180,62 @@ tabs {
 	vertical-align:top;
 	display:inline-block;
 	height:100%;
-	min-height:600px;
+	min-height:700px;
 	width:40%;
 	min-width:305px;
 	text-align:center;
 	float:left;/*this works for some reason - otherwise the tabs are on top of eachother*/
 	margin-top:0;
 	padding-top:30px;
-	z-index:2;
+	z-index:1;
+}
+#mapMessages{
+	background-color:orange;
+	width:75%;
+	height:400px;
+	margin:auto;
+	display:none;
+}
+.setting1{
+	color:white;
+	text-align: left;
+	padding:5px;
+	background:black;
+
+}
+.settingButton{
+	cursor: pointer; 
+	display:inline-block;
+	padding:10px;
+	border:2px solid darkgrey;
+	background-color: grey;
+	width:50px;
+	height:43px;
+	text-align:left;
+	margin:8px;
+	border-radius: 5px;
+	width:300px;
+}
+.settingButtonOn, .settingButtonOff{
+	position:relative;
+	top:-30.5px;
+	left: 232px;
+	height:43px;
+	display: block;
+    width: 55px;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid darkgrey;
+    border-radius: 0px 5px 5px 0px;
+}
+.settingButtonOff{
+	background:red;
+}
+.settingButtonOn{
+	background:green;
+}
+.settingButton:hover{
+	background:purple;
 }
 .researchButton{
 	font-size:1.2em;
@@ -141,7 +255,7 @@ tabs {
 	height:70px;
 	margin:10px;
 	border:7px ridge rgb(124, 78, 78);
-	background: rgba(166, 186, 216, 1);
+	background: rgb(168, 150, 175);
 	padding:0;
 	position:relative;
 }
@@ -159,18 +273,50 @@ tabs {
 	padding:0px;
 	text-align:center;
 	width:380px;
-	height:100px;
+	height:70px;
 	color:black;
 	position:relative;
 	background-clip:border-box;
 	font-weight: bold;
 	font-size:1.5em;
-
 }
 #exploreButton:hover {
 	background-image:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/mapp.jpg);
 	color:white;
 	cursor:pointer;
+}
+#buildMineButton {
+	background-image:linear-gradient(rgba(150,150,150,0.3),rgba(250,250,250,.55)),url(images/mapp.jpg); 
+	background-size:100% 100%;
+	border:2px solid black;
+	margin:auto;
+	margin-top:30px;
+	padding:0px;
+	text-align:center;
+	width:380px;
+	height:70px;
+	color:black;
+	position:relative;
+	background-clip:border-box;
+	font-weight: bold;
+	font-size:1.5em;
+}
+#buildMineButton:hover {
+	background-image:linear-gradient(rgba(10,10,10,0.4),rgba(10,10,10,0.4)),url(images/mapp.jpg);
+	color:white;
+	cursor:pointer;
+}
+#exploreButton:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+	right:20px;
+	top:105%;
+}
+#buildMineButton:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+	right:20px;
+	top:105%;
 }
 .resText {
 	position:absolute; 
@@ -178,11 +324,21 @@ tabs {
 	width:100%; margin:0;
 	line-height:30px;
 	padding-top:15px;
+	
+/*to make multi-line resources look ok*/
+	margin-top:8px;
+	line-height: 20px;
+	padding:0px;
 }
 .resBar {
 	height:56px;
 	background-color:rgba(98, 161, 113, .5);
 	width:0%;
+}
+.resBar p{
+	margin:0px;
+	top:50%;
+	transform: translateY(-50%);
 }
 div.JobBox0 { /*the 0 designation is a work-around for the JS generated html being different from the pre-existing one*/
 	width:250px;
@@ -193,7 +349,6 @@ div.JobBox0 { /*the 0 designation is a work-around for the JS generated html bei
 	margin-top:10px;
 	height:100%;
 	background-size:cover;
-	
 }
 div.JobBoxTest { /*the 0 designation is a work-around for the JS generated html being different from the pre-existing one*/
 	width:250px;
@@ -204,7 +359,6 @@ div.JobBoxTest { /*the 0 designation is a work-around for the JS generated html 
 	margin-top:10px;
 	height:100%;
 	background-size:cover;
-	
 }
 div.JobBox { 
 	width:250px;
@@ -226,7 +380,6 @@ div.userAdd0 { /*not sure why but need to set left and right to 2px for jobEleme
 	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	text-align:left;
-	
 }
 div.userAdd { 
 	width:180px;
@@ -237,7 +390,6 @@ div.userAdd {
 	background:rgba(255, 255, 255, .75);
 	border:1px solid black;
 	text-align:left;
-
 }
 div.userAdd0:hover{
 	cursor:pointer;
@@ -318,21 +470,31 @@ div.userRemove:hover{
 	cursor:pointer;
 	border-color:grey;
 }
-.statementOn:hover, .red:hover{
-	cursor: pointer;
-	width:1000px;
-	max-width:85%;
+.regularMsg, .exploreMsg, .researchMsg, .councilMsg, .discoveryMsg, .starveMsg, .black{
 	margin:auto;
-	height:60px;
-}
-.statementOn{
-	height:60px;
-	width:1000px;
-	max-width:85%;
-	margin:auto;
+	font-size: 1.3em;
+	padding-left: 80px;
+	padding-right: 80px;
 	transition-timing-function: linear;
-	transition:color 2s;
-	color:white;
+	transition:color 1s;
+	position: relative;
+	top: 20%;
+	/*transform: translateY(-50%);*/
+}
+.black{
+	color:black;
+}
+.regularMsg{
+	color:lightgray;
+}
+.exploreMsg{
+	color:burlywood;
+}
+.researchMsg{
+	color:lightgreen;
+}
+.starveMsg{
+	color:red;
 }
 .orange{
 	height:60px;
@@ -343,15 +505,6 @@ div.userRemove:hover{
 	/*transition:color 1s;*/
 	color:orange;
 }
-.red{
-	height:60px;
-	width:1000px;
-	max-width:85%;
-	margin:auto;
-	transition-timing-function: linear;
-	/*transition:color 1s;*/
-	color:red;
-}
 .statementOff{
 	height:60px;
 	width:1000px;
@@ -361,8 +514,7 @@ div.userRemove:hover{
 	transition:color 1s;
 	color:black;
 }
-body{ 
-	
+body{ 	
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center; 
@@ -393,7 +545,6 @@ body.normal{
     line-height: 20px;
     cursor: pointer;
     transition: 0.3s;
-
 }
 .alert {
     padding: 200px 70px 500px 70px;
@@ -450,7 +601,7 @@ body.normal{
 	text-align:center; 
 	width:100%; margin:0;
 	line-height:30px;
-	padding:5px;
+	padding:0px;
 }
 .tooltiptext {
     visibility: hidden;
@@ -459,7 +610,7 @@ body.normal{
     color: white;
     text-align: left;
     border-radius: 2px;
-    padding: 0 10px;
+    padding: 10px;
     position: absolute;
     z-index: 1;
     top: 125%;
@@ -468,7 +619,9 @@ body.normal{
     margin-left: 0;
     opacity: 0;
 	font-size:12pt;
-
+}
+.tooltiptext p{
+	margin:10px;
 }
 .userAdd0:hover .tooltiptext {
     visibility: visible;
@@ -490,12 +643,6 @@ body.normal{
     visibility: visible;
     opacity: 1;
 }
-#exploreButton:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-	right:20px;
-	top:105%;
-}
 .councilMessage{
 	font-size:1.2em;
 	font-style:italic;
@@ -516,13 +663,38 @@ body.normal{
 }
 .statementLog{
 	position:absolute;
-	top:78px;
-	right:15px;
+	top:10px;
+	right:10px;
 	padding:5px;
 	background-color:black;
 	border:2px solid white;
+	width:60px;
+	height:32px;
+	text-align:center;
 }
-#save, #load, #export, #import, #reset, #tips{
+.popupStyle, .popupTransition{
+	position:absolute;
+	top:50%;
+	right:50%;
+	padding:2px;
+	background-color:transparent;
+	font-family: sans-serif;
+	-webkit-text-stroke: 1.5px black; color: turquoise;
+	background-color:rgba(255, 225, 76, 0);
+	font-weight: bold;
+	font-size:5em;
+	z-index:3;
+	opacity: .7;
+}
+.popupTransition{
+	opacity: 0;
+	transform: translateY(-30px);
+	transition: opacity .5s ease-out 1.5s, transform 2s linear 0s;
+}
+/*Can decide later to have a menu button that makes these pop out
+after clicking on menu, expand the menu box out, then make save, load, etc. visible on a setTimeout call the same time as the transition effect
+how to make the menu disappear? clicking an 'X' button to close*/
+#save, #load, #export, #import, #reset, #tips, #settings{
 	position:absolute;
 	padding:5px;
 	background-color:black;
@@ -531,12 +703,17 @@ body.normal{
 	height:32px;
 	text-align:center;
 }
+#settings{
+	top:47px;
+	right:10px;
+	padding-left: 2px;
+}
 #save{
 	top:10px;
 	left:10px;
 }
 #load{
-	top:50px;
+	top:47px;
 	left:10px;
 }
 #export{
@@ -544,18 +721,18 @@ body.normal{
 	left:75px;
 }
 #import{
-	top:50px;
+	top:47px;
 	left:75px;
 }
 #reset{
-	top:90px;
-	left:10px;
+	top:10px;
+	left:140px;
 }
 #tips{
-	top:90px;
-	left:75px;
+	top:47px;
+	left:140px;
 }
-#save:hover, #load:hover, #export:hover, #import:hover, #reset:hover, #tips:hover{
+#save:hover, #load:hover, #export:hover, #import:hover, #reset:hover, #tips:hover, #settings:hover{
 	background-color:gray;
 	cursor:pointer;
 }
@@ -574,20 +751,47 @@ body.normal{
 	padding:25px;
 	z-index:3;	
 }
-#tips:hover #tipText{
+/*#tips:hover #tipText{
 	display:block;
 	cursor:cell;
 	
-}
+}*/
 .statementLog:hover{
-	background-color:lightgray;
-	border-color:darkgrey;
-	cursor:cell;
+	background-color:gray;
+	cursor:pointer;
+}
+#closeMessage, #enterName, #closeSettings{/*should really just make this a class now*/
+	cursor:pointer;
+	background-color:rgb(87, 87, 87); 
+	margin:0px; padding:10px; 
+	position:absolute; 
+	bottom:0px;
+	width:100%;
+}
+#closeMessage:hover, #enterName:hover, #closeSettings:hover{
+	background-color: grey;
+}
+#nameStr{
+	background-color: black;
+	text-align: center;
+	color:white;
+	margin-top:40px;
+	padding:20px;
+	border-color: black;
+	font-family: 'Times New Roman', Times, serif;
+	resize:none;
+	width:650px;
+	height:150px;
+	overflow: hidden;
+}
+#nameStr:focus{
+	outline-color: black;
 }
 .logOut{
+	width:600px;
 	visibility: hidden;
-    border:2px solid darkgrey;
-    background-color: rgba(61,59,42,1); 
+    border:2px solid white;
+    background-color:black; 
     color: white;
     text-align: left;
     border-radius: 2px;
@@ -596,16 +800,19 @@ body.normal{
     z-index: 3;
     top: -2px;
     right: -2px;
-	white-space: nowrap;
+	white-space: normal;
     margin-left: 0;
     opacity: 1;
 	font-size:12pt;
+	overflow-x: hidden;
+	height:600px;
+	overflow-y: scroll;
 	/*height:200px;
 	width:500px;*/
 }
-.statementLog:hover .logOut{
+/*.statementLog:hover .logOut{
 	visibility: visible;
-}
+} making this click to open and close*/
 .none {
 	display:none;
 }
@@ -614,7 +821,45 @@ body.normal{
 	display:inline-block;
 	vertical-align:top;
 }
-#exportWindow, #importWindow{
+.messagepop{
+
+	vertical-align: 50%;
+	left:50%;
+	transform: translateX(-50%);/*not sure if best way to center? thanks Warface from SO*/
+	visibility: visible;
+	z-index: 2;
+	position:absolute;
+	top:120px;
+	background-color:black;
+	color:white;
+	text-align: center;
+	/*overflow-wrap: break-word;*/
+	border:2px solid white;
+	transition: 0.5s;
+	width: 700px;
+	height: 300px;
+	opacity: 1;
+	cursor: default;
+}
+.messageHidden{
+	z-index: 2;
+	position:absolute;
+	top:120px;
+	/*left:12px; slide in transition is weird*/
+	left:50%;
+	transform: translateX(-50%);
+	background-color:black;
+	color:white;
+	text-align: center;
+	/*overflow-wrap: break-word;*/
+	border:2px solid white;
+	transition: 0.5s;
+	width: 700px;
+	height:300px;
+	opacity: 0;
+	visibility: hidden;/*https://stackoverflow.com/questions/133051/what-is-the-difference-between-visibilityhidden-and-displaynone#133064*/
+}
+#exportWindow, #importWindow, #resetSure{
 	z-index: 3;
 	position:absolute;
 	top:120px;
@@ -624,6 +869,18 @@ body.normal{
 	text-align: center;
 	/*overflow-wrap: break-word;*/
 	border:2px solid black;
+}
+#resetYes, #resetNo{
+	width:50px;
+	margin:auto;
+	background-color:lightgrey;
+	padding:10px;
+	border: 2px solid black;
+	display:inline-block;
+	cursor: pointer;
+}
+#resetYes:hover, #resetNo:hover {
+	background-color: grey;
 }
 #exportStr, #importStr{
 	height:400px;
@@ -649,17 +906,23 @@ body.normal{
 	cursor:pointer;
 	background-color:lightgray;
 }
+.tinyResText{
+	margin:0;
+	font-size:1em;
+}
 .tinyRes{
+	font-style:normal;
 	position: relative;
 	display:inline-block;
-	height:40px;
-	width:40px;
-	border:5px ridge black;
-	background-color:rgba(0,0,0,.1);
-	margin:5px;
+	height:auto;/*this is how you comment css */
+	text-align: left;
+	width:150px;
+	border:none;
+	padding:none;
+	margin:0,0,0,0;
 }
 .tinyRes:hover{
-	background-color:gray;
+	font-weight:bold;
 }
 .tinyRes:hover .tooltiptext{
 	visibility: visible;
@@ -668,28 +931,24 @@ body.normal{
 	left:-100px;
 	white-space: pre-line;
 	padding:2px;
-	 
 }
 .resourceName{
 	text-align:left;
 	width:75px;
 	display:inline-block;
 	height:30px;
-
 }
 .resource{
 	text-align:right;
 	width:40px;
 	display:inline-block;
-
 }
 .resourceMax{
 	text-align: left;
 	width:40px;
 	display: inline-block;
-
 }
-.ratePos, .rateZero, .rateNeg{
+.ratePos, .rateZero, .rateNeg, .rateChange{
 	text-align:right;
 	width:40px;
 	display:inline-block;
@@ -702,6 +961,9 @@ body.normal{
 }
 .rateNeg{
 	color:red;
+}
+.rateChange{
+	color:#ACAC09;
 }
 #doneResBox{
 	border-top:1px solid grey;

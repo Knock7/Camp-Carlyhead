@@ -15,7 +15,7 @@
 </head>
 
 
-<body>
+<body style="overflow-x: hidden;overflow-y: scroll;">
 
 <div id="exportWindow" class="exportWindowOff">
 	<div style="height:100%; padding:10px;"><b>Copy the following string:</b><br></div>
@@ -29,15 +29,39 @@
 	<p id="closeImport">Import</p>
 </div>
 
-<header id="closeMe" class="alert" style="color:black">
+<div id="resetSure" style="display:none; padding:20px;"> <!--changing style.display:none/block seems better then changing class with those things, like I did for import/export but I won't change those now-->
+	<div style="height:100%; padding:10px;"><b>Are you sure you want to completely reset the game? Your progress will be wiped.</b><br></div>
+	<p id="resetYes">Yes</p>
+	<p id="resetNo">No</p>
+</div>
+
+<div id="messagepop" class="messageHidden">
+	<div style="padding:10px; text-align:left;"><b>Messages: <span id="statementNum">1</span></b><br></div>
+	<div id="message" class="regularMsg"> test message text</div> 
+	<p id="closeMessage" >Close Message</p>
+</div>
+<div id="namePrompt" class="messagepop" style="display:none; z-index:3;">
+	<div class="regularMsg" style="top:20px;">What would you like to name your settlement?</div> 
+	<textarea autofocus id="nameStr" class="regularMsg" style="user-select:text;" type="text"> </textarea>
+	<p id="enterName" >Enter Name</p>
+</div>
+<div id="settingpop" class="messagepop" style="display:none;">
+	<div style="padding:10px; text-align:center;"><b>Settings</b><br></div>
+	<div id="setting1" class="setting1">					 <div id="settingButton1" class="settingButton">Rename the settlement</div></div>
+	<div id="setting2" class="setting1" style="display:none"><div id="settingButton2" class="settingButton">Toggle resource bars<div class="settingButtonOff">OFF</div></div></div>
+	<div id="setting3" class="setting1" style="display:none"><div id="settingButton3" class="settingButton">Change color theme (someone write the code please)<div class="SettingButtonOff"></div></div></div>  <!--make the selector all drop-down options to choose from-->
+	<p id="closeSettings" >Close Settings</p>
+</div>
+
+<header id="closeMe" class="alert" style="color:black; position:absolute;left:0;top:0;z-index:5;transition:ease-in 2s;">
 	<h2 id="intro">Like many others, the turmoil of the War has driven you to start a new life in the unknown and unpopulated lands outside the walls of the Great City. After several years of wandering and living off the land you decide to settle down in a quiet valley.<br><br>You set up camp at the edge of the forest near a river and a field with wild berries and small game you can hunt, and with the few tools in your travel sack you begin work on a more permanent residence.</h2>
 	<h1 class="closebtn"><br><i> continue </i><br></h1>
 </header>
 
 <header style="position:relative;">
 	<h1 id="title">A Lonely Beginning</h1>
-	<h3 id="statement" class="statementOn">&nbsp;</h3>
-	<div id="messages"> New Messages: <span id="statementNum">1</span></div>
+<!--	<h3 id="statement" class="statementOn">&nbsp;</h3>
+		<div id="messages"> Messages: <span id="statementNum">1</span></div>-->
 	<div id="statementLog" class="statementLog">
 		Log
 		<div class="logOut">
@@ -45,20 +69,23 @@
 			<p id="logOut">Event text here</p>
 		</div>
 	</div>
-	<div id="save">Save</div>
-	<div id="load">Load</div>
-	<div id="export">Export</div>
-	<div id="import">Import</div>
-	<div id="reset">Reset</div>
-	<div id="tips">Info
-		<div id="tipText">
+	<div id="settings" style="display:none">Settings</div>
+	<div id="menu">
+		<div id="save">Save</div>
+		<div id="load">Load</div>
+		<div id="export">Export</div>
+		<div id="import">Import</div>
+		<div id="reset">Reset</div>
+		<div id="tips">Info
+			<div id="tipText">
 						[Save]&nbsp;&nbsp;&nbsp;&nbsp;saves to browser local storage<br>
 						[Load]&nbsp;&nbsp;&nbsp;&nbsp;loads from local storage<br>
 						[Reset]&nbsp;&nbsp;&nbsp;starts the game over (no prestige)<br>
 						[Export]&nbsp;gives you a text string to save<br>
 						[Import]&nbsp;loads from input text string<br><br>
 						right-click moves all workers<br>
-						shift-click moves 5 workers<br><br>
+						shift-click moves half workers<br>
+						spacebar pauses/unpauses game<br><br>
 						If you get stuck, build more buildings,<br>
 						mine more resources, or message me.<br>
 						There is a pop-up at the end letting you<br>
@@ -68,8 +95,8 @@
 						for 'late' game yet.<br>
 						Please let me know of any changes you<br>
 						would like to see, or things to add.</div>
+		</div>
 	</div>
-
 </header>
 
 <div id="loadingPopUp">Loading...</div>
@@ -79,15 +106,27 @@
 
 	<div id="foodStuff">
 		<div class="resourceName"> Food: </div>
-		<div class="resource" id="food"> 50 </div> / 
-		<div class="resourceMax" id="foodMax" >100</div>
-		<div class="ratePos" id="foodRate">1</div> /sec
+		<div class="resNumsOn">
+			<div class="resource" id="food"> 100.0 </div> / 
+			<div class="resourceMax" id="foodMax" >100</div>
+		</div>
+		<div class="resourceBarBoxOff"><!--set display to inline-block to make visible-->
+			<div class="resourceBarBar"> </div>
+			<div class="resourceBarMax">100</div>
+		</div>
+		<div class="rateNeg" id="foodRate">-1.5</div> /sec
 	</div>  
 	<div id="woodStuff">
 		<div class="resourceName"> Wood: </div>
-		<div class="resource" id="wood"> 100 </div> / 
-		<div class="resourceMax" id="woodMax" >100</div>
-		<div class="ratePos" id="woodRate">1</div> /sec
+		<div class="resNumsOn">
+			<div class="resource" id="wood"> 100.0 </div> / 
+			<div class="resourceMax" id="woodMax" >100</div>
+		</div>
+		<div class="resourceBarBoxOff"><!--set display to inline-block to make visible-->
+			<div class="resourceBarBar"> </div>
+			<div class="resourceBarMax">100</div>
+		</div>
+		<div class="rateZero" id="woodRate">0.0</div> /sec
 	</div> 
 
 </resources>
@@ -107,7 +146,6 @@
 </div>
 
 
-
 <!--///////////////////////////////////jobs tab//////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan1">
 
@@ -116,14 +154,19 @@
 		<div class="bkgrn"><b>&nbsp;CAMP&nbsp;</b></div>
 		<div class="imgBox" style="background-image:linear-gradient(rgba(225,250,250,0.1),rgba(255,200,200,0.1)),  url(images/camp.jpg);">
 
-			<div class="userAdd" style="cursor:default; background-color:rgba(255, 255, 255, .75)">
-				<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="freeworkersMax">1</span>&nbsp;</b>
-				<div class="tooltiptext">
-					<p>Every worker consumes <br>
-					<span id="freeworkerMake">1.5 food</span> / sec<br><br>
-					The workers required to construct<br> 
-					new buildings meet here at camp</p>
+			<div id="freeworkerJob0" class="userAdd" style="width:220px; cursor:default; background-color:rgba(255, 255, 255, .75)">
+				<div style="display:inline-block">
+					<b>&nbsp;Free Workers: <span id="freeworkers">1</span> / <span id="freeworkersMax">1</span></b>
 				</div>
+				<div style="float:right;">
+					<b>[<span id="workerspace">0</span>]</b>
+				</div>
+					<div class="tooltiptext">
+						<p>Every worker consumes <br>
+						<span id="freeworkerMake">1.5 food</span> / sec<br><br>
+						The workers required to construct<br> 
+						new buildings meet here at camp</p>
+					</div>
 			</div>
 		
 		</div>
@@ -153,12 +196,18 @@
 
 </tabs>
 
+<!--///////////////////////////////////map tab///////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan6" class="none">
-	<canvas id="canvas" height="600" width="600" style="margin:auto; border:2px solid black">Your browser does not appear to support Canvas</canvas>
+	<canvas id="canvas" height="600" width="600" style="margin:auto; border:2px solid black; width:95%; border:5px solid goldenrod;">Your browser does not appear to support Canvas</canvas>
 
 	<canvas id="bigCanvas" height="5000" width="5000" style="display:none"></canvas>
 	<canvas id="blackedCanvas" height="5000" width="5000" style="display:none"></canvas>
+
+	<div id="mapMessages">Test map message</div>
+
+
 </tabs>
+
 
 <!--//////////////////////////////////buildings tab//////////////////////////////////////////////////////////////////////////-->
 <tabs id="pan2">
@@ -210,11 +259,11 @@
 			<p class="resText">Farm Equipment</p>
 		</div>
 		<div class="tooltiptext">
-			<br>The farmers want to design a wooden plow and other<br>
-			equipment which should improve crop output significantly.<br>
+			The farmers want to design a wooden plow and some other<br>
+			simple equipment which should improve crop output significantly.<br>
 			<br>Takes 1000 research<br>
 			Uses 2 wood and 1 lumber per research<br><br>
-			Improves farmers' food output by 50%<br><br>
+			Improves farmers' food output by 20%
 		</div>
 	</div>
 
@@ -223,20 +272,27 @@
 			<p class="resText">Stone Axes</p>
 		</div>
 		<div class="tooltiptext">
-			<br>You notice that the axes that most of your comrads have<br>
+			You notice that the axes that most of your comrads have<br>
 			brought with them, and the few saws and other metal tools,<br>
 			have been dulling and deteriorating to the point of uselessness.<br>
-			It seems that the best course of action is to develope<br>
+			It seems that the best course of action is to develop<br>
 			stone axes for felling trees and shaping them into boards.<br>
 			<br>Takes 1500 research<br>
 			Uses 1 lumber and 3 stone per research<br><br>
-			Resets woodcutter and lumberworker output to 2.5/sec<br><br>
+			Resets woodcutter and lumberworker output to 2.5/sec
 		</div>
 	</div>
 
-	<div id="doneResBox">
+	<div id="doneResBox" style="font-style:italic; font-weight: bold; font-size:1.2em;">
 		Finished Research<br>
-		<div id="doneRes"> </div>
+		<div id="doneRes" style="font-weight: normal"> 
+			<div class="tinyRes" id="finishedResSpacer">
+				<p class="tinyResText">&nbsp;</p>
+			</div><div class="tinyRes">
+				<p class="tinyResText">&nbsp;</p>
+			</div><div class="tinyRes">
+				<p class="tinyResText">&nbsp;</p>
+			</div></div>
 	</div>
 
 
@@ -246,7 +302,7 @@
 <!--/////////////////////////////////council tab//////////////////////////////////////////////////////////////////////////-->
 <tabs class="none" id="pan4">
 
-
+<!--should clean this part up when I decide how to use the council decree - council decree should be a hint at how to continue play-->
 	<div id="buildCounc" class="council"> 
 		<div class="tooltiptext" style="top: 110%;">
 			<p>Requires (10) workers to build<br>
@@ -261,11 +317,19 @@
 		</div>
 	</div>
 
-	<div class="hide councilMessage" id="council1"><i>During the first meeting, the Council decideds to begin research and planning to recover lost technologies. As time goes on, and new resources become available, differnt settlers may propose research projects to improve tools, or lead the design of new buildings. You can now build labspace at the back of the Town Hall for research.</i>
+	<div class="hide councilMessage" id="council1"><i>During the first meeting, the Council decides to begin research and planning to recover lost technologies. As time goes on, and new resources become available, different settlers may propose research projects to improve tools, or design new buildings. You can now add laboratory space onto the back of the Town Hall for researchers.<br><br>Select a research topic and assign researchers to generate research points.</i>
 	</div>
 
-	<div class="none councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div>
+	<div class="none councilMessage" id="councilDefault">The next meeting will be held after sufficient progress is made</div><!--should replace message text, not have a new message div. make sure it goes away once the next task has been achived-->
 
+	<div id="buildMineButton" class="buildMineButton">
+		<div class="tooltiptext" id="buildMineTip">
+			<p>Requires (<span id="buildMineWorkers">1</span>) workers to begin construction<br>The project will need <span id="buildMineCosts">30 food, 200 lumber</span></p>
+		</div>
+		<div id="buildMineBar" class="buildBar">
+			<p class="buildText" style="padding-top:15px">Send a party to survey a potential mining site</p>
+		</div>
+	</div>
 	
 </tabs>
 

@@ -1,12 +1,66 @@
+relatively 'urgent' stuff:
+
+keep working on the new mine system. a lot of thisngs to clean up.
+
+make the build council (and build mine and send exploring party) buttons grey out if there are not enough resources.
+move the build mine button to the town hall tab, remove it from the buildings tab completely. Add new mines randomly in for now, can work on a way to order things later
+while scouting parties are away, use less food (for the people who are gone). make it more than the trip would need - for x people times y time plus 20%.
+could have 'build mine' button and then 'copper mineshaft' 'iron mineshaft' etc. build buttons too. the build mine button gets red/dead a lot. mineshafts get reset to lower cost when a new mine of that type is found
+research to reduce new mineshaft costs (or workers that can mine)
+Later make it so resources run out if not maintained at optimal harvest rate. Mines run out period over time (fewer workers can got b/c some shafts are dry - counter for amount mined of each mine type).
+the first mine grey-out gets reverted to the normal white 'can't build yet' color after building another building, fix thatkd884sk3G
+Gameplay stuff to work on.
+kilns-spears should come later? make something else with copper first like upgrade axes. upgrade for spear and military stuff after the explorers die first time.
+make it so the job box doesn't show up until after there can be at least one worker. EG farmers and laboratory box don't show up until 1 farm or 1 lab are built, respectively
+More cosmetic stuff or related:
+make an upgrade for starvation warning that makes food resource flash red when negative and time to run out is less than 1 minute - could have an option for a pop-up that pauses
+explore messages (that don't say important stuff) should show up near the explore button, on the town hall tab
+the wrong number of explorers are returning from scouting
+double resource management research tabs
+change resource management to res mgmt in tiny finshed research
+this is done but there is an issue with starving while building council hall, rewrite how council hall works- when you have a starvation event, if a buildig is being built have all workers returned without finishing the building and return some resources - later there can be some 'trick' move that requires maxing out food before building a major structure
+anything I need to do for starve event while explorers are out? they shouldn't count for food decreasing while they are out.
+add another research-unlockable setting to show 'time until resource bar is full' (or to make it a tooltip)
+make explorers search bar at top of town hall tab. Make message somewhere that one of the council decides when the next party will set out. change decree message and make it reload properly. GlobVar.decree="Residents assigned to the scouting party will meet at the town hall (should rename Camp to town-hall/town-square) and consult what maps have been made so far to decide where to venture on the next excursion."
+when discover new mine, make dropdown menu for selecting which mine to build? probably need a better way? Na, click build mine - pop up list of mineshafts that would show the normal build bar. or setting to group mines into a button.
+fix the "hamlet of..." rename options case settings to be correct (camp, not hamlet eg)
+option so that when resource bars are enabled, if you click on a building you can build but don't have enough resources for, for the limited resources a red line appears on the bar (and slowly fades) so you can tell how much more you need to fill (could make the lines disappear if you click on a different building later)
+another option for time to fill resource bar and time until enough resource to build next building
+once you 'explore all immediate area" make send explorers button turn into three (or more) buttons with different scaling increases - maybe one needs lots of food and water, another just takes a long time, can have multiple exploring parties out at the same time (river, mountains, plains, forest, trading (trading gets optionally automated later through research))
+<check> to see the settings button and unlocked setting display on reload. (if you load it works, but not if you refresh page. need to add a section on finishLoad() to set displays to 'block').
+when you get to a coal mine, research (fast) to change kilns to use coal first, then wood if there is no coal?
+re-name mineshaft to copper mineshaft - make it unclickable after 6 mines. can start building more again once you find a new mineshaft (make some hurdle to get it that you can see, like spears to explore in animal-infested area, and need protection for miners in the form of stationed guards. if you don't have 2 guards, you can't mine with more than 6 miners in the copper mines)
+I think the exploring messages pop up is too much. Only the important ones should show. Otherwise the message can show up on the map tab as a separate log list.
+scroll over resource rate to see what jobs are making and taking
+make townhall decree a GlobVar string that gets reloaded. Also make sure the message is a hint at the main focus at the time
+somehow (around finding mines, maybe to do with reloading) you lose worker count
+on reload the 'X' on the map for mining spot doesn't show up
+
+send people and supplies to so set up a mining or logging or something camp with a trade agreement - you send food and recieve some resource in return, later need to renegotiate trade deals
+
+When you are self-selecting explore points, have a hover-over of how many people and resources you will need to explore that area. exploration get limited by defined ranges. like exploring deep into the forest is hard, into the mountains is near impossible, down the river is easy. Few resources and people but lots of travel time across plains. Lots of people and resources but little time to fight and clear out some areas. Some expidiions don't make it back. Random chance for explorers to die - if all die the party doesn't return, give message "it has been a long time since the scouting party departed. We must assume they are lost and move on." free up living space for more workers
+
+ideas-get copper ore>research smelting>get copper metal>research smithing>can build smithy>after first smithy, now unlock copper axes>now unlock spears(austensibly for hunting at first)>later use spears for scouting parties
+also researching stone axes should unlock lumberyard and a simple building that requires lumber - say a stoneyard for now.
+
+add upgrade to make the game not pause when messages pop up so you can let it idle? Any reason to not close when idle? need to test and make sure catch-up rates are the same at active window idle rates
+
 0) Consider making the # of workers needed for a building increase onver time (need to move materials further) instead of increasing cost ratio? (have the ratios reduce using research to the point where they are not resource-limited)
 
-00) Make a research that allows you to designate a certain worker type to pull builders from instead of having to move in and out. Those workers will stop producing for the durration of the building. Also can make adding workers/removing workers dump to that job. Call research 'worker management'.
+00) Make a research upgrade that allows you to designate a certain worker type to pull builders from instead of having to move in and out. Those workers will stop producing for the durration of the building. Also can make adding workers/removing workers dump to that job. Call research 'worker management'.
 
 000) Make some research like 'scaled opperations' where you build new equipment that requires at least X (10?) workers to run but produces way more, say rock, than before (like 100x) to stockpile for later and use those workers for something new.
 
-1) fix the food shortage bug. how to deal with this when everyone can't even hunt for food because too many are building or run out of hunter space? or people are busy building buildings.
+0000 change 'need more workers, wood, etc' to little images instead of text.
 
-2) finished research - add icon/number that you can hover over for a tooltip? 
+05 cange change the rate at which people join the camp by some research - maybe welcome package, new people require lump of food and some luxery item (beer/wine, chocolate, idk)
+
+) research to make bricks in kilns (faster, less wood used)
+
+) make some reseach cost a lot of ticks but cheap so you want a lot of researchers, and some cost few ticks but lots of resources so you don't even put one researcher in fll time
+
+) housing projects upgrade to remove all shacks and replace with rowhouses or something - needs lots of bricks, time - over the course of the research (maybe even make into phases 1, destroy houses, phase 2, build foun dation, phase 3 build framing, realize the foundation is cracking and re-do phase 2 for more resources...)
+before you can begin, you need to save up space for all the poeple living in shacks (could be a tent city research - only displaced current residents can go to tents, not newcomers?)
 
 3) add some new goal like a total population (the coucil has decided to improve planning, reduce cost ratios of all buildings
 then you can add an explorers guild next to the town hall - rename Town Hall tab?
@@ -15,21 +69,9 @@ then you can add an explorers guild next to the town hall - rename Town Hall tab
 
 4) city planning should add smaller, winding dirt streets through the previously built areas, and nice grid smaller streets for new buildings that aren't shacks, woodsheds, lumberyards, quarry, etc.
 
-5) make it so that adding research does not make messages, but it should log - change addResearchButton and the early reserches to not use logStatement().
-
-6) consider renaming workshops (building) or workshops (job box). otherwise need to limit kilns to number of workshops and that is silly. Can make the 
-[building]Workshop -> mason shop or stone-yard (still applies to brickmakers)
-job box is till workshops
-will add building smithy
-kilns will be in their own building (smelt?)
-
-
 7) tech to reduce all cost ratios
 
 8) make the image sizes smaller for faster loading.
-
-12) have a way to store more food and get more people (cabin for families to move into - kids number to Camp box (they eat less food and don't do jobs/do other easy jobs)
-12b fix the kids making food decrease while rate is positive
 
 13) implement coal and iron mines
 
@@ -51,46 +93,23 @@ d) more
 19c) some way to group or collapse resources
 
 Improvements from NH play test:
-a) change text for exploring to be different and make you want to keep exploring
+
 b) start is confusing (note to move workers back and forth, free workers needed to build)
-c) make text stay longer - have to click to move to next message 
+
 d) add a castle, add a fense, hospitals, schools
 e) rename mine to copper mine, just have all the mines named separatly, no drop-down - maybe make kilns produce everything they can and move on if the think is full and make more of other things? or every tick switch what is made in kilns? dropdown to select kiln stuff?
 f) if a resource stays at max storage, move the workers to free workers (maybe max toggle or with research "settlement management")
-g) differnt spelled wrong
 h) increase food storage at start?
 i) zombies to mine uranium 
 j) oregon trail diseases
 k) robot factories that make robots (that make robot factories)
-l) change 'researchers' to 'inventors'
-m) list of researched tech instead of hover-over, or list of tech and hover for improvement
+l) change 'researchers' to 'inventors' <meh>
 n) change 'need research' to 'need research points' - somehow indicated that it builds over time, not lump sum - also that you need to select a research
 o) add more insentive to explore, do stuff
 p) make rate stop flickering
 q) timer to compare active gameplay time
-r) saving should indicate that it saved (pop-up)
 
 
-Thoughts from Matt G:
-make loadGame() auto-run on page load, and add auto-save - maybe every 5 minutes
-fix tabs:
-  make jobs constant
-  switch between other stuff in second panel, make currently-selected tab highlighted
- not calling .toFixed(1) somewhere for resource updates, and need to use it on lumberworker tooltip
- gray out building if not enough resources
- 
-
-
-Thoughts from Christine:
-Pottery
-more storage (food, wood, lumber) - maybe increase warehouse space? add silos.
-ok on people
-wants to explore more
-
-
-Thoughts from Matt C:
-Make unlocking woodshed more straightforward 
-Map that shows buildings (learn Canvas API?) - function to draw a new block 
 
 
 Thoughts from Nacho:
@@ -113,13 +132,80 @@ random disasters
 
 Thoughts from Kelsey:
 
+Thoughts on a plane
 
-Thoughts from Brian (and Nick) (rest of ToDo  list from local save on NickLaptop)
-- Make top title collapsable with messages showing up at the bottom of the screen when collapsed
-- stuck at stoneyard
-- work on way messages look
-- camp broke into two lines (xx/xx [x])
-- 'new messages' covers up actual messages. some messages are too long
-- add in the people dying from starvation and random diseases (that you can lower probabilty by getting doctors and hospitals) maybe make them sick and work at half speed? which ones work slower though - make it randomly choose a job, then one worker gets sick.
-- finished research text of name of research in a more condensed list format.
-- 
+make research 'hunting bow' that says improve hunter/gatherer production by 50% and then the finish message says 'the hunting bows are actually pretty bad and only improve production by 5%' make sure the researched tooltip says 5% and not 50.
+add chance that scouts will die while exploring (increases as they go out further/in certain areas, decreases with better weapons/armor)
+
+From Matthias and Shannon:
+<maybe not> better indication that workers need to be in camp (or just mention tooltips in message)
+make naming town alert check for some words like 'camp' or 'land' or just make it so you can rename it
+make running low on food more obvious?
+give a better reason to have a rockcutter?
+clear paths through forrest as research project
+fishing (with each fisher having a small chance for someting?[getting a huge fish worth lots of food (or just variable food production?) or pearls or something that comes from a river])
+make more apparent the bottlenecks/stops in research when resources run out (can make them turn red)
+message came up as undefined when started exploring
+make town hall button and exploring button also grey out when you don't have enough resources
+make number of explorers go up slower (have spikes when you move on to different areas?) make it start with 2 or 3 workers
+switching from brickmaking to smelting research gives 2000/1000
+it would be nice to be able to build more (resource rate accumulation-limited building) in the time just before you get kilns
+when get to roadbuilding tech you don't have enough food to keep exploring - make that research available sooner
+check research increase rate - it is off (low)
+industrial engineering research that highlights bottlenecks in resource generation
+<keep this then have a worker boom later> allow more shacks because there is a slow hump phase with not enough workers
+exploring land and find a bunch of people, say in tents, that you can try to convince to come join you
+map generation and exploring was fun so promote that
+wanderers should know the path that they came from so make the canyon visible on the map a ways out (and lead into a dense forest that would make you lose sense of direction)
+like zelda, research bridge after specializing in, say, lumber so you explore across the river and find stone (trade) otherwise tech in stone and go north and find lumber - smaller barrier to other paths having grinded in one direction
+resources flicker too much (even with )
+on reload, # of messages is wrong
+
+
+
+From Kelly and Josh
+
+From Mitch
+<>resources into bar after 'resource management' upgrade (which makes the settings button - can add more settings options to it later)
+map legend?
+once you get town too big, bandits keep you down by destrying stuff
+so you need to build a standing army to grow
+eventally army take so many resources you can't grow
+[have soldiers limited by number of spears]
+later balance funding education vs funding army
+at some point space-limited or resource-limited (say a storage barrier?) so need to destroy buildings to replace/upgrade
+some point food limited - drop max hunter amount to get a good fit 
+have a building with optional resource requirements of different distributions to build
+set up street grid, sell off lots, but can't decide how looks on map
+dismantle for resources, or space, or 'points' toward someo other structure - like improving blocks of a real city
+
+spears should improve hunting
+more people, more polution - poison river
+corporations sponsor projects. later corporations say you can't do certain things - have to fight them
+"a union have formed, must give x food, x money" can't remove below a certain number of brickworkers - this could be a late-stage issue. now resources are the ones that the government can use. private citizens and corporations can loan you more resources - compete for resources. maybe let corporate factory take land, use forest in return for more gold income but consequences. need EPA.
+spend x resources to inhibit union action, or to surpress free association
+leads to more warriors and resource drain that way
+or set policies to have more open speach and education - make a policy tab with toggles. can trade money for education
+set taxes
+have a town meeting where you decide to form a government and now the woodsheds produce wood automatically but you lose control over most workers - do once the number of workers becomes too much to mangage and it's more like a sim city control than moving individual workers?
+leads to more progress (research faster?) but less production (people are more idle, lower work factor)
+go off the gold standard later
+transition from survival town where everyone works together to a government running people less connected/concerened with well-being of the city
+
+
+
+times when:
+  easy worker space, need attract faster
+  easy resource cap, need more generation
+  research show sooner
+  triangle selectors
+  spears later than exploring prompt
+
+
+From cousin Matt
+mini-map?
+fish
+watermill electricity generation
+max research wrong when research finishes
+
+

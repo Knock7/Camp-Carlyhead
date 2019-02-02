@@ -1,5 +1,5 @@
 var MapVars = {//			1			2			3			4		5			6			7		8			9			10
-	Spots:{			
+	Spots:{	//coordinates for buildings initially - later buildings will have zones and rows I hope		
 		shack: 		[3095,2040, 3125,2045, 3158,2043, 3190,2030, 3217,2035, 3100,2070, 3135,2075, 3165,2071, 3200,2074, 3252,2030,
 					 3239,2058, 3275,2060, 3118,2099, 3150,2105, 3078,2105, 3177,2104, 3230,2098, 3261,2095, 3280,2025, 3070,2070],
 		shed: 		[3135,1999, 3085,2003, 3180,1990, 3110,1980, 3155,1970, 3200,1935, 3210,1968, 3102,1948, 3140,1930],
@@ -40,7 +40,7 @@ var MapVars = {//			1			2			3			4		5			6			7		8			9			10
 		[],
 	],
 	curYPos:0, 
-	curXPos:0,
+	curXPos:0,//x position at the time of a mousedown or begin of a touchscroll
 	curDown:false,
 	mapX:2850,
 	mapY:1800,
@@ -111,48 +111,92 @@ function setup(){
 			var y = MapVars.mapY + (MapVars.curYPos - e.pageY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
 
 			//keep from scrolling outside the currently allowed area
-			if(x<MapVars.minXscroll){
-				MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				x=MapVars.minXscroll;	
+			if(MapVars.maxXscroll-MapVars.minXscroll<2*MapVars.zoomLvl){//zoomed all the way out
+				if(x>MapVars.minXscroll){
+					MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x=MapVars.minXscroll;
+				}
+				if(x+2*MapVars.zoomLvl<MapVars.maxXscroll){
+					MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x= MapVars.maxXscroll - 2*MapVars.zoomLvl;	
+				}
+			} else {//zoomed in or normal scroll
+				if(x<MapVars.minXscroll){//need to check something like if x>max, do nothing because ok if x<min and x>max, just can't be x<min and x<max, then this stop check needs to happen
+					MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);//makes it so if you scroll off edge, don't need to scroll back all the way to move map back direction
+					x=MapVars.minXscroll;
+				}
+				if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
+					MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
+				}
 			}
-			if(y<MapVars.minYscroll){
-				MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				y=MapVars.minYscroll;			
+			
+			if(MapVars.maxYscroll-MapVars.minYscroll<2*MapVars.zoomLvl){
+				if(y>MapVars.minYscroll){
+					MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.minYscroll;
+				}
+				if(y+2*MapVars.zoomLvl<MapVars.maxYscroll){
+					MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y= MapVars.maxYscroll - 2*MapVars.zoomLvl;	
+				}
+			} else {
+				if(y<MapVars.minYscroll){
+					MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.minYscroll;
+				}
+				if(y+2*MapVars.zoomLvl>=MapVars.maxYscroll){
+					MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.maxYscroll-2*MapVars.zoomLvl;
+				}
 			}
-			if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
-				MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
-			}
-			if(y+2*MapVars.zoomLvl>MapVars.maxYscroll){
-				MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				y= MapVars.maxYscroll - 2*MapVars.zoomLvl;		
-			}
-
 			dragDraw(x,y);
 		}
 	});
 	window.addEventListener('touchmove', function(e){ 
 		if(MapVars.curDown){
-			e.preventDefault();
-			var x = MapVars.mapX + (MapVars.curXPos - e.changedTouches[0].screenX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
-			var y = MapVars.mapY + (MapVars.curYPos - e.changedTouches[0].screenY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			var x = MapVars.mapX + (MapVars.curXPos - e.pageX)*MapVars.zoomLvl*2/MapVars.smallMapMax;
+			var y = MapVars.mapY + (MapVars.curYPos - e.pageY)*MapVars.zoomLvl*2/MapVars.smallMapMax;
 
 			//keep from scrolling outside the currently allowed area
-			if(x<MapVars.minXscroll){
-				MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				x=MapVars.minXscroll;	
+			if(MapVars.maxXscroll-MapVars.minXscroll<2*MapVars.zoomLvl){//zoomed all the way out
+				if(x>MapVars.minXscroll){
+					MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x=MapVars.minXscroll;
+				}
+				if(x+2*MapVars.zoomLvl<MapVars.maxXscroll){
+					MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x= MapVars.maxXscroll - 2*MapVars.zoomLvl;	
+				}
+			} else {//zoomed in or normal scroll
+				if(x<MapVars.minXscroll){//need to check something like if x>max, do nothing because ok if x<min and x>max, just can't be x<min and x<max, then this stop check needs to happen
+					MapVars.curXPos += (MapVars.minXscroll - x)/(MapVars.zoomLvl*2/MapVars.smallMapMax);//makes it so if you scroll off edge, don't need to scroll back all the way to move map back direction
+					x=MapVars.minXscroll;
+				}
+				if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
+					MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
+				}
 			}
-			if(y<MapVars.minYscroll){
-				MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				y=MapVars.minYscroll;			
-			}
-			if(x+2*MapVars.zoomLvl>MapVars.maxXscroll){
-				MapVars.curXPos += (MapVars.maxXscroll - (x + 2*MapVars.zoomLvl))/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				x= MapVars.maxXscroll - 2*MapVars.zoomLvl;		
-			}
-			if(y+2*MapVars.zoomLvl>MapVars.maxYscroll){
-				MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
-				y= MapVars.maxYscroll - 2*MapVars.zoomLvl;		
+			
+			if(MapVars.maxYscroll-MapVars.minYscroll<2*MapVars.zoomLvl){
+				if(y>MapVars.minYscroll){
+					MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.minYscroll;
+				}
+				if(y+2*MapVars.zoomLvl<MapVars.maxYscroll){
+					MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y= MapVars.maxYscroll - 2*MapVars.zoomLvl;	
+				}
+			} else {
+				if(y<MapVars.minYscroll){
+					MapVars.curYPos += (MapVars.minYscroll - y)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.minYscroll;
+				}
+				if(y+2*MapVars.zoomLvl>=MapVars.maxYscroll){
+					MapVars.curYPos += (MapVars.maxYscroll - y - 2*MapVars.zoomLvl)/(MapVars.zoomLvl*2/MapVars.smallMapMax);
+					y=MapVars.maxYscroll-2*MapVars.zoomLvl;
+				}
 			}
 			dragDraw(x,y);
 		}
@@ -215,7 +259,7 @@ function setBlackout(){
 function dragDraw(x,y){
 	MapVars.smallMap.drawImage(MapVars.blackCanvas, x, y, 2*MapVars.zoomLvl, 2*MapVars.zoomLvl, 0, 0, MapVars.smallMapMax, MapVars.smallMapMax);
 }
-function mapZoom(e){
+function mapZoom(e){//need to change to prevent map from locking to bottom when unzoomed with black map top and bottom
 	e.preventDefault();
 	var destinationCanvas = document.getElementById("canvas");
 	var sourceCanvas = MapVars.blackCanvas;
@@ -224,26 +268,37 @@ function mapZoom(e){
 	MapVars.maxZoomLvl = Math.max((MapVars.maxXscroll-MapVars.minXscroll)/2,(MapVars.maxYscroll-MapVars.minYscroll)/2);
 
 	var changeInZoom = e.deltaY;
-	if(MapVars.zoomLvl+changeInZoom>MapVars.maxZoomLvl||MapVars.zoomLvl+changeInZoom<MapVars.minZoomLvl){//300 is the minimum zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
-		console.log("trying to zoom out or in too far");
-		return false;
+	if(MapVars.zoomLvl+changeInZoom>MapVars.maxZoomLvl){
+		MapVars.zoomLvl=MapVars.maxZoomLvl;
+		MapVars.mapX = MapVars.minXscroll-(MapVars.maxZoomLvl*2-(MapVars.maxXscroll-MapVars.minXscroll))/2//do I need a 4th case where not max zoomed but still map area smaller than max-min?
+		MapVars.mapY = MapVars.minYscroll-(MapVars.maxZoomLvl*2-(MapVars.maxYscroll-MapVars.minYscroll))/2
+	} else if (MapVars.zoomLvl+changeInZoom<MapVars.minZoomLvl){//300 is the zoom level which takes a 600x600 shot of the blackedCanvas to display on the 600x600 small map canvas (1:1)
+		MapVars.zoomLvl=MapVars.minZoomLvl;	
+		//do I need to do anything with mapX and mapY here?
+	} else {
+		MapVars.zoomLvl += changeInZoom;
+		MapVars.mapX = MapVars.mapX-changeInZoom;
+		MapVars.mapY = MapVars.mapY-changeInZoom;
+
+		if(MapVars.maxXscroll-MapVars.minXscroll>MapVars.zoomLvl*2){
+			if(MapVars.mapX<MapVars.minXscroll){
+				MapVars.mapX = MapVars.minXscroll;
+			} else if (MapVars.mapX+MapVars.zoomLvl*2>MapVars.maxXscroll){
+				MapVars.mapX = MapVars.maxXscroll - MapVars.zoomLvl*2;
+			}
+		}
+		if(MapVars.maxYscroll-MapVars.minYscroll>MapVars.zoomLvl*2){
+			if(MapVars.mapY<MapVars.minYscroll){
+				MapVars.mapY = MapVars.minYscroll;
+			} else if (MapVars.mapY+MapVars.zoomLvl*2>MapVars.maxYscroll){
+				MapVars.mapY = MapVars.maxYscroll - MapVars.zoomLvl*2;
+			}	
+		}
 	}
 
-	MapVars.zoomLvl += changeInZoom;
-	MapVars.mapX = MapVars.mapX-changeInZoom;
-	MapVars.mapY = MapVars.mapY-changeInZoom;
 
-	if(MapVars.mapX<MapVars.minXscroll){
-		MapVars.mapX = MapVars.minXscroll;
-	} else if (MapVars.mapX+MapVars.zoomLvl*2>MapVars.maxXscroll){
-		MapVars.mapX = MapVars.maxXscroll - MapVars.zoomLvl*2;
-	}
 
-	if(MapVars.mapY<MapVars.minYscroll){
-		MapVars.mapY = MapVars.minYscroll;
-	} else if (MapVars.mapY+MapVars.zoomLvl*2>MapVars.maxYscroll){
-		MapVars.mapY = MapVars.maxYscroll - MapVars.zoomLvl*2;
-	}
+
 
 
 	destinationCtx.drawImage(sourceCanvas, MapVars.mapX, MapVars.mapY, 2*MapVars.zoomLvl, 2*MapVars.zoomLvl, 0, 0, MapVars.smallMapMax, MapVars.smallMapMax);
